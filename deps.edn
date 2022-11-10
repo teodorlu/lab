@@ -1,0 +1,7 @@
+{:deps {nextjournal/clerk {:git/url "https://github.com/nextjournal/clerk"
+                           :git/sha "8f376762847bc1728b12679111b09c5943a70990"}}
+ :paths ["src" "dev"]
+ :aliases
+ {:nextjournal/clerk
+  {:exec-fn nextjournal.clerk/build!
+   :exec-args {:paths ["src"]}}}}
