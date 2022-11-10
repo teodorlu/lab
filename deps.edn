@@ -1,5 +1,7 @@
 {:deps {nextjournal/clerk {:git/url "https://github.com/nextjournal/clerk"
-                           :git/sha "8f376762847bc1728b12679111b09c5943a70990"}}
+                           :git/sha "8f376762847bc1728b12679111b09c5943a70990"}
+        clojure2d/clojure2d {:mvn/version "1.4.4"}
+        generateme/fastmath {:mvn/version "2.1.8"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
