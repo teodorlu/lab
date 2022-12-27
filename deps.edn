@@ -5,7 +5,7 @@
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
         babashka/fs {:mvn/version "0.2.12"}
-        babashka/process {:mvn/version "0.4.13"}}
+        babashka/process {:mvn/version "0.4.14"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
