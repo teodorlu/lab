@@ -6,4 +6,4 @@
  :aliases
  {:nextjournal/clerk
   {:exec-fn nextjournal.clerk/build!
-   :exec-args {:index "src/heya.clj"}}}}
+   :exec-args {}}}}
