@@ -19,7 +19,7 @@
 ;;
 ;; At least I can ensure loose coupling on pandoc.
 ;;
-;; =pandoc-edn= has an atom that controls how it shells out to pandoc:
+;; `pandoc-edn` has an atom that controls how it shells out to pandoc:
 
 pandoc/!exec-fn
 
