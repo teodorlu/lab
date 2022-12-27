@@ -73,12 +73,12 @@ pandoc/!exec-fn
 ;;
 ;;   https://github.com/rorokimdim/stash/tree/f07f90316531cb0b3eafaa481ab72b8ca59525f6/src/BabashkaPod.hs
 ;;
-;; Rough draft to get this working:
+;; Rough sketch of remaining work:
 ;;
-;;  1. Rip out hair getting an up-to-date Haskell environment working
-;;  2. Slash out parts of BabashkaPod.hs from stash to try to get something working
+;;  1. Rip out hair getting an up-to-date Haskell environment
+;;  2. Copy stuff from BabashkaPod.hs to get started
 ;;  3. Provide bencode / POD API
-;;  4. Rip out remaining hair trying to figure out how to get multi-target Haskell compilation working
+;;  4. Rip out remaining hair trying to figure out how to get multi-target Haskell compilation on CI
 ;;
 ;;      (or steal more from rorokimdim, see
 ;;      https://github.com/rorokimdim/stash/tree/f07f90316531cb0b3eafaa481ab72b8ca59525f6/.github/workflows/release.yml
