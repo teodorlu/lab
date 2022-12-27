@@ -3,7 +3,8 @@
         clojure2d/clojure2d {:mvn/version "1.4.4"}
         generateme/fastmath {:mvn/version "2.1.8"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
-                             :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}}
+                             :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
+        babashka/fs {:mvn/version "0.2.12"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
