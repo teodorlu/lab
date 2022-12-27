@@ -6,4 +6,4 @@
  :aliases
  {:nextjournal/clerk
   {:exec-fn nextjournal.clerk/build!
-   :exec-args {}}}}
+   :exec-args {:paths ["src/*.clj"]}}}}
