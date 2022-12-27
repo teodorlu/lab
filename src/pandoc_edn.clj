@@ -1,7 +1,6 @@
 (ns pandoc-edn
   (:require [teodorlu.pandoc.alpha2 :as pandoc]
             [babashka.process]
-            ;; [babashka.process.pprint]
             [clojure.java.shell]))
 
 pandoc/!exec-fn
