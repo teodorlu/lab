@@ -86,3 +86,7 @@ pandoc/!exec-fn
 ;;
 ;; I wonder how much of a bribe https://github.com/rorokimdim (Amit Shrestha)
 ;; would need to be willing to help with this?
+;;
+;; We could ask him directly. He's on the Clojurians Slack:
+;;
+;;   https://clojurians.slack.com/archives/C06MAR553/p1644786915896299
