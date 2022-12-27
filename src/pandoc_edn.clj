@@ -34,7 +34,9 @@ pandoc/!exec-fn
   (slurp (:out (apply babashka.process/process {:in s}
                       "pandoc" args))))
 
-(pandoc-exec-fn-bb-process "Good morning!" ["--from" "markdown" "--to" "html"])
+(comment
+  (pandoc-exec-fn-bb-process "Good morning!" ["--from" "markdown" "--to" "html"]))
+;; comment out to make this namespace compile on clerk.garden
 
 ;; with `clojure.java.shell`:
 
@@ -44,9 +46,38 @@ pandoc/!exec-fn
   (let [cmd (concat ["pandoc"] args [:in s])]
     (:out (apply clojure.java.shell/sh cmd))))
 
-(pandoc-exec-fn-clojure-java-shell "Good morning!" ["--from" "markdown" "--to" "html"])
+(comment
+  (pandoc-exec-fn-clojure-java-shell "Good morning!" ["--from" "markdown" "--to" "html"]))
+;; comment out to make this namespace compile on clerk.garden
 
 ;; with both libraries side-by-side, I prefer `babashka.process`. No funny
 ;; `concat`, no function keyword arguments. Option map, then args. Simple.
 
 (reset! pandoc/!exec-fn pandoc-exec-fn-bb-process)
+
+;; ... aaand this doesn't work on the clerk runner.
+;; becuase it the clerk runner doesn't provide a pandoc binary.
+;;
+;; Apparently, both Nextjournal folks and borkdude are interested in a pandoc
+;; pod for clojure. More details on Clojurians Slack:
+;;
+;;   https://clojurians.slack.com/archives/C035GRLJEP8/p166619657350352
+;;
+;; Pandoc source:
+;;
+;;   https://github.com/jgm/pandoc
+;;
+;; Rotokim/stash is a Haskell tool with native babashka pod support:
+;;
+;;   https://github.com/rorokimdim/stash/tree/f07f90316531cb0b3eafaa481ab72b8ca59525f6/src/BabashkaPod.hs
+;;
+;; Rough draft to get this working:
+;;
+;;  1. Rip out hair getting an up-to-date Haskell environment working
+;;  2. Slash out parts of BabashkaPod.hs from stash to try to get something working
+;;  3. Provide bencode / POD API
+;;  4. Rip out remaining hair trying to figure out how to get multi-target Haskell compilation working
+;;
+;;      (or steal more from rorokimdim, see
+;;      https://github.com/rorokimdim/stash/tree/f07f90316531cb0b3eafaa481ab72b8ca59525f6/.github/workflows/release.yml
+;;      )
