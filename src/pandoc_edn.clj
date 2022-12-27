@@ -1,7 +1,7 @@
 (ns pandoc-edn
   (:require [teodorlu.pandoc.alpha2 :as pandoc]))
 
-pandoc/!runner
+pandoc/!exec-fn
 
 (comment
   ;; perhaps
