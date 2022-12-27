@@ -83,3 +83,6 @@ pandoc/!exec-fn
 ;;      (or steal more from rorokimdim, see
 ;;      https://github.com/rorokimdim/stash/tree/f07f90316531cb0b3eafaa481ab72b8ca59525f6/.github/workflows/release.yml
 ;;      )
+;;
+;; I wonder how much of a bribe https://github.com/rorokimdim (Amit Shrestha)
+;; would need to be willing to help with this?
