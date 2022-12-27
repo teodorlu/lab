@@ -1,7 +1,9 @@
 {:deps {nextjournal/clerk {:git/url "https://github.com/nextjournal/clerk"
-                           :git/sha "8f376762847bc1728b12679111b09c5943a70990"}
+                           :git/sha "6609765bcd64fca51f8fdae0800aa93419bfc058"}
         clojure2d/clojure2d {:mvn/version "1.4.4"}
-        generateme/fastmath {:mvn/version "2.1.8"}}
+        generateme/fastmath {:mvn/version "2.1.8"}
+        teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
+                             :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
