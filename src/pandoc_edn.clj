@@ -1,3 +1,5 @@
+;; # `pandoc-edn`: an intermediate representation for rich text
+
 (ns pandoc-edn
   (:require [teodorlu.pandoc.alpha2 :as pandoc]
             [babashka.process]
@@ -6,8 +8,8 @@
 ;; Go to the latest version of this notebook:
 ;;
 ;;   https://github.clerk.garden/teodorlu/clerk-stuff?update=1
-
-;; # `pandoc-edn`: an intermediate representation for rich text
+;;
+;; -----
 ;;
 ;; Endgame: provide a nice, idiomatic Clojure interface to pandoc.
 ;;
