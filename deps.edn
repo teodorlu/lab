@@ -1,9 +1,8 @@
-{:deps {nextjournal/clerk {:git/url "https://github.com/nextjournal/clerk"
-                           :git/sha "6609765bcd64fca51f8fdae0800aa93419bfc058"}
-        teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
+{:deps {teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
         babashka/fs {:mvn/version "0.2.12"}
-        babashka/process {:mvn/version "0.4.14"}}
+        babashka/process {:mvn/version "0.4.14"}
+        io.github.nextjournal/clerk {:mvn/version "0.12.707"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
