@@ -1,8 +1,10 @@
 {:deps {teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
-        babashka/fs {:mvn/version "0.2.12"}
+        babashka/fs {:mvn/version "0.2.14"}
         babashka/process {:mvn/version "0.4.14"}
-        io.github.nextjournal/clerk {:mvn/version "0.12.707"}}
+        io.github.nextjournal/clerk {:mvn/version "0.12.707"}
+        com.github.seancorfield/next.jdbc {:mvn/version "1.3.847"}
+        org.xerial/sqlite-jdbc {:mvn/version "3.40.0.0"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
