@@ -213,3 +213,11 @@
 ;; https://en.wikipedia.org/wiki/Wikipedia:10,000_most_common_passwords
 ;;
 ;; Try it yourself! 😊
+
+^{:nextjournal.clerk/visibility {:code :hide
+                                 :result :hide}}
+(comment
+  ;; To update this notebook on Clerk, visit:
+  ;;
+  ;; https://github.clerk.garden/teodorlu/clerk-stuff?update=1
+  )
