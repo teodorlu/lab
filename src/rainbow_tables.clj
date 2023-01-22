@@ -203,3 +203,13 @@
 ;;
 ;; But at least you now know some examples of what can go wrong when you push
 ;; ahead without considering how you're securing user data!
+
+;; ## Future work
+;;
+;; Above, we computed the hash of all three letter passwords using the letters `abceot`.
+;; When humans create their passwords, we can do better!
+;; For instance, we can start with a list of common passwords:
+;;
+;; https://en.wikipedia.org/wiki/Wikipedia:10,000_most_common_passwords
+;;
+;; Try it yourself! 😊
