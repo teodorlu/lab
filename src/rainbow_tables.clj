@@ -130,7 +130,8 @@
 
 (setup-schema)
 
-;; Now, let's create that rainbow table.
+;; We have a table!
+;; Let's put in some values.
 
 ;; Nextjournal happs to be paying for the infrastructure that builds this document.
 ;; So we're going to avoid generating really big rainbow tables on each build.
