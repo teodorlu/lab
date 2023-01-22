@@ -104,7 +104,7 @@
 ;; Just -- the type of the hash is a string, not binary data.
 ;; And strings are easy to show.
 ;;
-;; Digresjon done!
+;; Digression completed!
 ;;
 ;; We can use our hash function like this:
 
