@@ -227,5 +227,4 @@
                                                          "/src/rainbow_tables.html"
                                                          )}
                        "view this document"]
-               ;; dummy change
                "."]))
