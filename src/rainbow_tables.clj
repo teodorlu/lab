@@ -215,10 +215,6 @@
 ;;
 ;; Try it yourself! 😊
 
-^{:nextjournal.clerk/visibility {:code :hide
-                                 :result :hide}}
-(comment
-  ;; To update this notebook on Clerk, visit:
-  ;;
-  ;; https://github.clerk.garden/teodorlu/clerk-stuff?update=1
-  )
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/html [:a {:href "https://github.clerk.garden/teodorlu/clerk-stuff?update=1"}
+             "Rebuild this document."])
