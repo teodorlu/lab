@@ -119,7 +119,9 @@
 
 ;; Nå kan vi lage oss en regnbuetabell.
 
-(let [alphabet "abcdefghijklmnopqrstuvwxyz"]
+;; Edit: reduce alphabet size to the minimum to avoid build timeout
+
+(let [alphabet "abceot"]
   (with-open [conn (next.jdbc/get-connection (datasource))]
     (next.jdbc/with-transaction [tx conn]
       (doseq [a alphabet
@@ -177,7 +179,7 @@
 ;; Men det gjelder bare når:
 ;;
 ;; 1. Passordet er tre bokstaver langt
-;; 2. Passordet inneholder bare små latinske bokstaver: abcdefghijklmnopqrstuvw
+;; 2. Passordet kan kun inneholde disse bokstavene: abceot
 ;; 3. Hashfunksjonen er hexdigest(sha1sum(passordet))
 ;; 4. Og passord saltes ikke.
 ;;
