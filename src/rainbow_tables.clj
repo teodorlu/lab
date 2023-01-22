@@ -44,7 +44,7 @@
             [babashka.process]
             [clojure.string :as str]))
 
-;; ## A rainbow table is a database that maps hash(password) to password.
+;; ## A table of hash(password) and password
 ;;
 ;; I'm going to store my rainbow table in SQLite. To connect to the SQLite database, I need a datasource.
 
@@ -112,7 +112,7 @@
  (sha1sum-digest "cat")
  (sha1sum-digest "teo")]
 
-;; ## We store passord and hash(passord) in a database table.
+;; ## Let's precompute some hashes
 ;;
 ;; The table has two columns:
 ;;
@@ -149,7 +149,7 @@
                  " ON CONFLICT (sha1sum_digest) DO UPDATE SET sha1sum_digest=?")
             abc digest digest]))))))
 
-;; ## We can use the rainbow table as a function from hash to password!
+;; ## A function from hash to password
 ;;
 ;; Here are the first couple of hash(password), password pairs:
 
@@ -204,7 +204,7 @@
 ;; But at least you now know some examples of what can go wrong when you push
 ;; ahead without considering how you're securing user data!
 
-;; ## Future work
+;; ## Using common passwords
 ;;
 ;; Above, we computed the hash of all three letter passwords using the letters `abceot`.
 ;; When humans create their passwords, we can do better!
