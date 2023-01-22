@@ -20,3 +20,6 @@ pom.xml.asc
 # Clerk
 /.clerk/
 /public/
+
+# Teodor
+/rainbow-table.sqlite
