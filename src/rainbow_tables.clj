@@ -32,7 +32,7 @@
 ;;
 ;; If we were to make our table harder to crack, we would make different choices:
 ;;
-;; 1. En slower hash function made for hashing passwords
+;; 1. A slower hash function made for hashing passwords
 ;; 2. Passord must be at least ten characters, and can contain non-ascii letters
 ;; 3. Store hash(passord+salt), not hash(passord)
 
