@@ -44,7 +44,7 @@
             [babashka.process]
             [clojure.string :as str]))
 
-;; ## A table of hash(password) and password
+;; ## A table of passwords and hashes
 ;;
 ;; I'm going to store my rainbow table in SQLite. To connect to the SQLite database, I need a datasource.
 
@@ -112,7 +112,7 @@
  (sha1sum-digest "cat")
  (sha1sum-digest "teo")]
 
-;; ## Let's precompute some hashes
+;; ## Precomputing hashes
 ;;
 ;; The table has two columns:
 ;;
