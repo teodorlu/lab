@@ -216,5 +216,5 @@
 ;; Try it yourself! 😊
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
-(clerk/html [:a {:href "https://github.clerk.garden/teodorlu/clerk-stuff?update=1"}
-             "Rebuild this document."])
+(let [href-rebuild "https://github.clerk.garden/teodorlu/clerk-stuff?update=1"]
+  (clerk/html [:p "Document out of date? Force a " [:a {:href href-rebuild} "rebuild"] "!"]))
