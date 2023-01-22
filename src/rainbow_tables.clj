@@ -138,7 +138,7 @@
 
 (let [alphabet "abceot"]                    ; small alphabet -> fast
   (with-open [conn (next.jdbc/get-connection (datasource))]
-    (next.jdbc/with-transaction [tx conn]   ; in a transaction -> fast
+    (next.jdbc/with-transaction [tx conn]   ; single transaction -> fast
       (doseq [a alphabet
               b alphabet
               c alphabet]
