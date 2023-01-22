@@ -3,8 +3,8 @@
 ;; > DISCLAIMER: Rainbow tables are more complicated then what I explain in this document.
 ;; > For a full depth introduction to rainbow tables, please read the [WIkipedia article].
 ;; > For a simplified introduction with specific examples, please keep reading.
-;;
-;; [wikipedia-article]: https://en.wikipedia.org/wiki/Rainbow_table
+;; >
+;; > [wikipedia-article]: https://en.wikipedia.org/wiki/Rainbow_table
 ;;
 ;; To crack passwords, you can use a rainbow table.
 ;; A rainbow table has two columns: password, and cryptographic hash of the password.
