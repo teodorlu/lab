@@ -222,9 +222,5 @@
 (let [href-rebuild "https://github.clerk.garden/teodorlu/clerk-stuff?update=1"
       current-git-hash (-> (babashka.process/shell "git rev-parse HEAD" {:out :string}) :out (str/trim))]
   (clerk/html [:p "Document out of date? Force a " [:a {:href href-rebuild} "rebuild"] "!"
-               " or " [:a {:href (str "https://github.clerk.garden/teodorlu/clerk-stuff/commit/"
-                                                         current-git-hash
-                                                         "/src/rainbow_tables.html"
-                                                         )}
-                       "view this document"]
-               "."]))
+               (comment " or " [:a {:href (str "https://github.clerk.garden/teodorlu/clerk-stuff/commit/" current-git-hash "/src/rainbow_tables.html")} "view this document"] ".")
+               ]))
