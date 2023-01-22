@@ -1,31 +1,40 @@
-;; # Regnbuetabeller
+;; # Rainbow tables
 ;;
-;; https://en.wikipedia.org/wiki/Rainbow_table
+;; > DISCLAIMER: Rainbow tables are more complicated then what I explain in this document.
+;; > For a full depth introduction to rainbow tables, please read the [WIkipedia article].
+;; > For a simplified introduction with specific examples, please keep reading.
 ;;
-;; Hvis du skal cracke passord, kan du bruke en "rainbow table".
-;; Jeg synes ordet "regnbuetabell" er kulere, så jeg kommer til å snakke om regnbuetabeller.
+;; [wikipedia-article]: https://en.wikipedia.org/wiki/Rainbow_table
 ;;
-;; En regnbuetabell er en tabell med to kolonner: passord og en kryptografisk hash av passordet.
-;; For å beskytte seg mot regnbuetabell-angrep, bruker man en "salt".
-;; Man "salter passordet sitt" vet ikke å hashe passordet, men å hashe passord + tilfeldig lang string, "salt".
+;; To crack passwords, you can use a rainbow table.
+;; A rainbow table has two columns: password, and cryptographic hash of the password.
+;; To protect against rainbow table attacks, you can use a salt.
 ;;
-;;    mittpassord = "megabrøl"
+;; By "salting the password", you don't store the hash of the password in the database.
+;; The salt is a long, random string.
+;;
+;;    mypassword = "kaladinrocks"
 ;;    salt = "da39a3ee5e"
 ;;    hash(string_concat(mittpassord, salt))
 ;;
-;; så lagrer man både salt og hash(passord + salt) i tabellen.
+;; then store both salt and hash(password + salt) in your table.
 ;;
-;; Hvis man lagrer hash(passord) direkte, kan man finne ut passord ved en stor tabell over hashen av strenger.
-;; Sånne tabeller kan du laste ned fra Internett.
-;; Da får du feks en 5 GB stor tekstfil.
+;; If you store hash(password) directly, you make it easier for a malicious actor to find user passwords from your table.
+;; That malicious actor can precompute a bunch of password hashes, and look up whether there's a match.
+;; You can find tables like that on the internet, for instance as a 5 GB text file.
 ;;
-;; Nå skal vi lage en liten regnbuetabell, og bruker den til å "knekke" et passord.
-;; For å unngå masse venting, bruker vi svært korte passord (tre tegn) og en usikker men rask hashefunksjon, SHA-1.
-;; Skulle vi gjort dette vanskelig å knekke, hadde vi gjort andre valg:
+;; We're going to make a small rainbow table, and use it to "crack" a password.
+;; To avoid lots of wainting, we're going to stick to passwords that are easy to crack:
 ;;
-;; 1. En tyngre kryptografisk hashfunksjon
-;; 2. Passord på minst ti tegn med tegn og norske bokstaver, ikke bare latinske
-;; 3. Lagret hash(passord+salt) i tabellen, ikke hash(passord)
+;; 1. Passwords are very short
+;; 2. Passwords use only lowercase english character
+;; 3. We use a quite fast hash function: SHA-1
+;;
+;; If we were to make our table harder to crack, we would make different choices:
+;;
+;; 1. En slower hash function made for hashing passwords
+;; 2. Passord must be at least ten characters, and can contain non-ascii letters
+;; 3. Store hash(passord+salt), not hash(passord)
 
 ^{:nextjournal.clerk/toc true}
 (ns rainbow-tables
@@ -35,10 +44,9 @@
             [babashka.process]
             [clojure.string :as str]))
 
-;; ## En regnbuetabell er en database som mapper hash til passord.
+;; ## A rainbow table is a database that maps hash(password) to password.
 ;;
-;; Jeg bruker sqlite. Så jeg lager meg en funksjon `datasource` som lar meg
-;; referere til en SQLite-fil
+;; I'm going to store my rainbow table in SQLite. To connect to the SQLite database, I need a datasource.
 
 (do
   (def ^:private db-file "rainbow-table.sqlite")
@@ -46,30 +54,33 @@
   (defn datasource []
     (next.jdbc/get-datasource {:dbtype "sqlite" :dbname db-file})))
 
-;; , og en funksjon `reset-db!` som sletter databasen og lar meg starte fra
-;; scratch.
+;; , and I'm making a `reset-db!` function for REPL usage -- it lets me delete
+;; the database and start from scratch in case I mess up the schema.
 
 (do
   (defn reset-db! []
     (babashka.fs/delete-if-exists db-file))
 
   (comment
-    ;; Kjør denne for å slette databasen og starte på nytt:
+    ;; Run to delete the database and start from scratch:
     (reset-db!)
     ))
 
-;; Jeg kommer til å bruke `hexdigest(sha1(passord))` som hash-funksjon.
-;; `sha1sum` er ofte tilgjengelig som en systemkommando. Du kan bruke den sånn:
+;; I'm going to use `hexdigest(sha1(password))` as hash function.
+;; `sha1sum` is often available as a system command.
+;; You can use `sha1sum` like this:
 ;;
-;;    $ echo "abc" | sha1sum
-;;    03cfd743661f07975fa2f1220c5194cbaff48451  -
+;;    $ echo -n "abc" | sha1sum
+;;    a9993e364706816aba3e25717850c26c9cd0d89d  -
 ;;    $ echo "cat" | sha1sum
-;;    8f6abfbac8c81b55f9005f7ec09e32d29e40eb40  -
-;;    $ echo "teo" | sha1sum
-;;    afe5d9ddc17f73b8ecf9558daf0ab32c4d544208  -
+;;    9d989e8d27dc9e0ec3389fc855f142c3d40f0c50  -
+;;    $ echo -n "teo" | sha1sum
+;;    437a1c14efaa8e9881ef6bb077411dc1d24cb4c0  -
 ;;
-;; Jeg bruker [babashka/process][babashka-process] for å kalle systemprosesser
-;; fra Clojure.
+;; We use `echo -n` to hash "abc", and not "abc\n".
+;; Try it yourself, and see if you get a different hash!
+
+;; We'll use [babashka/process][babashka-process] to call system processes from Clojure.
 ;;
 ;; [babashka-process]: https://github.com/babashka/process
 
@@ -80,31 +91,33 @@
       (str/split #" ")
       first))
 
-;; Digresjon.
+;; Digression.
 ;;
-;; Teknisk bruker vi en hex-digest av sha1-hashen til passordet. Men en
-;; hex-digest er lettere å jobbe med enn binærdata. Og
+;; Technically, we're using the hex digest of the sha 1 hash of the password.
+;; But the hex digest is a string - and is easier to visualize than binary data.
+;; And
 ;;
 ;;    (fn [password]
 ;;      (hex-digest (hash password)))
 ;;
-;; er (faktisk) også en gyldig hash-funksjon! Bare at typen til hashen er
-;; tekst (string), ikke binærdata. Og strings er lettere å vise fram.
+;; is a valid hash function!
+;; Just -- the type of the hash is a string, not binary data.
+;; And strings are easy to show.
 ;;
-;; Digresjon slutt!
+;; Digresjon done!
 ;;
-;; Vi kan bruke hash-funksjonen vår sånn:
+;; We can use our hash function like this:
 
 [(sha1sum-digest "abc")
  (sha1sum-digest "cat")
  (sha1sum-digest "teo")]
 
-;; ## Vi lagrer passord og hash(passord) i en databasetabell.
+;; ## We store passord and hash(passord) in a database table.
 ;;
-;; Tabellen trenger to kolonner:
+;; The table has two columns:
 ;;
-;; - `password`: passordet
-;; - `sha1sum_digest`: hash av passordet
+;; - `password`: the password
+;; - `sha1sum_digest`: the password hash
 ;;
 
 (defn setup-schema []
@@ -117,17 +130,18 @@
 
 (setup-schema)
 
-;; Nå kan vi lage oss en regnbuetabell.
+;; Now, let's create that rainbow table.
 
-;; Edit: reduce alphabet size to the minimum to avoid build timeout
+;; Nextjournal happs to be paying for the infrastructure that builds this document.
+;; So we're going to avoid generating really big rainbow tables on each build.
 
-(let [alphabet "abceot"]
+(let [alphabet "abceot"]                    ; small alphabet -> fast
   (with-open [conn (next.jdbc/get-connection (datasource))]
-    (next.jdbc/with-transaction [tx conn]
+    (next.jdbc/with-transaction [tx conn]   ; in a transaction -> fast
       (doseq [a alphabet
               b alphabet
               c alphabet]
-        (let [abc (str a b c)
+        (let [abc (str a b c)               ; short passwords -> fast
               digest (sha1sum-digest abc)]
           (next.jdbc/execute!
            tx
@@ -135,9 +149,9 @@
                  " ON CONFLICT (sha1sum_digest) DO UPDATE SET sha1sum_digest=?")
             abc digest digest]))))))
 
-;; ## Vi kan bruke regnbuetabellen som en funksjon fra hash til passord!
-
-;; Her er de første verdiene fra tabellen:
+;; ## We can use the rainbow table as a function from hash to password!
+;;
+;; Here are the first couple of hash(password), password pairs:
 
 (let [_invalidate-cache 7258
       ds (datasource)]
@@ -146,7 +160,7 @@
                   conn
                   ["SELECT * FROM rainbowtable ORDER BY sha1sum_digest LIMIT 20"]))))
 
-;; Hvor mange passord har vi regnet ut hashen til?
+;; How many password hashes have we stored?
 
 (let [_invalidate-cache 7006
       ds (datasource)]
@@ -174,18 +188,18 @@
    {"hash(passord)" h
     "passord" (:rainbowtable/password (guess-password {:sha1sum-digest h}))}))
 
-;; Voilà! Vi kan nå slå opp passordet til folk hvis vi har hashen.
+;; Voilà! We can now lookup people's passwords if we have the password hash.
 ;;
-;; Men det gjelder bare når:
+;; But there's some limitations:
 ;;
-;; 1. Passordet er tre bokstaver langt
-;; 2. Passordet kan kun inneholde disse bokstavene: abceot
-;; 3. Hashfunksjonen er hexdigest(sha1sum(passordet))
-;; 4. Og passord saltes ikke.
+;; 1. The password must be three characters long
+;; 2. Passwords can only be created out of these letters: abceot
+;; 3. The hash function is hexdigest(sha1(password))
+;; 4. Passwords are not salted.
 ;;
-;; Det er vanskelig å ikke gjøre noe feil når man finner opp et ad-hoc system
-;; for sikring av brukerkontoer, uten å kunne informasjonssikkerhet. Og det er
-;; ikke bare disse feilene man kan gjøre heller.
+;; It's easy to make a mistake when you roll your own system for securing user
+;; accounts without experience in information security.
+;; And there are plenty of pitfalls we haven't touched.
 ;;
-;; Men nå vet du i det minste litt om hva som kan gå galt hvis du peiser på uten
-;; å tenke på hvordan du sikrer dataen til brukerne dine!
+;; But at least you now know some examples of what can go wrong when you push
+;; ahead without considering how you're securing user data!
