@@ -1,9 +1,12 @@
+;; # SI Units in Clojure
+;;
+;; Idea: try to get something ergonomic / idiomatic working on its own.
+;; Then consider how this could integrate with SICMUtils (https://github.com/mentat-collective/emmy/issues/46).
+
 (ns siunit
   (:refer-clojure :exclude [+ * /])
   (:require [teodorlu.siunit.alpha1 :as siunit :refer [+ * /]]
             [teodorlu.siunit.alpha1.metric-prefix :refer [k m]]))
-
-;; In the spirit of SICMUtils, we try to make units work as you would want them with special operators.
 
 ;; Units are maps from base units to their exponent.
 
