@@ -22,3 +22,7 @@
   (/
    (* force length)
    k N))
+
+;; There's also a reader literal:
+
+#siunit [30 :kg]
