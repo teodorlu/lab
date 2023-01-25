@@ -26,3 +26,15 @@
 ;; There's also a reader literal:
 
 #siunit [30 :kg]
+
+;; The reader literal interprets keywords as SI base units, numbers as unitless numbers and maps as unit exponent maps.
+
+#siunit :m
+
+#siunit 20
+
+#siunit {:m 2}
+
+;; The vector form multiplies its arguments.
+
+#siunit [30 :kg {:m -2}]
