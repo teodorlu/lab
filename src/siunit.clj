@@ -16,7 +16,7 @@
       length (* 30 m :m)]
   (* force length))
 
-;; Let's ask for that number in kilo Newtons.
+;; Let's ask for that number in kN.
 (let [force (* 12 k N)
       length (* 30 m :m)]
   (/
