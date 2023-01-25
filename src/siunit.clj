@@ -38,3 +38,5 @@
 ;; The vector form multiplies its arguments.
 
 #siunit [30 :kg {:m -2}]
+
+;; To update Clerk Garden: https://github.clerk.garden/teodorlu/clerk-stuff?update=1
