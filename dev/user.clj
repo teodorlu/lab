@@ -6,7 +6,7 @@
 
 (comment
   ;; start without file watcher, open browser when started
-  (clerk/serve! {:browse? true :portk clerk-port})
+  (clerk/serve! {:browse? true :port clerk-port})
 
   (clerk/clear-cache!)
 

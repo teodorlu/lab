@@ -1,8 +1,24 @@
 (ns siunit
-  (:refer-clojure :exclude [+ *])
-  (:require [teodorlu.siunit.alpha1 :as siunit :refer [+ *]]
+  (:refer-clojure :exclude [+ * /])
+  (:require [teodorlu.siunit.alpha1 :as siunit :refer [+ * /]]
             [teodorlu.siunit.alpha1.metric-prefix :refer [k m]]))
 
 (def N {:kg 1 :m 1 :s -2})
 
-(* 12 N 3 :m)
+;; Since we coerce into SI Units, we can do funny stuff like this:
+
+(* 12 k N :m
+   30 m :m)
+
+;; Or be more explicit:
+
+(let [force (* 12 k N :m)
+      length (* 30 m :m)]
+  (* force length))
+
+;; Let's ask for that number in kilo Newtons.
+(let [force (* 12 k N)
+      length (* 30 m :m)]
+  (/
+   (* force length)
+   k N))

@@ -6,7 +6,7 @@
         com.github.seancorfield/next.jdbc {:mvn/version "1.3.847"}
         org.xerial/sqlite-jdbc {:mvn/version "3.40.0.0"}
         io.github.teodorlu/siunit.alpha1 {:git/url "https://github.com/teodorlu/siunit.alpha1"
-                                          :git/sha "f72934757dad9e54892566909b79bc2c92178c8e"}}
+                                          :git/sha "9ec8a1f01ccd4d4dc038a52467c8b2576f6dc4c2"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
