@@ -48,23 +48,16 @@
 ;;
 ;; I'm going to store my rainbow table in SQLite. To connect to the SQLite database, I need a datasource.
 
-(do
-  (def ^:private db-file "rainbow-table.sqlite")
+(def ^:private db-file "rainbow-table.sqlite")
 
-  (defn datasource []
-    (next.jdbc/get-datasource {:dbtype "sqlite" :dbname db-file})))
+(defn datasource []
+  (next.jdbc/get-datasource {:dbtype "sqlite" :dbname db-file}))
 
 ;; , and I'm making a `reset-db!` function for REPL usage -- it lets me delete
 ;; the database and start from scratch in case I mess up the schema.
 
-(do
-  (defn reset-db! []
-    (babashka.fs/delete-if-exists db-file))
-
-  (comment
-    ;; Run to delete the database and start from scratch:
-    (reset-db!)
-    ))
+(defn reset-db! []
+  (babashka.fs/delete-if-exists db-file))
 
 ;; I'm going to use `hexdigest(sha1(password))` as hash function.
 ;; `sha1sum` is often available as a system command.
