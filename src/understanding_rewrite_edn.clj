@@ -1,4 +1,4 @@
-;; # Understanding `rewrite-edn`: working with data, contributing to open source, and why you should care about Babashka
+;; # Making a contribution to `babashka/neil`
 ;;
 ;; Working with data, contributing to open source, and why you should care about Babashka and Neil.
 
@@ -188,6 +188,13 @@
 
 ;; We can definitively conclude that the weird behavior happens in `assoc-project-meta!`!
 
+;; ## Remaining work
+;;
+;; 1. Create a reproducible example of what we're actually doing with rewrite-edn in `assoc-project-meta!`
+;; 2. Create a reproducible example of using `rewrite-edn` to achieve what we want.
+;; 3. Make the required changes in `neil`
+;; 4. Test
+;; 5. PR!
 
 
 
