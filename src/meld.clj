@@ -181,7 +181,11 @@
     (reset! the-filesystem (make-fuse-filesystem))
     ;; args to mount: this path blocking? debug? options -- this is
     ;; currently set to block, so don't call it interactively!
-    (.mount @the-filesystem (-> mountpoint File. .toURI Paths/get) true false (into-array String []))))
+    (.mount @the-filesystem ; this
+            (-> mountpoint File. .toURI Paths/get) ; path
+            true ; blocking?
+            false ; debug?
+            (into-array String [])))) ; options
 
 (defn umount! []
   (.umount @the-filesystem))
@@ -202,10 +206,7 @@
 (comment
   ;; repl helpers -- Teodor
 
-  (mount! {:mountpoint "/tmp/meld"})
   (umount!)
-
-  (deref the-filesystem)
 
   (future
     (run {:mountpoint "/tmp/meld"}))

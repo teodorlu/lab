@@ -3,7 +3,8 @@
 ^{:nextjournal.clerk/toc true
   :nextjournal.clerk/visibility {:code :hide}}
 
-(ns a-vfs)
+(ns a-vfs
+  (:require meld))
 
 ;; I'm working from this starting point by Jack Rusher:
 ;;
@@ -20,3 +21,23 @@
 ;;
 ;; That's the idea.
 ;; Run it, and it interacts with your system natively.
+
+@meld/the-filesystem
+
+@meld/ersatz-fs
+
+(comment
+  (defn create-root-folder! [name]
+    (swap! meld/ersatz-fs
+           (fn [fs]
+             (-> fs
+                 (assoc (str "/" name) {:contents #{} :type :dir})
+                 (update-in ["/" :contents] conj name)))))
+
+  (create-root-folder! "mythings")
+  (create-root-folder! "items")
+
+  (swap! meld/ersatz-fs assoc "/posts" {:contents #{} :type :dir})
+  (swap! meld/ersatz-fs update-in ["/" :contents] conj "posts")
+
+  )
