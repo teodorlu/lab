@@ -96,6 +96,8 @@
         0
         enoent-error))
 
+    ;; I can't get this to work properly on my Linux
+    ;; aaand I don't know how to approach it.
     (read [path buf size offset fi]
       (println "read: " path)
       (if-let [ent (@ersatz-fs path)]
