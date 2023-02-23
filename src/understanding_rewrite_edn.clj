@@ -1,4 +1,6 @@
-;; # Making a contribution to `babashka/neil`
+;; # Working with Babashka: shell meets Clojure
+;;
+;; Making a contribution to `babashka/neil`
 ;;
 ;; Working with data, contributing to open source, and why you should care about Babashka and Neil.
 
