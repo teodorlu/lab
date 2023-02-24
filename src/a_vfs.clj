@@ -46,7 +46,6 @@
 
 ;; but, how do I create a Byte Buffer?
 
-
 (defn str->bytes [s] (.getBytes s "UTF-8"))
 (defn bytes->str [byte-arr] (String. byte-arr "UTF-8"))
 
@@ -58,9 +57,19 @@
                                       :type :file})
                (update-in ["/" :contents] conj name)))))
 
-(create-root-file! "message.txt" "hei fra teodor")
+(let [message "hei fra teodor"
+      _ (create-root-file! "message.txt" message)
+      message-as-read (slurp "/tmp/meld/message.txt")]
+  [[:should= message message-as-read]
+   (when (not= message message-as-read) "This is bollocks!")])
 
-(slurp "/tmp/meld/message.txt")
+;; Questions.
+;;
+;; 1. How do I know whether the Clojure code works?
+;; 2. How do I know whether the Java code works?
+;;
+;; Also, I've done close to zero java interop from Clojure.
+;; I don't feel like I know what I'm doing.
 
 #_ "Trailing whitespace"
 ^{:nextjournal.clerk/visibility {:code :hide}}
