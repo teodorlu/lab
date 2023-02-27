@@ -42,7 +42,20 @@
 (let [dice-sides (vec (range 1 (inc 6)))]
   (convolute dice-sides (vec (reverse dice-sides))))
 
-(let [ones (vec (repeat 6 1))]
-  (convolute ones ones))
+(defn index-starting-at [start-at coll]
+  (vec (range start-at (+ (count coll) start-at))))
+
+(let [ones (vec (repeat 6 1))
+      convolution (convolute ones ones)]
+  (clerk/table {'index (index-starting-at 2 convolution)
+                'convolution convolution
+                'probability (mapv (fn [x] (/ x 36)) convolution)
+                'p2 (map (fn [x] (/ x 36)) convolution)}))
 
 ;; I think I made a mistake, where's the 7?
+;;
+;; Or not, I'm not really sue what I'm computing here.
+
+(let [ones (vec (repeat 6 1))
+      convolution (convolute ones ones)]
+  (map (fn [x] (/ x 36)) convolution))
