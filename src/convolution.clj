@@ -29,3 +29,20 @@
 (clerk/table (for [[u v expected] [[[1 2 3] [1] [1 2 3]]
                                    [[1 2 3] [10 20 30] [10 40 100 120 90]]]]
                {'u u 'v v 'expected expected 'actual (convolute u v)}))
+
+;; A: yes I am! 😁
+
+(clerk/html [:hr])
+
+;; Q: Am I able to sum dices using convolution?
+
+(let [dice-sides (vec (range 1 (inc 6)))]
+  (convolute dice-sides dice-sides))
+
+(let [dice-sides (vec (range 1 (inc 6)))]
+  (convolute dice-sides (vec (reverse dice-sides))))
+
+(let [ones (vec (repeat 6 1))]
+  (convolute ones ones))
+
+;; I think I made a mistake, where's the 7?
