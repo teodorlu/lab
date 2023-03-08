@@ -1,5 +1,5 @@
-#+title: Some Clerk stuff
+#+title: Teodor's Clojure lab
 
-Github: https://github.com/teodorlu/clerk-stuff
+Github: https://github.com/teodorlu/lab
 
-Clerk garden: https://github.clerk.garden/teodorlu/clerk-stuff
+Clerk garden: https://github.clerk.garden/teodorlu/lab
