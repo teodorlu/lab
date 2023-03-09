@@ -41,8 +41,9 @@
                (assoc (str "/" name) {:contents #{} :type :dir})
                (update-in ["/" :contents] conj name)))))
 
-(create-root-folder! "mythings")
-(create-root-folder! "items")
+(comment
+  (create-root-folder! "mythings")
+  (create-root-folder! "items"))
 
 ;; but, how do I create a Byte Buffer?
 
@@ -57,11 +58,12 @@
                                       :type :file})
                (update-in ["/" :contents] conj name)))))
 
-(let [message "hei fra teodor"
-      _ (create-root-file! "message.txt" message)
-      message-as-read (slurp "/tmp/meld/message.txt")]
-  [[:should= message message-as-read]
-   (when (not= message message-as-read) "This is bollocks!")])
+(comment
+  (let [message "hei fra teodor"
+        _ (create-root-file! "message.txt" message)
+        message-as-read (slurp "/tmp/meld/message.txt")]
+    [[:should= message message-as-read]
+     (when (not= message message-as-read) "This is bollocks!")]))
 
 ;; Questions.
 ;;
