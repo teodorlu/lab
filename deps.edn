@@ -4,6 +4,11 @@
         babashka/process {:mvn/version "0.4.15"}
         io.github.nextjournal/clerk {:sha "b2cb2144a89ab0e6c69a25ca5cc2d38f0c5672d9"
                                      ;; :mvn/version "0.12.707"
+                                     ;;
+                                     ;; I should perhaps rever to a stable, but
+                                     ;; I like the status indicator, so I'm
+                                     ;; staying on the exec-state branch for
+                                     ;; now.
                                      }
         com.github.seancorfield/next.jdbc {:mvn/version "1.3.847"}
         org.xerial/sqlite-jdbc {:mvn/version "3.40.0.0"}
