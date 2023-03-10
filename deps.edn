@@ -17,7 +17,7 @@
         borkdude/rewrite-edn {:mvn/version "0.4.6"}
         com.github.serceman/jnr-fuse {:mvn/version "0.5.4"}
         org.clojure/clojure {:mvn/version "1.11.1"}}
- :mvn/repos {"bintray" {:url "https://jcenter.bintray.com"}}
+ ;; :mvn/repos {"bintray" {:url "https://jcenter.bintray.com"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
