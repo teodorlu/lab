@@ -15,10 +15,10 @@
         io.github.teodorlu/siunit.alpha1 {:git/url "https://github.com/teodorlu/siunit.alpha1"
                                           :git/sha "9ec8a1f01ccd4d4dc038a52467c8b2576f6dc4c2"}
         borkdude/rewrite-edn {:mvn/version "0.4.6"}
-        ;; com.github.serceman/jnr-fuse {:mvn/version "0.5.4"}
+        com.github.serceman/jnr-fuse {:mvn/version "0.5.4"}
         org.clojure/clojure {:mvn/version "1.11.1"}
         org.babashka/cli {:mvn/version "0.6.48"}}
- ;; :mvn/repos {"bintray" {:url "https://jcenter.bintray.com"}}
+ :mvn/repos {"bintray" {:url "https://jcenter.bintray.com"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
