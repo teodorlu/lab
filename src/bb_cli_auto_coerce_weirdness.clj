@@ -5,5 +5,5 @@
 (clerk/table
  (for [example ["true" "false" ":abc" ":abc-def"]]
    {"example" example
-    "(auto-coerce example)" (cli/auto-coerce example)
+    "(auto-coerce example)" (clerk/code (pr-str (cli/auto-coerce example)))
     "(type (auto-coerce example))" (type (cli/auto-coerce example))}))
