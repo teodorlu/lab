@@ -4,10 +4,10 @@
 (def ^:private clerk-port
   7998)
 
-(comment
-  ;; start without file watcher, open browser when started
-  (clerk/serve! {:browse? true :port clerk-port})
+^{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
+(defn clerk-start! [] (clerk/serve! {:browse? true :port clerk-port}))
 
+(comment
   (clerk/clear-cache!)
 
   )
