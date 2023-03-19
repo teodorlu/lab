@@ -41,3 +41,36 @@
 
 (histogram-1 (roll-dice 400))
 (histogram-1 (roll-dice 4000))
+
+(frequencies (roll-dice 4000))
+(frequencies (roll-dice 40000))
+
+;; **near instant**:
+(frequencies (roll-dice 400000))
+
+;; **about a second**:
+(frequencies (roll-dice 4000000))
+(frequencies (roll-dice 5000000))
+
+(defn display-dice-sum
+  ([N] (display-dice-sum N {}))
+  ([N opts]
+   (let [d1 (roll-dice N)
+         d2 (roll-dice N)
+         dsum (f/+ d1 d2)
+         dsum-freq (frequencies dsum)]
+     (clerk/caption (clerk/tex (or (:label opts) (str "N = " N)))
+                    (clerk/vl {:data {:values (for [[throw freq] dsum-freq]
+                                                {"throw sum" throw "frequency" freq})}
+                               :mark :bar
+                               :encoding {:x {:field "throw sum"}
+                                          :y {:field "frequency" :type :quantitative}}
+                               :embed/opts {:actions false}})))))
+
+(->
+ (apply
+  clerk/row
+  (map (fn [exp] (display-dice-sum (f/pow 10 exp)
+                                   {:label (str "N = 10^" exp)}))
+       [1 2 3 4 5 6]))
+ (assoc :nextjournal/width :full))
