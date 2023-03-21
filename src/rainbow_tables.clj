@@ -48,7 +48,7 @@
 ;;
 ;; I'm going to store my rainbow table in SQLite. To connect to the SQLite database, I need a datasource.
 
-(def ^:private db-file "rainbow-table.sqlite")
+(def ^:private db-file "rainbow-tables.sqlite")
 
 (defn datasource []
   (next.jdbc/get-datasource {:dbtype "sqlite" :dbname db-file}))

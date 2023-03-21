@@ -22,5 +22,5 @@ pom.xml.asc
 /public/
 
 # Teodor
-/rainbow-table.sqlite
-/rainbow-table.sqlite-journal
+/rainbow-tables.sqlite
+/rainbow-tables.sqlite-journal
