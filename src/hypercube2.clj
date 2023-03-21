@@ -1,8 +1,15 @@
+;; # Latin hypercube sampling
+;;
+;; > Latin hypercube sampling (LHS) is a statistical method for generating a
+;; > near-random sample of parameter values from a multidimensional
+;; > distribution. The sampling method is often used to construct computer
+;; > experiments or for Monte Carlo integration.
+;;
+;; https://en.m.wikipedia.org/wiki/Latin_hypercube_sampling
+
 (ns hypercube2
   (:require
    [nextjournal.clerk :as clerk]))
-
-;; https://en.m.wikipedia.org/wiki/Latin_hypercube_sampling
 
 (defn randoms [N]
   (repeatedly N rand))
