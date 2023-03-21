@@ -2,6 +2,8 @@
   (:require
    [nextjournal.clerk :as clerk]))
 
+;; https://en.m.wikipedia.org/wiki/Latin_hypercube_sampling
+
 (defn randoms [N]
   (repeatedly N rand))
 
