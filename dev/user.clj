@@ -10,4 +10,6 @@
 (comment
   (clerk/clear-cache!)
 
+  (clerk-start!)
+
   )
