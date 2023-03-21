@@ -123,8 +123,7 @@
        [(str "CREATE TABLE IF NOT EXISTS rainbowtable"
              " (sha1sum_digest string UNIQUE, password string)")]))))
 
-(when-not (= (System/getenv "USER") "teodorlu")
-  (reset-db!))
+(reset-db!)
 (setup-schema)
 
 ;; We have a table!
