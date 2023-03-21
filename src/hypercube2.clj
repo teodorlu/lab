@@ -44,7 +44,9 @@
   (for [exp [2 3 4 5 6]]
     (let [N (Math/pow 10 exp)
           {:keys [duration result]} (timed #(hypercube-sample-single-variable N))]
-      {"N" {:pretty (list "^" 10 exp) :num N} "avg(sample(N))" (/ (reduce + result) N) "duration (ms)" duration}))))
+      {"N" {:pretty (list "^" 10 exp) :num N}
+       "avg(sample(N))" (/ (reduce + result) N)
+       "duration (ms)" duration}))))
 
 ;; ## Array-oriented dtype-next
 
@@ -74,4 +76,6 @@
   (for [exp [2 3 4 5 6]]
     (let [N (Math/pow 10 exp)
           {:keys [duration result]} (timed #(hypercube-sample-single-variable2-mean N))]
-      {"N" {:pretty (list "^" 10 exp) :num N} "avg(sample(N))" result "duration (ms)" duration}))))
+      {"N" {:pretty (list "^" 10 exp) :num N}
+       "avg(sample(N))" result
+       "duration (ms)" duration}))))
