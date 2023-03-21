@@ -1,7 +1,6 @@
 (ns hypercube2
   (:require
-   [nextjournal.clerk :as clerk]
-   [tech.v3.datatype.functional :as f]))
+   [nextjournal.clerk :as clerk]))
 
 (defn randoms [N]
   (repeatedly N rand))
