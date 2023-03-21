@@ -14,6 +14,13 @@
 (defn randoms [N]
   (repeatedly N rand))
 
+(defn timed [f]
+  (let [start (System/currentTimeMillis)
+        res (f)
+        end (System/currentTimeMillis)]
+    {:duration (- end start)
+     :result res}))
+
 (defn hypercube-sample-single-variable [N]
   (let [dz (/ 1 N)
         starting-points (->> (range N) (map (partial * dz)))
@@ -29,5 +36,5 @@
  (into []
   (for [exp [2 3 4 5 6]]
     (let [N (Math/pow 10 exp)
-          sample (hypercube-sample-single-variable N)]
-      {"N" {:pretty (list "^" 10 exp) :num N} "avg(sample(N))" (/ (reduce + sample) N)}))))
+          {:keys [duration result]} (timed #(hypercube-sample-single-variable N))]
+      {"N" {:pretty (list "^" 10 exp) :num N} "avg(sample(N))" (/ (reduce + result) N) "duration (ms)" duration}))))
