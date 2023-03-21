@@ -59,6 +59,8 @@
 (defn reset-db! []
   (babashka.fs/delete-if-exists db-file))
 
+
+
 ;; I'm going to use `hexdigest(sha1(password))` as hash function.
 ;; `sha1sum` is often available as a system command.
 ;; You can use `sha1sum` like this:
@@ -121,6 +123,8 @@
        [(str "CREATE TABLE IF NOT EXISTS rainbowtable"
              " (sha1sum_digest string UNIQUE, password string)")]))))
 
+(when-not (= (System/getenv "USER") "teodorlu")
+  (reset-db!))
 (setup-schema)
 
 ;; We have a table!
