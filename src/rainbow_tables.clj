@@ -53,14 +53,6 @@
 (defn datasource []
   (next.jdbc/get-datasource {:dbtype "sqlite" :dbname db-file}))
 
-;; , and I'm making a `reset-db!` function for REPL usage -- it lets me delete
-;; the database and start from scratch in case I mess up the schema.
-
-(defn reset-db! []
-  (babashka.fs/delete-if-exists db-file))
-
-
-
 ;; I'm going to use `hexdigest(sha1(password))` as hash function.
 ;; `sha1sum` is often available as a system command.
 ;; You can use `sha1sum` like this:
@@ -123,7 +115,7 @@
        [(str "CREATE TABLE IF NOT EXISTS rainbowtable"
              " (sha1sum_digest string UNIQUE, password string)")]))))
 
-(reset-db!)
+(babashka.fs/delete-if-exists db-file)
 (setup-schema)
 
 ;; We have a table!
