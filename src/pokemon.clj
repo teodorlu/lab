@@ -1,19 +1,10 @@
 (ns pokemon
   (:require
-   [nextjournal.clerk :as clerk]))
+   [nextjournal.clerk :as clerk]
+   [teodorlu.clerk-toolbelt :as hammertime]))
 
 ;; based on / inspired by ladymey's Tablecloth talk:
 
-(defn youtube-embed [youtube-id]
-  (let [default-size {:width 560 :height 315}
-        teodor-preferred-size (let [w 756]
-                                {:width w :height (* (/ w (:width default-size)) (:height default-size))})]
-    [:iframe (merge teodor-preferred-size
-                    {:src (str "https://www.youtube.com/embed/" youtube-id)
-                     :title "YouTube video player" :frameborder 0
-                     :allow "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                     :allowfullscreen true})]))
-
-(clerk/html (youtube-embed "a0T_d_N7wbg"))
+(clerk/html (hammertime/youtube-embed "a0T_d_N7wbg"))
 
 ;; full details on github: https://github.com/ladymeyy/tablecloth-talks-and-workshop

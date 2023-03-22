@@ -16,8 +16,9 @@
         scicloj/tablecloth {:mvn/version "6.103.1"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
-        io.github.teodorlu/teodorlu-clerk-utils {:git/url "https://github.com/teodorlu/teodorlu-clerk-utils"
-                                                 :git/sha "d42bab5e16e95ba458cf9dc4e733fd674a44407d"}}
+        io.github.teodorlu/clerk-toolbelt {:git/url "https://github.com/teodorlu/clerk-toolbelt"
+                                           :git/sha "bd5401b67e840c48012cca0019bb8b91a817909d"}
+        }
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
