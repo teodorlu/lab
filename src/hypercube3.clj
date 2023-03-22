@@ -74,13 +74,12 @@
                        :create-range (fn [N] (d/make-reader :int32 N idx))
                        :create-rand (fn [N] (hamf/double-array (hamf-rand-reducer N)))
                        }
-
                       ]]
           (let [N (Math/pow 10 6)
                 config (assoc config :N N)
                 {:keys [duration result]} (timed #(hypercube-sample-single-variable3-mean config))]
             {"config" (:name config)
-             "avg(sample(N))" result
+             "abs(0.5 - avg(sample(N)))" (Math/abs (- 0.5 result))
              "duration (ms)" duration})))))
 
 (comment
