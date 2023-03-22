@@ -1,7 +1,7 @@
 (ns pokemon
   (:require
    [nextjournal.clerk :as clerk]
-   [teodorlu.clerk-toolbelt :as hammertime]))
+   [teodorlu.clerk-hammertime :as hammertime]))
 
 ;; based on / inspired by ladymey's Tablecloth talk:
 
