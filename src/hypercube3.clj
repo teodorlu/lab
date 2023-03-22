@@ -4,8 +4,6 @@
    [tech.v3.datatype :as d]
    [tech.v3.datatype.functional :as f]))
 
-(System/getProperty "java.version")
-
 (vec (d/make-reader :int32 10 idx))
 
 (defn timed [f]
@@ -21,6 +19,8 @@
         small-randoms (f/* dz (create-rand N))
         randoms-ordered (f/+ starting-points small-randoms)]
     (f/mean randoms-ordered)))
+
+(System/getProperty "java.version")
 
 (clerk/table
  (into []
