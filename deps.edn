@@ -15,7 +15,9 @@
         org.xerial/sqlite-jdbc {:mvn/version "3.41.0.0"}
         scicloj/tablecloth {:mvn/version "6.103.1"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
-                             :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}}
+                             :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
+        io.github.teodorlu/teodorlu-clerk-utils {:git/url "https://github.com/teodorlu/teodorlu-clerk-utils"
+                                                 :git/sha "2099487d75f8aeb0e0d0466498b19cb3c9cf8907"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
