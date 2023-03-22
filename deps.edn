@@ -17,7 +17,7 @@
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
         io.github.teodorlu/teodorlu-clerk-utils {:git/url "https://github.com/teodorlu/teodorlu-clerk-utils"
-                                                 :git/sha "436db670291ab503a0bc5fd97054f1f7d7d8fa64"}}
+                                                 :git/sha "d42bab5e16e95ba458cf9dc4e733fd674a44407d"}}
  :paths ["src" "dev"]
  :aliases
  {:nextjournal/clerk
