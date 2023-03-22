@@ -4,6 +4,8 @@
    [tech.v3.datatype :as d]
    [tech.v3.datatype.functional :as f]))
 
+(System/getProperty "java.version")
+
 (vec (d/make-reader :int32 10 idx))
 
 (defn timed [f]
