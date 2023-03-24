@@ -10,7 +10,9 @@
 (ns correlation-howto
   (:require
    [nextjournal.clerk :as clerk]
-   [teodorlu.clerk-hammertime.montecarlo :as mc]))
+   [teodorlu.clerk-hammertime.montecarlo :as mc]
+   [tech.v3.datatype :as d]
+   [tech.v3.datatype.functional :as f]))
 
 (mc/histogram
  (->> (repeatedly 30 rand)
@@ -33,3 +35,36 @@
 ;; and
 ;;
 ;;   cov(X, Y) = E[ (X-[X])(Y-E[Y])]
+
+(f/- X (f/mean X))
+(f/- Y (f/mean Y))
+
+;; Covariance
+
+(f/mean
+ (f/*
+  (f/- X (f/mean X))
+  (f/- Y (f/mean Y))))
+
+;; Correlation
+
+(let [cov (f/mean
+           (f/*
+            (f/- X (f/mean X))
+            (f/- Y (f/mean Y))))]
+  (f// cov
+     (f/* (f/standard-deviation X)
+          (f/standard-deviation Y))))
+
+(defn cov [A B]
+  (f/mean
+   (f/*
+    (f/- X (f/mean A))
+    (f/- Y (f/mean B)))))
+
+(defn corr [A B]
+  (f// (cov A B)
+       (* (f/standard-deviation A)
+          (f/standard-deviation B))))
+
+(corr X Y)
