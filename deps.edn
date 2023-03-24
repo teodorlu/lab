@@ -14,7 +14,7 @@
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
         io.github.teodorlu/clerk-hammertime {:git/url "https://github.com/teodorlu/clerk-hammertime"
-                                             :git/sha "d727a3dad6a0f91278fe1644723af96295e21ea3"}
+                                             :git/sha "827357445a5f1dc51e7c5c2f08859f461c52220b"}
         ;; techascent/tech.ml.dataset {:mvn/version "7.000-beta-31"}
         }
  :paths ["src"#_ "dev"]
