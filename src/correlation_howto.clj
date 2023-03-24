@@ -18,3 +18,10 @@
       (map int)))
 
 (mc/histogram (mc/sample 50))
+
+(def N 1000)
+
+(def X (mc/sample N))
+(def Y (mc/sample N))
+
+;; now, how do we compute the correlation of X and Y?
