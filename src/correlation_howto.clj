@@ -24,3 +24,12 @@
 (def X (mc/sample N))
 (def Y (mc/sample N))
 
+(clerk/row (clerk/caption "X" (mc/histogram X)) (clerk/caption "Y" (mc/histogram Y)))
+
+;; from wikipedia:
+;;
+;;   corr(X, Y) = cov(X, y) / σ_X σ_Y
+;;
+;; and
+;;
+;;   cov(X, Y) = E[ (X-[X])(Y-E[Y])]
