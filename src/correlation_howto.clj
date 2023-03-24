@@ -16,3 +16,5 @@
  (->> (repeatedly 30 rand)
       (map (partial * 10))
       (map int)))
+
+(mc/histogram (mc/sample 50))
