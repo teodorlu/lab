@@ -9,18 +9,10 @@
 
 (ns correlation-howto
   (:require
-   [nextjournal.clerk :as clerk]))
+   [nextjournal.clerk :as clerk]
+   [teodorlu.clerk-hammertime.montecarlo :as mc]))
 
-(defn histogram
-  "histogram with automatic buckets, simply insert a list of values"
-  [values]
-  (clerk/vl {:data {:values (for [v values] {:x v})}
-             :mark :bar
-             :encoding {:x {:bin true
-                            :field :x}
-                        :y {:aggregate :count}}
-             :embed/opts {:actions false}}))
-
-(histogram (->> (repeatedly 30 rand)
-                (map (partial * 10))
-                (map int)))
+(mc/histogram
+ (->> (repeatedly 30 rand)
+      (map (partial * 10))
+      (map int)))
