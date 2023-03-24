@@ -1,4 +1,4 @@
-;; # How can we correlate to variables we sample from with monte carlo simulation?
+;; # How can we correlate two variables we sample from with monte carlo simulation?
 ;;
 ;; Let's try to simulate our way to an answer.
 ;; This is our approach:
