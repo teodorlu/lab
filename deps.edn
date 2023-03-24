@@ -15,7 +15,6 @@
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
         io.github.teodorlu/clerk-hammertime {:git/url "https://github.com/teodorlu/clerk-hammertime"
                                              :git/sha "d3917c3f5f4affa07b3c327fc63573516bd2ef1e"}
-        ;; techascent/tech.ml.dataset {:mvn/version "7.000-beta-31"}
         }
  :paths ["src"#_ "dev"]
  :aliases
