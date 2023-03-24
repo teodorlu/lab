@@ -1,7 +1,10 @@
 (ns pokemon
   (:require
    [nextjournal.clerk :as clerk]
-   [teodorlu.clerk-hammertime :as hammertime]))
+   [teodorlu.clerk-hammertime :as hammertime]
+   [tech.v3.datatype]
+   #_
+   [tablecloth.api :as tc]))
 
 ;; based on / inspired by ladymey's Tablecloth talk:
 

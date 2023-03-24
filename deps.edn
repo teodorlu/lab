@@ -11,12 +11,13 @@
         org.babashka/cli {:mvn/version "0.6.50"}
         org.clojure/clojure {:mvn/version "1.11.1"}
         org.xerial/sqlite-jdbc {:mvn/version "3.41.0.1"}
-        scicloj/tablecloth {:mvn/version "6.103.1"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
         io.github.teodorlu/clerk-hammertime {:git/url "https://github.com/teodorlu/clerk-hammertime"
-                                             :git/sha "d727a3dad6a0f91278fe1644723af96295e21ea3"}}
- :paths ["src" "dev"]
+                                             :git/sha "d727a3dad6a0f91278fe1644723af96295e21ea3"}
+        ;; techascent/tech.ml.dataset {:mvn/version "7.000-beta-31"}
+        }
+ :paths ["src"#_ "dev"]
  :aliases
  {:nextjournal/clerk
   {:exec-fn nextjournal.clerk/build!
