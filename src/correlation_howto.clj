@@ -25,3 +25,15 @@
 (def Y (mc/sample N))
 
 ;; now, how do we compute the correlation of X and Y?
+
+(defmacro defh [var & body]
+  `(do (def ~var ~@body)
+       (mc/histogram ~var)))
+
+(macroexpand-1 '(defh X (mc/sample 11)))
+
+(defh Z (mc/sample 100))
+
+(type Z)
+
+(type (defh W (mc/sample 10)))
