@@ -7,7 +7,7 @@
         com.github.serceman/jnr-fuse {:mvn/version "0.5.7"}
         io.github.nextjournal/clerk {:mvn/version "0.13.842"}
         io.github.teodorlu/clerk-hammertime {:git/url "https://github.com/teodorlu/clerk-hammertime"
-                                             :git/sha "d3917c3f5f4affa07b3c327fc63573516bd2ef1e"}
+                                             :git/sha "cbfc63949d1f2743b45f785cdb07d455d4748403"}
         io.github.teodorlu/siunit.alpha1 {:git/url "https://github.com/teodorlu/siunit.alpha1"
                                           :git/sha "9ec8a1f01ccd4d4dc038a52467c8b2576f6dc4c2"}
         org.babashka/cli {:mvn/version "0.6.50"}
