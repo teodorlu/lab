@@ -68,3 +68,30 @@
           (f/standard-deviation B))))
 
 (corr X Y)
+
+(corr (mc/sample 100) (mc/sample 100))
+(corr (mc/sample 100) (mc/sample 100))
+(corr (mc/sample 100) (mc/sample 100))
+(corr (mc/sample 100) (mc/sample 100))
+
+(corr (mc/sample 101) (mc/sample 100))
+
+^::clerk/no-cache
+(defn sample! [N]
+  (mc/sample N))
+
+(corr (sample! 100) (sample! 100))
+(corr (sample! 100) (sample! 100))
+(corr (sample! 100) (sample! 100))
+
+;; but ... it would be kinda nice to see
+
+(mc/histogram (sample! 100))
+(mc/histogram (sample! 100))
+(mc/histogram (sample! 100))
+
+;; perhaps I just want to keep the seed explicit all the time.
+;;
+;; 1. baseline sample all distributions.
+;;      provide a seed, and named variable names.
+;; 2. Then do it all with immutability.
