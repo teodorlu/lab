@@ -21,7 +21,7 @@
  :aliases
  {:nextjournal/clerk
   {:exec-fn nextjournal.clerk/build!
-   :exec-args {:paths ["src/*.clj"]}}
+   :exec-args {:paths ["src/*.clj" "experimental/*.clj"]}}
   :rainbow-tables
   {:exec-fn nextjournal.clerk/build!
    :exec-args {:paths ["src/rainbow_tables.clj"]}}}}
