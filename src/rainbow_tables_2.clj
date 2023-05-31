@@ -1,6 +1,6 @@
 ;; # Rainbow tables 2
 ;;
-;; > DISCLAIMER: Rainbow tables are a complicated topic.
+;; > DISCLAIMER: Rainbow tables are complicated.
 ;; > For precise details, please read the [Wikipedia article][wikipedia-article].
 ;; > For a simplified introduction with specific examples, keep reading.
 ;;
