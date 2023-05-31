@@ -97,8 +97,8 @@
 ;;
 ;; Our function from hash to password is now a lookup in a map!
 
-(defn guess-password [sha1sum-digest]
-  (get rainbow-table sha1sum-digest))
+(defn guess-password [sha1-digest]
+  (get rainbow-table sha1-digest))
 
 (clerk/table
  (for [h ["qZk+NkcGgWq6PiVxeFDCbJzQ2J0="
