@@ -78,10 +78,9 @@
 (def rainbow-table
   (alphabet->lookup-table "abceot"))
 
-(clerk/html
-       [:p "We have an index of "
-        [:em (count rainbow-table)]
-        " passwords in our rainbow table :)"])
+(clerk/html [:p "We have an index of "
+             [:em (count rainbow-table)]
+             " passwords in our rainbow table :)"])
 
 ;; The first ten pairs of hash(password), hash are:
 
