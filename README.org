@@ -1,6 +1,6 @@
 #+title: Teodor's Clojure lab
 
-Purpose: share knowledge, and experiemnt with knowledge representation.
+Purpose: share knowledge, and experiment with knowledge representation.
 
 | Github       | https://github.com/teodorlu/lab          |
 | Clerk garden | https://github.clerk.garden/teodorlu/lab |
