@@ -109,7 +109,7 @@
 
 ;; Voilà! We can now lookup people's passwords if we have the password hash.
 ;;
-;; But there's some limitations:
+;; But there are limitations:
 ;;
 ;; 1. The password must be three characters long
 ;; 2. Passwords can only be created out of these letters: abceot
