@@ -46,8 +46,13 @@
    [clojure.string :as str]))
 
 ;; ## A table of passwords and hashes
+;;
+;; A rainbow table can be used to look up `password` from `hash(password)`.
+;;
+;; First, we need a hash function.'
+;; We'll choose `base64_encode(sha1(password))`:
 
-(defn sha1sum-digest [password]
+(defn sha1-str [password]
   (.encodeToString (java.util.Base64/getEncoder)
                    (.digest
                     (doto (java.security.MessageDigest/getInstance "SHA-1")
@@ -56,9 +61,11 @@
 ;; We can use our hash function like this:
 
 (clerk/example
- (sha1sum-digest "abc")
- (sha1sum-digest "cat")
- (sha1sum-digest "teo"))
+ (sha1-str "abc")
+ (sha1-str "cat")
+ (sha1-str "teo"))
+
+;; To create a lookup table, we enumerate multiple three letter passwords:
 
 (defn alphabet->lookup-table [alphabet]
   (into {}
@@ -66,12 +73,19 @@
               b alphabet
               c alphabet]
           (let [password (str a b c)]
-            [(sha1sum-digest password) password]))))
-
-;; ## A function from hash to password
+            [(sha1-str password) password]))))
 
 (def rainbow-table
   (alphabet->lookup-table "abceot"))
+
+(clerk/html
+       [:p "We have an index of "
+        [:em (count rainbow-table)]
+        " passwords in our rainbow table :)"])
+
+;; ## A function from hash to password
+;;
+;; Our function from hash to password is now a lookup in a map!
 
 (defn guess-password [sha1sum-digest]
   (get rainbow-table sha1sum-digest))
