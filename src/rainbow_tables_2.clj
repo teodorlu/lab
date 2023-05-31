@@ -83,7 +83,7 @@
         [:em (count rainbow-table)]
         " passwords in our rainbow table :)"])
 
-;; The first ten pairs if hash(password), hash are:
+;; The first ten pairs of hash(password), hash are:
 
 (->> rainbow-table
      (sort-by first)
