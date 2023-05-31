@@ -116,12 +116,10 @@
 ;; 3. The hash function is base64_encode(sha1(password))
 ;; 4. Passwords are not salted.
 ;;
-;; It's easy to make a mistake when you roll your own system for securing user
-;; accounts without experience in information security.
+;; It's easy to make mistakes when you roll your own system for securing user accounts without experience in information security.
 ;; And there are plenty of pitfalls we haven't touched.
 ;;
-;; But at least you now know some examples of what can go wrong when you push
-;; ahead without considering how you're securing user data!
+;; But at least you now know some examples of what can go wrong when you push ahead without considering how to secure user data!
 
 ;; ## Using common passwords
 ;;
