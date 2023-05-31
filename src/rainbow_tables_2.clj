@@ -49,7 +49,7 @@
 ;;
 ;; A rainbow table can be used to look up `password` from `hash(password)`.
 ;;
-;; First, we need a hash function.'
+;; First, we need a hash function.
 ;; We'll choose `base64_encode(sha1(password))`:
 
 (defn sha1-str [password]
@@ -133,5 +133,4 @@
       href-rebuild (str garden-url "/" github-user "/" github-repo "?update=1")
       current-git-hash (-> (babashka.process/shell "git rev-parse HEAD" {:out :string}) :out (str/trim))]
   (clerk/html [:p "Document out of date? Force a " [:a {:href href-rebuild} "rebuild"] "!"
-               " or " [:a {:href (str garden-url "/" github-user "/" github-repo "/commit/" current-git-hash "/src/rainbow_tables_2.html")} "view this document"] "."
-               ]))
+               " or " [:a {:href (str garden-url "/" github-user "/" github-repo "/commit/" current-git-hash "/src/rainbow_tables_2.html")} "view this document"] "."]))
