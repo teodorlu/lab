@@ -10,3 +10,9 @@ To build locally:
 #+begin_src
 clj -X:nextjournal/clerk :browse true
 #+end_src
+
+To build locally within a prod-like environment:
+
+#+begin_src
+nix run github:nextjournal/garden-env#build
+#+end_src
