@@ -83,6 +83,16 @@
         [:em (count rainbow-table)]
         " passwords in our rainbow table :)"])
 
+;; The first ten pairs if hash(password), hash are:
+
+(->> rainbow-table
+     (sort-by first)
+     (take 10)
+     (map (fn [[hash password]]
+            {"hash(password)" hash
+             "password" password}))
+     (clerk/table))
+
 ;; ## A function from hash to password
 ;;
 ;; Our function from hash to password is now a lookup in a map!
