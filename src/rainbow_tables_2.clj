@@ -15,7 +15,7 @@
 ;;
 ;;    mypassword = "kaladinrocks"
 ;;    salt = "da39a3ee5e"
-;;    hash(string_concat(mittpassord, salt))
+;;    hash(string_concat(mypassword, salt))
 ;;
 ;; then store both salt and hash(password + salt) in your table.
 ;;
