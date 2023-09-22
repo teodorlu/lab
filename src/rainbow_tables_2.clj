@@ -27,7 +27,7 @@
 ;; To avoid lots of wainting, we're going to stick to passwords that are easy to crack:
 ;;
 ;; 1. Passwords are very short
-;; 2. Passwords use only lowercase english character
+;; 2. Passwords use only lowercase english characters
 ;; 3. We use a quite fast hash function: SHA-1
 ;;
 ;; If we were to make our table harder to crack, we would make different choices:
