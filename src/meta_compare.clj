@@ -45,3 +45,38 @@
 
 (equal-value-and-equal-meta ^:nice {:x 1} ^:not-nice {:x 1})
 ;; => false
+
+(defn meta->explicit-2 [x]
+  (prewalk (fn [v]
+             (if (and (instance? clojure.lang.IMeta v) (some? (meta v)))
+               {::value (with-meta v nil)
+                ::meta (meta v)}
+               {::value v}))
+           x))
+
+(defn wrapped-value? [v]
+  (or (contains? v ::value)
+      (contains? v ::meta)))
+
+(comment
+  ;; the following is experimental and does not yet work.
+  (defn prune-non-meta [x]
+    ;; goal.
+    ;;
+    ;; - we want to prune values without any metadata.
+    ;;
+    ;; logic.
+    ;;
+    ;; 1. We traverse outside -> in, leaf nodes first.
+    ;;
+    ;; 2. When we encounter a leaf node (its value is not itself a wrapped value)
+    ;;    and the value has no metadata
+    ;;    , we replace it with ::prune.
+    ;;
+    ;; 1. leaf values without metadata are replaced with ::prune.
+    ;;
+    (clojure.walk/postwalk (fn [v]
+                             (cond ())
+
+                             ))
+    ))
