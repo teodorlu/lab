@@ -61,6 +61,18 @@
   (defn tempdir-deleted-on-exit [])
   )
 
+(comment
+  ;; Jukeslapp
+  (clojure.repl/doc fs/list-dir)
+
+  (clojure.repl/doc fs/temp-dir)
+  (->> (fs/list-dir (fs/temp-dir))
+       (map str)
+       sort
+       (take 5))
+
+  )
+
 (fs/list-dir
  (fs/temp-dir))
 
