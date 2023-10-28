@@ -5,7 +5,9 @@
    [clojure.java.io :as io]
    [nextjournal.clerk :as clerk]))
 
-;; # Steel beam design with Clojure
+;; # Steel beam resistance against bending moment
+;;
+;; _Exlplained with Clojure_.
 ;;
 ;; You're probably wondering why steel beams look like they do, and want an explanation for that in a nice, functional programming language.
 ;; You're in luck—that's what you'll be getting today!
