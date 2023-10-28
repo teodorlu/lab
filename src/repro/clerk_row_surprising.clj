@@ -41,3 +41,9 @@
 (list
  (scale-by ipe300 * 0.5)
  (scale-by hea300 * 0.5))
+
+;; If both elements are wrapped in a vector, both are shown.
+
+(clerk/row
+ [(scale ipe300 0.5)
+  (scale hea300 0.5)])
