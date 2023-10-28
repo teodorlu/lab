@@ -47,3 +47,8 @@
 (clerk/row
  [(scale ipe300 0.5)
   (scale hea300 0.5)])
+
+(clerk/row {:item 1} {:item 2})
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/html [:div {:style {:height "50vh"}}])
