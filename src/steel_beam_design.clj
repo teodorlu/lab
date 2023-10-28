@@ -17,7 +17,7 @@
 (clerk/caption "Steel beam supporting the first floor of a house"
  (clerk/image (io/resource "steel_beam_design/I-Beam_002.jpg")))
 
-;; Image [from Wikiepdia][I-Beam_002.jpg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
+;; Image [from Wikipedia][I-Beam_002.jpg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
 ;;
 ;; [I-Beam_002.jpg-source]: https://commons.wikimedia.org/wiki/File:I-Beam_002.JPG
 
@@ -27,7 +27,7 @@
  "Cross section of an I-shape beam"
  (clerk/html (slurp (io/resource "steel_beam_design/I-BeamCrossSection.svg"))))
 
-;; Image [from Wikiepdia][I-BeamCrossSection.svg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
+;; Image [from Wikipedia][I-BeamCrossSection.svg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
 ;;
 ;; [I-BeamCrossSection.svg-source]: https://commons.wikimedia.org/wiki/File:I-BeamCrossSection.svg
 ;;
