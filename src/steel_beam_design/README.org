@@ -1,0 +1,3 @@
+#+title: Steel beam design in Clojure—resources
+
+In this folder, I collect some images for use in a text about designing steel beams.
