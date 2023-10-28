@@ -38,3 +38,6 @@
 ;; This steel beam is an _I-shape beam_.
 ;; I-shape beams have _flanges_ on the top and on the bottom, and a _web_ in the middle.
 ;; The flanges and the web are labelled on the figure above.
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/html [:div {:style {:height "50vh"}}])
