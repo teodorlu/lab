@@ -23,10 +23,14 @@
 
 ;; This a figure of steel beam's _cross section_:
 
-#_
-(clerk/caption "Cross section of an I-shape beam"
- (clerk/image (io/resource "steel_beam_design/I-BeamCrossSection.svg")))
+(clerk/caption
+ "Cross section of an I-shape beam"
+ (clerk/html (slurp (io/resource "steel_beam_design/I-BeamCrossSection.svg"))))
 
-(javax.imageio.ImageIO/read (io/resource "steel_beam_design/I-BeamCrossSection.svg"))
-
-(io/resource "steel_beam_design/I-BeamCrossSection.svg")
+;; Image [from Wikiepdia][I-BeamCrossSection.svg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
+;;
+;; [I-BeamCrossSection.svg-source]: https://commons.wikimedia.org/wiki/File:I-BeamCrossSection.svg
+;;
+;; This steel beam is an _I-shape beam_.
+;; I-shape beams have _flanges_ on the top and on the bottom, and a _web_ in the middle.
+;; The flanges and the web are labelled on the figure above.
