@@ -50,5 +50,7 @@
 
 (clerk/row {:item 1} {:item 2})
 
+(clerk/row [{:item 1} {:item 2}])
+
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
