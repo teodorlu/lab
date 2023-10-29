@@ -111,39 +111,35 @@
 (clerk/caption "Cross section of an I-shape beam"
                (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection-NORWEGIAN.svg"))))
 
+
+;; Image [from Wikipedia][I-BeamCrossSection.svg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
+;;
+;; SVG labels have been modified to match the labels used in this figure.
+
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (comment
   (clerk/clear-cache!))
 
 
-;; Those figures are from Wikipedia.
-;;
 ;; Is copy-pasting stuff from Wikipedia the end game of content creation?
 ;; No!
 ;; Let's make our own figures.
-
-;; Also, please ignore the labels for the wikipedia figure.
-;; I'm sticking to the standard labels for design of steel structures /in Norway/, which are different.
 ;;
-;; We will be working on maps like this:
+;; We will be working on beams as maps.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
-(def ipe300
-  {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38})
-
-^{:nextjournal.clerk/visibility {:code :hide}}
-(let [labels [{:norwegian :r       :pretty "r"                 :wikipedia nil :description "Curve radius between flanges and beams"}
-              {:norwegian :wy      :pretty "W_y"               :wikipedia nil :description "Strong axis bending moment resistance"}
-              {:norwegian :s       :pretty "s"                 :wikipedia "b" :description "Web thickness"}
-              {:norwegian :prefix  :pretty "\\textit{prefix}"  :wikipedia nil :description "Beam profile name prefix, eg IPE or HEA"}
-              {:norwegian :wz      :pretty "W_z"               :wikipedia nil :description "Weak axis bending moment resistance"}
-              {:norwegian :h       :pretty "h"                 :wikipedia "h" :description "Beam cross section height"}
-              {:norwegian :b       :pretty "b"                 :wikipedia "w" :description "Beam cross section width"}
-              {:norwegian :iz      :pretty "I_z"               :wikipedia nil :description "Weak axes bending stiffness"}
-              {:norwegian :t       :pretty "t"                 :wikipedia "t" :description "Flange thickness"}
-              {:norwegian :iy      :pretty "I_y"               :wikipedia nil :description "Strong axis bending stiffness"}
-              {:norwegian :profile :pretty "\\textit{profile}" :wikipedia nil :description "Profile number, eg 300 for IPE300"}
-              {:norwegian :a       :pretty "A"                 :wikipedia nil :description "Cross section area"}
+(let [labels [{:norwegian :r       :pretty "r"                  :description "Curve radius between flanges and beams"}
+              {:norwegian :wy      :pretty "W_y"                :description "Strong axis bending moment resistance"}
+              {:norwegian :s       :pretty "s"                  :description "Web thickness"}
+              {:norwegian :prefix  :pretty "\\textit{prefix}"   :description "Beam profile name prefix, eg IPE or HEA"}
+              {:norwegian :wz      :pretty "W_z"                :description "Weak axis bending moment resistance"}
+              {:norwegian :h       :pretty "h"                  :description "Beam cross section height"}
+              {:norwegian :b       :pretty "b"                  :description "Beam cross section width"}
+              {:norwegian :iz      :pretty "I_z"                :description "Weak axes bending stiffness"}
+              {:norwegian :t       :pretty "t"                  :description "Flange thickness"}
+              {:norwegian :iy      :pretty "I_y"                :description "Strong axis bending stiffness"}
+              {:norwegian :profile :pretty "\\textit{profile}"  :description "Profile number, eg 300 for IPE300"}
+              {:norwegian :a       :pretty "A"                  :description "Cross section area"}
 
               ]]
   (clerk/table (for [label (sort-by :norwegian labels)]
@@ -151,35 +147,44 @@
                      (update :pretty clerk/tex)
                      (set/rename-keys {:description "Description"
                                        :norwegian "Label"
-                                       :wikipedia "Label from Wikipedia"
                                        :pretty "Symbol"})))))
+
+;; An IPE300 beam is represented as this:
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(def ipe300
+  {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38})
+
+;; Let's draw such beams with SVG:
+
 (do
   (require '[clojure.string :as str])
 
   (defn i-shape-steel-beam->svg [beam]
-    (let [marg 10.5
-          marg*2 (* marg 2)
+    (let [margin 4.5
+          margin*2 (* margin 2)
 
-          ;; profilargumenter
+          ;; Profile parameters
           {:keys [h b s t r]} beam
           ;;
-          ;; SVG Path-notasjon
+          ;; Notation for paths with SVG
+          ;; See
+          ;;
+          ;;     https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+          ;;
+          ;; to learn how to work with SVG pathsSVG paths
           M "M"
           l "l"
           a "a"
 
-          ;; hjelpere
           -r (- r)
           r*2 (* r 2)
-
-          ;; "flens" på engelsk er flange
-          flens-tupp-bredde (/ (- b s) 2)
-          ;; "steg på engelsk er "web"
-          steg-indre (- h (* 2 t))
-          path [M marg marg
+          flange-tip-length (/ (- b s) 2)
+          web-inner-height (- h (* 2 t))
+          path [M margin margin
                 l b 0
                 l 0 t
-                l (- (- flens-tupp-bredde r)) 0 ; topp høyre hjørne
+                l (- (- flange-tip-length r)) 0 ; topp høyre hjørne
 
                 ;; Se MDN for hvordan man lager kurvesegmenter ("arc" på engelsk):
                 ;;
@@ -187,23 +192,23 @@
                 ;;
                 ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
                 a  r  r  0               0              0          -r r
-                l 0 (- steg-indre r*2)  ; steg høyre
+                l 0 (- web-inner-height r*2)  ; steg høyre
                 a r r 0 0 0 r r
 
-                l (- flens-tupp-bredde r) 0
+                l (- flange-tip-length r) 0
                 l 0 t
                 l (- b) 0
                 l 0 (- t)
 
-                l (- flens-tupp-bredde r) 0
+                l (- flange-tip-length r) 0
                 a r r 0 0 0 r (- r)
-                l 0 (- (- steg-indre r*2)) ;; steg venstre
+                l 0 (- (- web-inner-height r*2)) ;; steg venstre
                 a r r 0 0 0 (- r) (- r)
-                l (- (- flens-tupp-bredde r)) 0
+                l (- (- flange-tip-length r)) 0
                 "Z"
                 ]]
-      [:svg {:width (+ marg*2 (:b beam))
-             :height (+ marg*2 (:h beam))}
+      [:svg {:width (+ margin*2 (:b beam))
+             :height (+ margin*2 (:h beam))}
        [:path {:d (str/join " " path)
                :fill "transparent"
                :stroke "black"}]]))
