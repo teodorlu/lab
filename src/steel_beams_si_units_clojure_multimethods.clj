@@ -109,7 +109,8 @@
 ;; This a figure of steel beam's _cross section_:
 
 (clerk/caption "Cross section of an I-shape beam"
-               (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection.svg"))))
+               (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection-NORWEGIAN.svg"))))
+
 
 ;; Those figures are from Wikipedia.
 ;;
