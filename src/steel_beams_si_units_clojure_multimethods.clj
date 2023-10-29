@@ -272,8 +272,28 @@
 ;; Our solution is to invent a new number type that respects units.
 ;; We will name our "number with unit" type "with-unit".
 ;; Let's get to it.
+;;
+;; We'll implement equality at once.
 
-(defrecord WithUnit [number unit])
+(deftype WithUnit [number unit]
+  Object
+  (hashCode [_] (bit-xor (hash number) (hash unit)))
+  (equals [self other]
+    (and (instance? WithUnit other)
+         (= (.number self) (.number other))
+         (= (.unit self) (.unit other)))))
+
+;; TODO REMOVE
+;; Note: Clerk still doesn't play nicely with my units!
+;;
+;; I get
+;;
+;; > Cannot invoke "Object.hashCode()" because "key" is null
+;;
+;; when I try to evaluate this namespace in clerk.
+;;
+;; Though I'm able to evaluate things in the REPL.
+;; Weird.
 
 ;; We represent a unit as a map from a base unit to an exponent.
 
