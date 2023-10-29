@@ -524,6 +524,9 @@ clerk/default-viewers
 
 (multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
+;; comment out to get a working clerk build
+
+#_
 (let [height (with-unit (clojure.core// 300 1000) {:si/m 1})]
   (clerk/example
    (* height 0.5)
