@@ -329,6 +329,7 @@ clerk/default-viewers
 ;;
 ;; I'm thinking we want to write a viewer that applies _only to our new unit type_.
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (defn with-unit? [x] (instance? WithUnit x))
 
 (clerk/example
@@ -336,58 +337,81 @@ clerk/default-viewers
  (with-unit? 3)
  (with-unit? "iiiiiiiiiiiiiiiiiiiiii"))
 
-;; Looks _perfect_.
+;; Looks right!
 
-(defn unit->tex [unit]
+;; Now, let's render m^2/s.
+
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defn unit->tex
+  "Convert from a unit as data to unit as TeX.
+
+  Unit-as-map is from base unit to exponent:
+
+    {:m 2 :s -1}
+
+  In TeX, we render m^2 above the line, and s below:
+
+    \"\\frac{\\operatorname{m}^{2}}{\\operatorname{s}}\""
+  [unit]
   (when (map? unit)
-    (let [above-fractional-line (filter (comp pos? val) unit)
-          below-fractional-line (->> unit
-                                     (filter (comp neg? val))
-                                     (map (fn [[baseunit exponent]]
-                                            [baseunit (clojure.core/- exponent)])))
+    (let [numerator (filter (comp pos? val) unit)
+          numerator (if (seq numerator)
+                      numerator
+                      "1")
+          denominator (->> unit
+                           (filter (comp neg? val))
+                           (map (fn [[baseunit exponent]]
+                                  [baseunit (clojure.core/- exponent)])))
+          base+exp->tex
+          (fn [[base exp]]
+            (str "\\operatorname{" (name base) "}"
+                 (when (not= 1 exp)
+                   (str "^{" exp "}"))))]
+      (if-not (seq denominator)
+        (str/join " " (map base+exp->tex numerator))
+        (str "\\frac{" (str/join " " (map base+exp->tex numerator)) "}"
+             "{" (str/join " " (map base+exp->tex denominator)) "}")))))
 
-          baseunit+exponent->tex
-          (fn [[baseunit exponent]]
-            (str "\\operatorname{" (name baseunit) "}"
-                 (when (not= 1 exponent)
-                   (str "^{" exponent "}"))))
+(clerk/example
+ (unit->tex {:m 2 :s -1})
+ (clerk/tex (unit->tex {:m 2 :s -1})))
 
-          above-fractional-line (if (seq above-fractional-line)
-                                  above-fractional-line
-                                  "1")]
-      (if-not (seq below-fractional-line)
-        (str/join " " (map baseunit+exponent->tex above-fractional-line))
-        (str "\\frac{" (str/join " " (map baseunit+exponent->tex above-fractional-line)) "}"
-             "{" (str/join " " (map baseunit+exponent->tex below-fractional-line)) "}")))))
+;; That looks like what I had in mind!
+;;
+;; We also want _numbers with SI units_:
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (defn with-unit->tex [with-unit]
-  (str (.number with-unit)
+  (str (cond-> (.number with-unit)
+         ratio? double)
        " "
        (unit->tex (.unit with-unit))))
 
 (clerk/tex
  (with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
 
+(unit->tex
+ {:m 2 :s -1})
 
-(def with-unit-viewer
-  {:pred with-unit?
-   :transform-fn (fn [unit]
-                   (clerk/tex (with-unit->tex unit)))})
+(do
+  (def with-unit-viewer
+    {:pred with-unit?
+     :transform-fn (clerk/update-val (fn [unit]
+                                       (clerk/tex (with-unit->tex unit))))})
 
-(WithUnit. (clojure.core// 300 1000) {:si/m 1})
+  (clerk/fragment
+   (WithUnit. (clojure.core// 300 1000) {:si/m 1})
+
+   (clerk/with-viewer with-unit-viewer
+     (WithUnit. (clojure.core// 300 1000) {:si/m 1}))))
+
+;; It's working!
+;; Time to implement *.
+;; We're going to use multimethods to support plain numbers numbers without units.
 
 
 
-(comment
-  ;; Putting this in the main file gives me an error:
-  ;;
-  ;; > Unhandled java.lang.IllegalArgumentException
-  ;; > No matching field found: number for class clojure.lang.PersistentHashMap
-  ;;
-  ;; Not sure whether this is my fault or not.
 
-  (clerk/with-viewer with-unit-viewer
-    (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
