@@ -273,27 +273,35 @@
 ;; We will name our "number with unit" type "with-unit".
 ;; Let's get to it.
 
-(deftype WithUnit [number unit])
+(defrecord WithUnit [number unit])
 
-;; As units, we use plain Clojure maps from a base unit to exponent.
+;; We represent a unit as a map from a base unit to an exponent.
 
-(clerk/table [{:name "meter"        :value {:si/m 1}}
-              {:name "square meter" :value {:si/m 2}}])
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/caption "Examples of units as maps from base unit to exponent"
+               (clerk/table [{:name "meter"                    :value {:si/m 1}}
+                             {:name "square meter"             :value {:si/m 2}}
+                             {:name "second"                   :value {:si/s 1}}
+                             {:name "per second"               :value {:si/s -1}}
+                             {:name "meters per square second" :value {:si/m 1 :si/s -2}}
+                             ]))
 
-;; Let's not invent types when we don't have to.
+;; Let's not invent types when we don't have to!
 ;;
-;; We can now represent 300 mm accurately:
+;; We can now represent 300 mm and preserve the unit:
 
-(WithUnit. (clojure.core// 300 1000) {:si/m 1})
+(str (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
-;; Man, that wasn't nice.
-;;
-;; Perhaps we can persuade Clerk to show our units in a more appealing way.
+;; Perhaps we can persuade Clerk to show our units in a more appealing way?
+;; I don't really
 ;; Clerk provides certain viewer.
 
 clerk/default-viewers
 
-;; What keys have been used?
+;; A vector of maps.
+;; Each map is a viewer.
+;;
+;; I wonder what keys the maps have?
 
 (->> clerk/default-viewers
      (mapcat keys)
@@ -395,7 +403,8 @@ clerk/default-viewers
 
 (do
   (def with-unit-viewer
-    {:pred with-unit?
+    {:name `with-unit-viewer
+     :pred with-unit?
      :transform-fn (clerk/update-val (fn [unit]
                                        (clerk/tex (with-unit->tex unit))))})
 
@@ -420,6 +429,43 @@ clerk/default-viewers
  (both-types 1 1)
  (both-types 1 (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
 
+;; Note: since we're using `defrecord` to implement our SI units, we will inherit Clojure's value-based equality.
+;; That's not what we want!
+;; Here's an example:
+
+(=
+ (WithUnit. (clojure.core// 300 1000) {:si/m 1})
+ (WithUnit. (clojure.core// 300 1000) {:si/m 1 :si/s 0}))
+
+;; Our problem is zero exponents in the exponent map.
+;; We can fix this with a contructor that conforms units to the representation we want.
+
+(defn ^:private simplify-unit [x]
+  (into {} (remove (fn [[_ exponent]] (= exponent 0)) x)))
+
+^{:nextjournal.clerk/visibility {:result :hide}}
+(do
+  (defmulti simplify type)
+  (defmethod simplify Number [n] n)
+  (defmethod simplify WithUnit [x]
+    (let [simplified-unit (simplify-unit (.unit x))]
+      (if (= {} simplified-unit)
+        (.number x)
+        (WithUnit. (.number x)
+                   simplified-unit)))))
+
+;; This implementation simplifies unitless numbers to plain numbers:
+
+(simplify (WithUnit. (clojure.core// 300 1000) {:si/m 0 :si/s 0}))
+
+;; Then we implement a constructor in terms of the simplifier.
+
+(defn with-unit [number unit]
+  (simplify (WithUnit. number unit)))
+
+;; From now on, we ensure that we _always_ use this constructor.
+;; If this wasn't one long file, I'd hide away the `defprotocol` to reduce the risk of people accidentally using it.
+
 (do
   (defmulti multiply both-types)
 
@@ -429,26 +475,24 @@ clerk/default-viewers
 
   (defmethod multiply [Number WithUnit]
     [a b]
-    (WithUnit. (clojure.core/* a (.number b))
+    (with-unit (clojure.core/* a (.number b))
                (.unit b)))
 
   (defmethod multiply [WithUnit Number]
     [a b]
-    (WithUnit. (clojure.core/* (.number a) b)
+    (with-unit (clojure.core/* (.number a) b)
                (.unit b)))
 
   (defmethod multiply [WithUnit WithUnit]
     [a b]
-    (WithUnit. (clojure.core/* (.number a) (.number b))
+    (with-unit (clojure.core/* (.number a) (.number b))
                (merge-with clojure.core/+
                            (.unit a)
                            (.unit b)))))
 
-#_
-(comment
-  (multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+;; Finally, we can multiply numbers!
 
-  :rcf)
+(multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
 (defn *
   ([a] a)
@@ -475,6 +519,7 @@ clerk/default-viewers
 ;;
 ;; To learn more about designing flexible software, read [Software Design for Flexibility].
 ;; It's good!
+
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
