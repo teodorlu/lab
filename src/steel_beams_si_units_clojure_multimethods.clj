@@ -267,5 +267,118 @@
 
 ;; Let's fix that.
 
+;; ## Numbers with unit
+;;
+;; Our solution is to invent a new number type that respects units.
+;; We will name our "number with unit" type "with-unit".
+;; Let's get to it.
+
+(deftype WithUnit [number unit])
+
+;; As units, we use plain Clojure maps from a base unit to exponent.
+
+(clerk/table [{:name "meter"        :value {:si/m 1}}
+              {:name "square meter" :value {:si/m 2}}])
+
+;; Let's not invent types when we don't have to.
+;;
+;; We can now represent 300 mm accurately:
+
+(WithUnit. (clojure.core// 300 1000) {:si/m 1})
+
+;; Man, that wasn't nice.
+;;
+;; Perhaps we can persuade Clerk to show our units in a more appealing way.
+;; Clerk provides certain viewer.
+
+clerk/default-viewers
+
+;; What keys have been used?
+
+(->> clerk/default-viewers
+     (mapcat keys)
+     (into #{})
+     sort)
+
+;; I believe we need a name (`:name`), a predicate for when to apply our
+;; viewer (`:pred`), and a way to actually view our thing (perhaps `:render-fn`
+;; or `:transform-fn`).
+;;
+;; The Clerk Docs provide an example of a [simple viewer using :transform].
+;;
+;; [simple viewer using :transform]: https://github.clerk.garden/nextjournal/book-of-clerk/commit/b4c03cfb272f516a287c51133dd2dc0a71f274f0/#transform
+
+(clerk/with-viewer {:transform-fn (clerk/update-val (constantly "LOL IT'S A JOKE"))}
+  "A very serious sentence")
+
+;; Nice!
+;; New viewer in one line of code.
+;; (The author had never realliy written a serious Clerk viewer before working on this article).
+;; Can it show formulas?
+
+(clerk/with-viewer {:transform-fn (clerk/update-val
+                                   (constantly (clerk/tex "E = m c^2")))}
+  "A very serious sentence")
+
+;; It's math!
+
+;; But:
+;;
+;; 1. We don't want to set the viewer manually on each expression we write.
+;; 2. We also don't want to break all the existing viewers.
+;;
+;; I'm thinking we want to write a viewer that applies _only to our new unit type_.
+
+(defn with-unit? [x] (instance? WithUnit x))
+
+(clerk/example
+ (with-unit? (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+ (with-unit? 3)
+ (with-unit? "iiiiiiiiiiiiiiiiiiiiii"))
+
+;; Looks _perfect_.
+
+(defn unit->tex [unit]
+  (when (map? unit)
+    (let [above-fractional-line (filter (comp pos? val) unit)
+          below-fractional-line (->> unit
+                                     (filter (comp neg? val))
+                                     (map (fn [[baseunit exponent]]
+                                            [baseunit (clojure.core/- exponent)])))
+
+          baseunit+exponent->tex
+          (fn [[baseunit exponent]]
+            (str "\\operatorname{" (name baseunit) "}"
+                 (when (not= 1 exponent)
+                   (str "^{" exponent "}"))))
+
+          above-fractional-line (if (seq above-fractional-line)
+                                  above-fractional-line
+                                  "1")]
+      (if-not (seq below-fractional-line)
+        (str/join " " (map baseunit+exponent->tex above-fractional-line))
+        (str "\\frac{" (str/join " " (map baseunit+exponent->tex above-fractional-line)) "}"
+             "{" (str/join " " (map baseunit+exponent->tex below-fractional-line)) "}")))))
+
+(defn with-unit->tex [with-unit]
+  (str (.number with-unit)
+       " "
+       (unit->tex (.unit with-unit))))
+
+(clerk/tex
+ (with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
+
+#_
+
+(def with-unit-viewer
+  {:pred with-unit?
+   :transform-fn (fn [unit]
+                   (clerk/tex (with-unit->tex unit)))})
+
+#_
+
+(clerk/with-viewer with-unit-viewer
+  (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
