@@ -22,7 +22,7 @@
 ;; Some programming languages depend greatly on the syntax.
 ;; Others don't.
 ;;
-;; Clojure establishes syntax for sequential data, associative data, sets, function calls and macro calls:
+;; Clojure establishes syntax for sequential data, associative data, sets, function calls and macro calls.
 
 ^{:nextjournal.clerk/toc true}
 (ns steel-beams-si-units-clojure-multimethods
