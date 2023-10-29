@@ -368,15 +368,15 @@ clerk/default-viewers
 (clerk/tex
  (with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
 
-#_
 
 (def with-unit-viewer
   {:pred with-unit?
    :transform-fn (fn [unit]
                    (clerk/tex (with-unit->tex unit)))})
 
-#_
+(WithUnit. (clojure.core// 300 1000) {:si/m 1})
 
+#_
 (clerk/with-viewer with-unit-viewer
   (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
