@@ -276,6 +276,9 @@
 ;; We'll implement equality at once.
 
 (deftype WithUnit [number unit]
+  ;; impl based on mikera's question here:
+  ;;
+  ;;     https://stackoverflow.com/questions/3018372/overriding-equals-hashcode-and-tostring-in-a-clojure-deftype
   Object
   (hashCode [_] (bit-xor (hash number) (hash unit)))
   (equals [self other]
