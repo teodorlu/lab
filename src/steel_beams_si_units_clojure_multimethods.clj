@@ -376,9 +376,18 @@ clerk/default-viewers
 
 (WithUnit. (clojure.core// 300 1000) {:si/m 1})
 
-#_
-(clerk/with-viewer with-unit-viewer
-  (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
+
+(comment
+  ;; Putting this in the main file gives me an error:
+  ;;
+  ;; > Unhandled java.lang.IllegalArgumentException
+  ;; > No matching field found: number for class clojure.lang.PersistentHashMap
+  ;;
+  ;; Not sure whether this is my fault or not.
+
+  (clerk/with-viewer with-unit-viewer
+    (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
