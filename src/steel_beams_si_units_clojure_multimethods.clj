@@ -33,6 +33,18 @@
    [clojure.string :as str]
    [nextjournal.clerk :as clerk]))
 
+^{:nextjournal.clerk/visibility {:code :hide
+                                 :result :hide}}
+(comment
+  ;; pitch
+  ;;
+  ;; In which you will learn
+  ;;
+  ;; - whether pixels and millimeters are the same thing
+  ;; - the difference between a flange and a web
+  ;; - how to draw steel beam cross section profiles
+  )
+
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
  ;; syntax for sequential data:
@@ -213,9 +225,8 @@
              :fill "transparent"
              :stroke "black"}]]))
 
-
-
-(clerk/html (i-shape-steel-beam->svg ipe300))
+(clerk/caption "My SVG of a steel beam!"
+               (clerk/html (i-shape-steel-beam->svg ipe300)))
 
 ;; Amazing!
 ;; It works!
@@ -246,8 +257,15 @@
 ;;
 ;; Or, I know why, but it's a very bad reason.
 ;; It's because we've assumed that millimeters and pixels are the same thing.
-;;
-;; How do we fix that?
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(let [padding-top-bottom "1em"]
+  (clerk/html
+   [:div.flex.justify-center
+    {:style {:padding-top padding-top-bottom :padding-bottom padding-top-bottom}}
+    [:strong [:em "Millimeters and pixels are not the same thing."]]]))
+
+;; Let's fix that.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
