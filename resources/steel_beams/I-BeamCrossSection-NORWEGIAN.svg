@@ -285,7 +285,7 @@
      sodipodi:role="line"
      id="tspan2790"
      x="164.95689"
-     y="32.295773">Flange width (w)</tspan></text>
+     y="32.295773">Flange width (b)</tspan></text>
 <text
    xml:space="preserve"
    style="font-size:36px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#008080;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial;-inkscape-font-specification:Arial"
@@ -332,5 +332,5 @@
      sodipodi:role="line"
      id="tspan2816"
      x="302.92615"
-     y="529.53149">Web thickness (b)</tspan></text>
+     y="529.53149">Web thickness (s)</tspan></text>
 </svg>

@@ -111,6 +111,10 @@
 (clerk/caption "Cross section of an I-shape beam"
                (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection-NORWEGIAN.svg"))))
 
+^{:nextjournal.clerk/visibility {:code :hide}}
+(comment
+  (clerk/clear-cache!))
+
 
 ;; Those figures are from Wikipedia.
 ;;
