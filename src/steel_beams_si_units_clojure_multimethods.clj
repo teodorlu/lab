@@ -409,9 +409,72 @@ clerk/default-viewers
 ;; Time to implement *.
 ;; We're going to use multimethods to support plain numbers numbers without units.
 
+;; First, we need a dispatch fn for two-arg type-based multimethods.
+;; Note that multimethod dispatch functions _take one arg_: the dispatch vector.
+
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defn ^:private both-types [a b]
+  [(type a) (type b)])
+
+(clerk/example
+ (both-types 1 1)
+ (both-types 1 (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
+
+(do
+  (defmulti multiply both-types)
+
+  (defmethod multiply [Number Number]
+    [a b]
+    (clojure.core/* a b))
+
+  (defmethod multiply [Number WithUnit]
+    [a b]
+    (WithUnit. (clojure.core/* a (.number b))
+               (.unit b)))
+
+  (defmethod multiply [WithUnit Number]
+    [a b]
+    (WithUnit. (clojure.core/* (.number a) b)
+               (.unit b)))
+
+  (defmethod multiply [WithUnit WithUnit]
+    [a b]
+    (WithUnit. (clojure.core/* (.number a) (.number b))
+               (merge-with clojure.core/+
+                           (.unit a)
+                           (.unit b)))))
+
+#_
+(comment
+  (multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
+  :rcf)
+
+(defn *
+  ([a] a)
+  ([a b] (multiply a b))
+  ([a b & args] (reduce multiply (multiply a b) args)))
+
+(multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
+#_
+(let [height (WithUnit. (clojure.core// 300 1000) {:si/m 1})]
+  (clerk/example
+   (* height 0.5)
+   (* height height)
+   ))
 
 
+;; ## Thank you
+;;
+;; To Sam Ritchie, Martin Kavalar and Jack Rusher for being generally awesome, and patient with people who don't know Lisp to the bones yet.
+;; To Gerald Jay Sussman for improving the way we think about programming.
+;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand how Java types work with
 
+;; ## Further reading
+;;
+;; To learn more about designing flexible software, read [Software Design for Flexibility].
+;; It's good!
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
