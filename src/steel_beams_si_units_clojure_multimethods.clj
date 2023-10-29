@@ -29,8 +29,9 @@
   (:refer-clojure :exclude [* / + -])
   (:require
    [clojure.java.io :as io]
-   [nextjournal.clerk :as clerk]
-   [clojure.set :as set]))
+   [clojure.set :as set]
+   [clojure.string :as str]
+   [nextjournal.clerk :as clerk]))
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
@@ -154,67 +155,67 @@
 
 ;; Let's draw such beams with SVG:
 
-(do
-  (require '[clojure.string :as str])
+(defn i-shape-steel-beam->svg [beam]
+  (let [plus clojure.core/+
+        minus clojure.core/-
+        div clojure.core//
+        mult clojure.core/*
 
-  (defn i-shape-steel-beam->svg [beam]
-    (let [plus clojure.core/+
-          minus clojure.core/-
-          div clojure.core//
-          mult clojure.core/*
+        margin 4.5
+        margin*2 (mult margin 2)
 
-          margin 4.5
-          margin*2 (mult margin 2)
+        ;; Profile parameters
+        {:keys [h b s t r]} beam
+        ;;
+        ;; Notation for paths with SVG
+        ;; See
+        ;;
+        ;;     https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+        ;;
+        ;; to learn how to work with SVG pathsSVG paths
+        M "M"
+        l "l"
+        a "a"
 
-          ;; Profile parameters
-          {:keys [h b s t r]} beam
-          ;;
-          ;; Notation for paths with SVG
-          ;; See
-          ;;
-          ;;     https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
-          ;;
-          ;; to learn how to work with SVG pathsSVG paths
-          M "M"
-          l "l"
-          a "a"
+        -r (minus r)
+        r*2 (mult r 2)
+        flange-tip-length (div (minus b s) 2)
+        web-inner-height (minus h (mult 2 t))
+        path [M margin margin
+              l b 0
+              l 0 t
+              l (minus (minus flange-tip-length r)) 0 ; top right corner
 
-          -r (minus r)
-          r*2 (mult r 2)
-          flange-tip-length (div (minus b s) 2)
-          web-inner-height (minus h (mult 2 t))
-          path [M margin margin
-                l b 0
-                l 0 t
-                l (minus (minus flange-tip-length r)) 0 ; top right corner
+              ;; MDN explains how to draw curve segments, _arcs_:
+              ;;
+              ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#arcs
+              ;;
+              ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
+              a  r  r  0               0              0          -r r
+              l 0 (minus web-inner-height r*2)  ; steg høyre
+              a r r 0 0 0 r r
 
-                ;; MDN explains how to draw curve segments, _arcs_:
-                ;;
-                ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#arcs
-                ;;
-                ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
-                a  r  r  0               0              0          -r r
-                l 0 (minus web-inner-height r*2)  ; steg høyre
-                a r r 0 0 0 r r
+              l (minus flange-tip-length r) 0
+              l 0 t
+              l (minus b) 0
+              l 0 (minus t)
 
-                l (minus flange-tip-length r) 0
-                l 0 t
-                l (minus b) 0
-                l 0 (minus t)
+              l (minus flange-tip-length r) 0
+              a r r 0 0 0 r (minus r)
+              l 0 (minus (minus web-inner-height r*2)) ;; web left
+              a r r 0 0 0 (minus r) (minus r)
+              l (minus (minus flange-tip-length r)) 0
+              "Z"
+              ]]
+    [:svg {:width (plus margin*2 (:b beam))
+           :height (plus margin*2 (:h beam))}
+     [:path {:d (str/join " " path)
+             :fill "transparent"
+             :stroke "black"}]]))
 
-                l (minus flange-tip-length r) 0
-                a r r 0 0 0 r (minus r)
-                l 0 (minus (minus web-inner-height r*2)) ;; web left
-                a r r 0 0 0 (minus r) (minus r)
-                l (minus (minus flange-tip-length r)) 0
-                "Z"
-                ]]
-      [:svg {:width (plus margin*2 (:b beam))
-             :height (plus margin*2 (:h beam))}
-       [:path {:d (str/join " " path)
-               :fill "transparent"
-               :stroke "black"}]]))
-  (clerk/html (i-shape-steel-beam->svg ipe300)))
+
+
+(clerk/html (i-shape-steel-beam->svg ipe300))
 
 ;; Amazing!
 ;; It works!
