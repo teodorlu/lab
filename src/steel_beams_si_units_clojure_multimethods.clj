@@ -492,7 +492,7 @@ clerk/default-viewers
 
 ;; Finally, we can multiply numbers!
 
-(multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+(multiply 100 (with-unit (clojure.core// 300 1000) {:si/m 1}))
 
 (defn *
   ([a] a)
@@ -501,8 +501,7 @@ clerk/default-viewers
 
 (multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
-#_
-(let [height (WithUnit. (clojure.core// 300 1000) {:si/m 1})]
+(let [height (with-unit (clojure.core// 300 1000) {:si/m 1})]
   (clerk/example
    (* height 0.5)
    (* height height)
@@ -511,15 +510,24 @@ clerk/default-viewers
 
 ;; ## Thank you
 ;;
-;; To Sam Ritchie, Martin Kavalar and Jack Rusher for being generally awesome, and patient with people who don't know Lisp to the bones yet.
+;; To Sam Ritchie, Martin Kavalar and Jack Rusher for being generally awesome, and patient with people who don't yet know Lisp to their core.
 ;; To Gerald Jay Sussman for improving the way we think about programming.
-;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand how Java types work with
+;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand how Java types work with Clojure multimethod type hierarchies.
 
 ;; ## Further reading
 ;;
-;; To learn more about designing flexible software, read [Software Design for Flexibility].
-;; It's good!
-
+;; This article was longer than the pieces I usually write!
+;; If you want to dig deeper along these lines, I've got some suggestions.
+;;
+;; - To learn more about designing flexible software, read [Software Design for Flexibility].
+;;   It's good!
+;;
+;; - To see how a real-world flexible system is built, explore [Emmy]'s architecture.
+;;   Emmy is inspired by Gerald Jay Sussman's [scmutils], and I'm strongly guessing experience building scmutils informed the writing of _Software Design for Flexibility_.
+;;
+;; [Software Design for Flexibility]: https://mitpress.mit.edu/books/software-design-flexibility
+;; [Emmy]: https://github.com/mentat-collective/emmy/
+;; [scmutils]: https://github.com/Tipoca/scmutils/
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
