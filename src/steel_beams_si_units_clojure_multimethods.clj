@@ -535,7 +535,7 @@ clerk/default-viewers
 ;; ## Thank you
 ;;
 ;; To Sam Ritchie, Martin Kavalar and Jack Rusher for being generally awesome, and patient with people who don't yet know the secrets of Lisp.
-;; To Gerald Jay Sussman for improving the way we think about programming.
+;; To Gerald Jay Sussman for improving the way we think about programming, and expanding the range of problems we can solve with programming.
 ;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand how Java types work with Clojure multimethod type hierarchies.
 
 ;; ## Further reading
