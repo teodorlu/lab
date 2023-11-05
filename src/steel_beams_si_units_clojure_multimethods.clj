@@ -126,7 +126,7 @@
 ;;
 ;; SVG labels have been modified to match the labels used in this figure.
 
-^{:nextjournal.clerk/visibility {:code :hide}}
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
   (clerk/clear-cache!))
 
@@ -157,7 +157,7 @@
                      (update :pretty clerk/tex)
                      (set/rename-keys {:description "Description"
                                        :norwegian "Label"
-                                       :pretty "Symbol"})))))
+                                       :pretty "Math notation"})))))
 
 ;; An IPE300 beam is represented as this:
 
