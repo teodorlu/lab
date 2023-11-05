@@ -121,10 +121,10 @@
 (clerk/caption "Cross section of an I-shape beam"
                (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection-NORWEGIAN.svg"))))
 
-
 ;; Image [from Wikipedia][I-BeamCrossSection.svg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
+;; SVG labels have been altered to match the names used in this article.
 ;;
-;; SVG labels have been modified to match the labels used in this figure.
+;; [I-BeamCrossSection.svg-source]: https://commons.wikimedia.org/wiki/File:I-BeamCrossSection.svg
 
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
@@ -286,18 +286,6 @@
          (= (.number self) (.number other))
          (= (.unit self) (.unit other)))))
 
-;; TODO REMOVE
-;; Note: Clerk still doesn't play nicely with my units!
-;;
-;; I get
-;;
-;; > Cannot invoke "Object.hashCode()" because "key" is null
-;;
-;; when I try to evaluate this namespace in clerk.
-;;
-;; Though I'm able to evaluate things in the REPL.
-;; Weird.
-
 ;; We represent a unit as a map from a base unit to an exponent.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
@@ -316,15 +304,12 @@
 (str (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
 ;; Perhaps we can persuade Clerk to show our units in a more appealing way?
-;; I don't really
-;; Clerk provides certain viewer.
+;; We start by looking at Clerk's provided viewers.
 
 clerk/default-viewers
 
-;; A vector of maps.
-;; Each map is a viewer.
-;;
-;; I wonder what keys the maps have?
+;; Each viewer is a map.
+;; What keys do the maps have?
 
 (->> clerk/default-viewers
      (mapcat keys)
@@ -344,7 +329,6 @@ clerk/default-viewers
 
 ;; Nice!
 ;; New viewer in one line of code.
-;; (The author had never realliy written a serious Clerk viewer before working on this article).
 ;; Can it show formulas?
 
 (clerk/with-viewer {:transform-fn (clerk/update-val
@@ -360,7 +344,6 @@ clerk/default-viewers
 ;;
 ;; I'm thinking we want to write a viewer that applies _only to our new unit type_.
 
-^{:nextjournal.clerk/visibility {:result :hide}}
 (defn with-unit? [x] (instance? WithUnit x))
 
 (clerk/example
@@ -368,11 +351,9 @@ clerk/default-viewers
  (with-unit? 3)
  (with-unit? "iiiiiiiiiiiiiiiiiiiiii"))
 
-;; Looks right!
-
+;; Looks about right.
 ;; Now, let's render m^2/s.
 
-^{:nextjournal.clerk/visibility {:result :hide}}
 (defn unit->tex
   "Convert from a unit as data to unit as TeX.
 
@@ -403,13 +384,13 @@ clerk/default-viewers
         (str "\\frac{" (str/join " " (map base+exp->tex numerator)) "}"
              "{" (str/join " " (map base+exp->tex denominator)) "}")))))
 
+^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
  (unit->tex {:m 2 :s -1})
  (clerk/tex (unit->tex {:m 2 :s -1})))
 
-;; That looks like what I had in mind!
-;;
-;; We also want _numbers with SI units_:
+;; That looks like what I had in mind.
+;; We also want _numbers with SI units_.
 
 ^{:nextjournal.clerk/visibility {:result :hide}}
 (defn with-unit->tex [with-unit]
