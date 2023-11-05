@@ -498,13 +498,14 @@ clerk/default-viewers
 
   (defmethod multiply [Number WithUnit]
     [a b]
-    (with-unit (clojure.core/* a (.number b))
-               (.unit b)))
+    (with-unit
+      (clojure.core/* a (.number b))
+      (.unit b)))
 
   (defmethod multiply [WithUnit Number]
     [a b]
     (with-unit (clojure.core/* (.number a) b)
-               (.unit b)))
+               (.unit a)))
 
   (defmethod multiply [WithUnit WithUnit]
     [a b]
@@ -526,13 +527,10 @@ clerk/default-viewers
 
 ;; comment out to get a working clerk build
 
-#_
 (let [height (with-unit (clojure.core// 300 1000) {:si/m 1})]
   (clerk/example
    (* height 0.5)
-   (* height height)
-   ))
-
+   (* height height)))
 
 ;; ## Thank you
 ;;
