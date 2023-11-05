@@ -465,8 +465,10 @@ clerk/default-viewers
 (defn with-unit [number unit]
   (simplify (WithUnit. number unit)))
 
-;; From now on, we ensure that we _always_ use this constructor.
-;; If this wasn't one long file, I'd hide away the `defprotocol` to reduce the risk of people accidentally using it.
+;; From now on, we will always use this constructor.
+;;
+;; This text is a single Clojure file.
+;; In a library for SI units, would /not/ put the deftype in the public interface.
 
 (do
   (defmulti multiply both-types)
@@ -483,15 +485,17 @@ clerk/default-viewers
 
   (defmethod multiply [WithUnit Number]
     [a b]
-    (with-unit (clojure.core/* (.number a) b)
-               (.unit a)))
+    (with-unit
+      (clojure.core/* (.number a) b)
+      (.unit a)))
 
   (defmethod multiply [WithUnit WithUnit]
     [a b]
-    (with-unit (clojure.core/* (.number a) (.number b))
-               (merge-with clojure.core/+
-                           (.unit a)
-                           (.unit b)))))
+    (with-unit
+      (clojure.core/* (.number a) (.number b))
+      (merge-with clojure.core/+
+                  (.unit a)
+                  (.unit b)))))
 
 ;; Finally, we can multiply numbers!
 
