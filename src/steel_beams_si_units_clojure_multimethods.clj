@@ -431,11 +431,9 @@ clerk/default-viewers
      :transform-fn (clerk/update-val (fn [unit]
                                        (clerk/tex (with-unit->tex unit))))})
 
-  (clerk/fragment
-   (WithUnit. (clojure.core// 300 1000) {:si/m 1})
+  (clerk/add-viewers! [with-unit-viewer])
 
-   (clerk/with-viewer with-unit-viewer
-     (WithUnit. (clojure.core// 300 1000) {:si/m 1}))))
+  (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
 ;; It's working!
 ;; Time to implement *.
@@ -523,9 +521,9 @@ clerk/default-viewers
   ([a b] (multiply a b))
   ([a b & args] (reduce multiply (multiply a b) args)))
 
-(multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
-;; comment out to get a working clerk build
+
+(multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
 (let [height (with-unit (clojure.core// 300 1000) {:si/m 1})]
   (clerk/example
