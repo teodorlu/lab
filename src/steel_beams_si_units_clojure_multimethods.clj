@@ -502,8 +502,6 @@ clerk/default-viewers
   ([a b] (multiply a b))
   ([a b & args] (reduce multiply (multiply a b) args)))
 
-
-
 (multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
 
 (let [height (with-unit (clojure.core// 300 1000) {:si/m 1})]
@@ -519,8 +517,7 @@ clerk/default-viewers
 
 ;; ## Further reading
 ;;
-;; This article was longer than the pieces I usually write!
-;; If you want to dig deeper along these lines, I've got some suggestions.
+;; Want to dig deeper?
 ;;
 ;; - To learn more about designing flexible software, read [Software Design for Flexibility].
 ;;   It's good!
