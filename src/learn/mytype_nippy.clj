@@ -46,3 +46,25 @@
     (Point. x y)))
 
 (nippy/thaw (nippy/freeze (Point. 97 77)))
+
+;; TWO PARAMS TAKE TWO
+
+(deftype Point3 [x y z])
+
+(nippy/extend-freeze Point ::Point3
+  [p data-output]
+  (.writeUTF data-output ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; what about Nippy's *freeze-serializable-allowlist* ?
+;; Martin suggested looking into it.
+
+(deftype P [x y])
+
+(comment
+  nippy/*freeze-serializable-allowlist*
+  ;; => #{"*"}
+
+  ;; what??
+  )
