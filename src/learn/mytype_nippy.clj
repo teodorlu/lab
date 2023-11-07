@@ -66,5 +66,43 @@
   nippy/*freeze-serializable-allowlist*
   ;; => #{"*"}
 
-  ;; what??
+  ;; nippy/*freeze-deserializable-allowlist*
+  (sort
+   nippy/*thaw-serializable-allowlist*)
+  ;; => ("[B"
+  ;;     "[C"
+  ;;     "[D"
+  ;;     "[F"
+  ;;     "[I"
+  ;;     "[J"
+  ;;     "[S"
+  ;;     "[Z"
+  ;;     "clojure.lang.ArityException"
+  ;;     "clojure.lang.ExceptionInfo"
+  ;;     "clojure.lang.Namespace"
+  ;;     "clojure.lang.Var"
+  ;;     "java.io.File"
+  ;;     "java.lang.ArithmeticException"
+  ;;     "java.lang.ClassCastException"
+  ;;     "java.lang.Exception"
+  ;;     "java.lang.IllegalArgumentException"
+  ;;     "java.lang.IndexOutOfBoundsException"
+  ;;     "java.lang.NullPointerException"
+  ;;     "java.lang.RuntimeException"
+  ;;     "java.lang.Throwable"
+  ;;     "java.net.URI"
+  ;;     "java.time.Clock"
+  ;;     "java.time.DateTimeException"
+  ;;     "java.time.LocalDate"
+  ;;     "java.time.LocalDateTime"
+  ;;     "java.time.LocalTime"
+  ;;     "java.time.MonthDay"
+  ;;     "java.time.OffsetDateTime"
+  ;;     "java.time.OffsetTime"
+  ;;     "java.time.Year"
+  ;;     "java.time.YearMonth"
+  ;;     "java.time.ZoneId"
+  ;;     "java.time.ZoneOffset"
+  ;;     "java.time.ZonedDateTime"
+  ;;     "org.joda.time.DateTime")
   )
