@@ -294,20 +294,9 @@
 
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (do
-  ;; https://github.com/taoensso/nippy/wiki/1-Getting-started#custom-types
-  ;;
-  ;; Support Clerk by supporting Nippy.
-  ;; Hide it from the text, this isn't the point.
-  (nippy/extend-freeze WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
-                       [x data-output]
-                       (.write data-output (nippy/freeze (.number x)))
-                       (.write data-output (nippy/freeze (.unit x))))
-
-  (nippy/extend-thaw :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
-                     [data-input]
-                     (let [x (edn/read-string (.readUTF data-input))
-                           unit (edn/read-string (.readUTF data-input))]
-                       (WithUnit. x unit))))
+  ;; Ensure WithUnit works with Clerk.
+  (alter-var-root #'nippy/*thaw-serializable-allowlist*
+                  (fn [list] (conj list "steel-beams-si-units-clojure-multimethods.WithUnit"))))
 
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
@@ -456,15 +445,7 @@ clerk/default-viewers
 ^{:nextjournal.clerk/visibility {:result :hide}}
 (clerk/add-viewers! [with-unit-viewer])
 
-(do
-  (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
-
-^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
-(comment
-  ;; Looks like i STILL dont't have a working Nippy solution.
-  ;;
-  ;; When I drop the `do` above, Clerk chokes.
-  )
+(WithUnit. (clojure.core// 300 1000) {:si/m 1})
 
 ;; It's working!
 ;; Time to implement *.
