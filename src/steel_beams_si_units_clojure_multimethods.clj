@@ -28,10 +28,12 @@
 (ns steel-beams-si-units-clojure-multimethods
   (:refer-clojure :exclude [* / + -])
   (:require
+   [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.set :as set]
    [clojure.string :as str]
-   [nextjournal.clerk :as clerk]))
+   [nextjournal.clerk :as clerk]
+   [taoensso.nippy :as nippy]))
 
 ^{:nextjournal.clerk/visibility {:code :hide
                                  :result :hide}}
@@ -289,6 +291,24 @@
          (= (.number self) (.number other))
          (= (.unit self) (.unit other)))))
 
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(comment
+  (do
+    ;; https://github.com/taoensso/nippy/wiki/1-Getting-started#custom-types
+    ;;
+    ;; Support Clerk by supporting Nippy.
+    ;; Hide it from the text, this isn't the point.
+    (nippy/extend-freeze WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
+                         [x data-output]
+                         (.writeUTF data-output (pr-str [(.number x) (.unit x)])))
+
+    (nippy/extend-thaw WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
+                       [data-input]
+                       (let [[x unit] (edn/read-string (.readUTF data-input))]
+                         (WithUnit. x unit)))
+
+    ))
+
 ;; We represent a unit as a map from a base unit to exponent.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
@@ -415,27 +435,18 @@ clerk/default-viewers
 
 ;; Finally, we can create a viewer.
 
+^{:nextjournal.clerk/visibility {:result :hide}}
+(def with-unit-viewer
+  {:name `with-unit-viewer
+   :pred with-unit?
+   :transform-fn (clerk/update-val (fn [unit]
+                                     (clerk/tex (with-unit->tex unit))))})
+
+^{:nextjournal.clerk/visibility {:result :hide}}
+(clerk/add-viewers! [with-unit-viewer])
+
 (do
-  (def with-unit-viewer
-    {:name `with-unit-viewer
-     :pred with-unit?
-     :transform-fn (clerk/update-val (fn [unit]
-                                       (clerk/tex (with-unit->tex unit))))})
-
-  (clerk/add-viewers! [with-unit-viewer])
-
   (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
-
-^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
-(comment
-  ;; Note to self: commenting out the thing above here causes some weird Clerk errors.
-  ;; They mention Nippy unthawable.
-  ;; Put the following line toplevel to see:
-
-  (WithUnit. (clojure.core// 300 1000) {:si/m 1})
-
-  ;; I believe we can fix this by making the deftype thawable.
-  )
 
 ;; It's working!
 ;; Time to implement *.
