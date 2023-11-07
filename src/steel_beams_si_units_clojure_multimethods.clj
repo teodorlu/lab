@@ -76,21 +76,21 @@
 ;; The only reason you can write `let` and have that automatically refer to `clojure.core/let` is `clojure.core` is required by default.
 ;; That default can be disabled.
 
-;; Notice all the things that are missing from other languages?
+;; Notice all the things that are missing?
 ;;
-;; - Syntax for function definition - `fn` is a plain macro.
-;; - Syntax for type definitions - you can choose a library for checking data
+;; - Syntax for function definition — `fn` is a plain macro.
+;; - Syntax for type definitions — you can choose a library for checking data
 ;;   (like [clojure spec] or [malli], _if_ you want.
-;; - Syntax for for loops - `for` is a plain macro
-;; - Syntax for while loops - `loop` and `reduce` are plain macros.
+;; - Syntax for for loops — `for` is a plain macro
+;; - Syntax for while loops — `loop` and `reduce` are plain macros.
 ;;   You can use those, or write your own alternatives.
-;; - Syntax for defining types: `deftype`, `defrecord` and `defprotocol` are macros.
+;; - Syntax for defining types — `deftype`, `defrecord` and `defprotocol` are macros.
 ;;
 ;; [clojure spec]: https://clojure.org/guides/spec
 ;; [malli]: https://github.com/metosin/malli
 ;;
 ;; This is good!
-;; You don't even need all the stuff I mentioned above to get really far.
+;;
 ;; Take the time to learn and understand vectors (sequential data), maps (associative data), sets (unique elements only) and functions.
 ;; Idiomatic Clojure code is functions transforming data.
 ;; Leave the rest for when you actually need it!
@@ -98,10 +98,10 @@
 ;; ## Steel beams
 ;;
 ;; > Wait, what about the steel beams?
-;; > I thought there was supposed to be steel beams!
+;; > I thought there was supposed to be steel beams.
 ;;
 ;; Yes!
-;; Steel beams are coming.
+;; Steel beams coming right up.
 ;;
 ;; Flexible languages can solve a wide variety of problems.
 ;; A problem you might pick for yourself is to design steel beams.
@@ -109,6 +109,7 @@
 
 ;; This is a _steel beam_:
 
+^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/caption "Steel beam supporting the first floor of a house"
                (clerk/image (io/resource "steel_beams/I-Beam_002.jpg")))
 
@@ -118,6 +119,7 @@
 
 ;; This a figure of steel beam's _cross section_:
 
+^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/caption "Cross section of an I-shape beam"
                (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection-NORWEGIAN.svg"))))
 
@@ -157,7 +159,7 @@
                      (update :pretty clerk/tex)
                      (set/rename-keys {:description "Description"
                                        :norwegian "Label"
-                                       :pretty "Math notation"})))))
+                                       :pretty "Notation for people who like math"})))))
 
 ;; An IPE300 beam is represented as this:
 
