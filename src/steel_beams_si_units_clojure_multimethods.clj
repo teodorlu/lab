@@ -164,8 +164,7 @@
 ;; An IPE300 beam is represented as this:
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
-(def ipe300
-  {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38})
+{:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}
 
 ;; Let's draw such beams with SVG:
 
@@ -227,8 +226,9 @@
              :fill "transparent"
              :stroke "black"}]]))
 
-(clerk/caption "My SVG of a steel beam!"
-               (clerk/html (i-shape-steel-beam->svg ipe300)))
+(let [ipe300 {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}]
+  (clerk/caption "My SVG of a steel beam!"
+                 (clerk/html (i-shape-steel-beam->svg ipe300))))
 
 ;; Amazing!
 ;; It works!
@@ -243,7 +243,7 @@
 ;; Think.
 ;;
 ;; We've complected two things.
-;; Give yourself a solid 20 seconds staring out into the air to figure out _which two things_ are currently complected.
+;; Give yourself a solid 20 seconds staring out a window to figure out _which two things_ are currently complected.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
@@ -254,7 +254,7 @@
 (clerk/html [:div {:style {:height "50vh"}}])
 
 ;; We've complected pixels and millimeters.
-;; Why is the figure exactly that height?
+;; Why is the figure 300 pixels high?
 ;; I have no idea!
 ;;
 ;; Or, I know why, but it's a very bad reason.
@@ -271,16 +271,17 @@
 
 ;; ## Numbers with unit
 ;;
-;; Our solution is to invent a new number type that respects units.
+;; Our solution is to invent a number type that respects units.
 ;; We will name our "number with unit" type "with-unit".
-;; Let's get to it.
-;;
-;; We'll implement equality at once.
 
-(deftype WithUnit [number unit]
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(comment
   ;; impl based on mikera's question here:
   ;;
   ;;     https://stackoverflow.com/questions/3018372/overriding-equals-hashcode-and-tostring-in-a-clojure-deftype
+  )
+
+(deftype WithUnit [number unit]
   Object
   (hashCode [_] (bit-xor (hash number) (hash unit)))
   (equals [self other]
@@ -288,7 +289,7 @@
          (= (.number self) (.number other))
          (= (.unit self) (.unit other)))))
 
-;; We represent a unit as a map from a base unit to an exponent.
+;; We represent a unit as a map from a base unit to exponent.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/caption "Examples of units as maps from base unit to exponent"
@@ -299,7 +300,7 @@
                              {:name "meters per square second" :value {:si/m 1 :si/s -2}}
                              ]))
 
-;; Let's not invent types when we don't have to!
+;; Let's not invent types when we don't have to.
 ;;
 ;; We can now represent 300 mm and preserve the unit:
 
@@ -310,19 +311,22 @@
 
 clerk/default-viewers
 
-;; Each viewer is a map.
-;; What keys do the maps have?
+;; A viewer is a map.
+;; What kind of keys are there?
 
 (->> clerk/default-viewers
      (mapcat keys)
      (into #{})
      sort)
 
-;; I believe we need a name (`:name`), a predicate for when to apply our
-;; viewer (`:pred`), and a way to actually view our thing (perhaps `:render-fn`
-;; or `:transform-fn`).
+;; For our SI Unit viewer, I believe we need:
+;;
+;; - `:name` — a viewer name
+;; - `:pred` — a predicate that tells Clerk _when_ to use the viewer
+;; - A way to actually implement our viewer, perhaps `:render-fn` or `:transform-fn`.
 ;;
 ;; The Clerk Docs provide an example of a [simple viewer using :transform].
+;; From the example, we make our own little viewer:
 ;;
 ;; [simple viewer using :transform]: https://github.clerk.garden/nextjournal/book-of-clerk/commit/b4c03cfb272f516a287c51133dd2dc0a71f274f0/#transform
 
@@ -331,11 +335,12 @@ clerk/default-viewers
 
 ;; Nice!
 ;; New viewer in one line of code.
-;; Can it show formulas?
+;;
+;; Can it show Math?
 
 (clerk/with-viewer {:transform-fn (clerk/update-val
-                                   (constantly (clerk/tex "E = m c^2")))}
-  "A very serious sentence")
+                                   (constantly (clerk/tex "a^2 + b^2 = c^2")))}
+  "A very serious sentence that is totally ignored in favor of math.")
 
 ;; It's math!
 
@@ -354,6 +359,7 @@ clerk/default-viewers
  (with-unit? "iiiiiiiiiiiiiiiiiiiiii"))
 
 ;; Looks about right.
+;;
 ;; Now, let's render m^2/s.
 
 (defn unit->tex
@@ -401,11 +407,13 @@ clerk/default-viewers
        " "
        (unit->tex (.unit with-unit))))
 
-(clerk/tex
- (with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
+;; For with-units (what a weird noun), the raw TeX and the rendered TeX look different:
 
-(unit->tex
- {:m 2 :s -1})
+(with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
+(clerk/tex (with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
+
+;; Finally, we can create a viewer.
 
 (do
   (def with-unit-viewer
@@ -417,6 +425,17 @@ clerk/default-viewers
   (clerk/add-viewers! [with-unit-viewer])
 
   (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(comment
+  ;; Note to self: commenting out the thing above here causes some weird Clerk errors.
+  ;; They mention Nippy unthawable.
+  ;; Put the following line toplevel to see:
+
+  (WithUnit. (clojure.core// 300 1000) {:si/m 1})
+
+  ;; I believe we can fix this by making the deftype thawable.
+  )
 
 ;; It's working!
 ;; Time to implement *.
