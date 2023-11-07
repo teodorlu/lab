@@ -314,7 +314,8 @@
   (nippy/thaw (nippy/freeze (WithUnit. 5 {:si/m 2})))
 
   (-> (WithUnit. 5 {:si/m 2})
-      nippy/freeze)
+      nippy/freeze
+      nippy/thaw)
 
   ;; => #object[steel_beams_si_units_clojure_multimethods.WithUnit 0x2f7197fb "steel_beams_si_units_clojure_multimethods.WithUnit@7a1491a9"]
   )
@@ -457,6 +458,13 @@ clerk/default-viewers
 
 (do
   (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(comment
+  ;; Looks like i STILL dont't have a working Nippy solution.
+  ;;
+  ;; When I drop the `do` above, Clerk chokes.
+  )
 
 ;; It's working!
 ;; Time to implement *.
