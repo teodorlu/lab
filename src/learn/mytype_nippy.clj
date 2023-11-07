@@ -1,6 +1,7 @@
 (ns learn.mytype-nippy
   (:require
-   [taoensso.nippy :as nippy]))
+   [taoensso.nippy :as nippy]
+   [clojure.edn :as edn]))
 
 ;; RECORDS
 
@@ -36,11 +37,12 @@
 (deftype Point [x y])
 
 (nippy/extend-freeze Point ::Point
-  [x data-output]
-  (.writeUTF data-output (.data x)))
+  [p data-output]
+  (.writeUTF data-output (pr-str [(.x p) (.y p)])))
 
 (nippy/extend-thaw ::Point
   [data-input]
-  (MyType. (.readUTF data-input)))
+  (let [[x y] (edn/read-string (.readUTF data-input))]
+    (Point. x y)))
 
-(nippy/thaw (nippy/freeze (Point. "Joe")))
+(nippy/thaw (nippy/freeze (Point. 97 77)))

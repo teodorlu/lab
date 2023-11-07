@@ -300,16 +300,22 @@
   ;; Hide it from the text, this isn't the point.
   (nippy/extend-freeze WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
                        [x data-output]
-                       (.writeUTF data-output (pr-str [(.number x) (.unit x)])))
+                       (.writeUTF data-output (pr-str (.number x)))
+                       (.writeUTF data-output (pr-str (.unit x))))
 
   (nippy/extend-thaw :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
                      [data-input]
-                     (let [[x unit] (edn/read-string (.readUTF data-input))]
+                     (let [x (edn/read-string (.readUTF data-input))
+                           unit (edn/read-string (.readUTF data-input))]
                        (WithUnit. x unit))))
 
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
   (nippy/thaw (nippy/freeze (WithUnit. 5 {:si/m 2})))
+
+  (-> (WithUnit. 5 {:si/m 2})
+      nippy/freeze)
+
   ;; => #object[steel_beams_si_units_clojure_multimethods.WithUnit 0x2f7197fb "steel_beams_si_units_clojure_multimethods.WithUnit@7a1491a9"]
   )
 
