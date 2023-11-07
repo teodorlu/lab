@@ -62,6 +62,14 @@
 
 (deftype P [x y])
 
+(alter-var-root #'nippy/*thaw-serializable-allowlist*
+                (fn [list] (conj list "learn.mytype-nippy.Point3")))
+
+(let [p (-> (P. 1 2)
+            nippy/freeze
+            nippy/thaw)]
+  (.y p))
+
 (comment
   nippy/*freeze-serializable-allowlist*
   ;; => #{"*"}
