@@ -68,7 +68,7 @@
                         #{:spaghetti :shekshuka})]
    (str "consider exploring " (name (rand-nth (vec topics))) " today!")))
 
-;; If you accept these five decisions about syntax, you can basically do whatever you want afterwards.
+;; If you accept these five decisions about syntax, you can mostly do whatever you want afterwards.
 
 ;; You can define your own functions, and your own macros.
 ;; `last` is defined as `clojure.core/last`, `set/union` is defined in `clojure.set/union.`
