@@ -291,23 +291,27 @@
          (= (.number self) (.number other))
          (= (.unit self) (.unit other)))))
 
+
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(do
+  ;; https://github.com/taoensso/nippy/wiki/1-Getting-started#custom-types
+  ;;
+  ;; Support Clerk by supporting Nippy.
+  ;; Hide it from the text, this isn't the point.
+  (nippy/extend-freeze WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
+                       [x data-output]
+                       (.writeUTF data-output (pr-str [(.number x) (.unit x)])))
+
+  (nippy/extend-thaw :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
+                     [data-input]
+                     (let [[x unit] (edn/read-string (.readUTF data-input))]
+                       (WithUnit. x unit))))
+
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
-  (do
-    ;; https://github.com/taoensso/nippy/wiki/1-Getting-started#custom-types
-    ;;
-    ;; Support Clerk by supporting Nippy.
-    ;; Hide it from the text, this isn't the point.
-    (nippy/extend-freeze WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
-                         [x data-output]
-                         (.writeUTF data-output (pr-str [(.number x) (.unit x)])))
-
-    (nippy/extend-thaw WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
-                       [data-input]
-                       (let [[x unit] (edn/read-string (.readUTF data-input))]
-                         (WithUnit. x unit)))
-
-    ))
+  (nippy/thaw (nippy/freeze (WithUnit. 5 {:si/m 2})))
+  ;; => #object[steel_beams_si_units_clojure_multimethods.WithUnit 0x2f7197fb "steel_beams_si_units_clojure_multimethods.WithUnit@7a1491a9"]
+  )
 
 ;; We represent a unit as a map from a base unit to exponent.
 
