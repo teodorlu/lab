@@ -300,8 +300,8 @@
   ;; Hide it from the text, this isn't the point.
   (nippy/extend-freeze WithUnit :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
                        [x data-output]
-                       (.writeUTF data-output (pr-str (.number x)))
-                       (.writeUTF data-output (pr-str (.unit x))))
+                       (.write data-output (nippy/freeze (.number x)))
+                       (.write data-output (nippy/freeze (.unit x))))
 
   (nippy/extend-thaw :teodorlu.lab.steel-beams-si-units-clojure-multimethods/WithUnit
                      [data-input]
