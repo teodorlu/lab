@@ -73,20 +73,21 @@
 ;; If you accept these five decisions about syntax, you can mostly do whatever you want afterwards.
 
 ;; You can define your own functions, and your own macros.
-;; `last` is defined as `clojure.core/last`, `set/union` is defined in `clojure.set/union.`
-;; Let is a macro defined in `clojure.core/let`.
-;; The only reason you can write `let` and have that automatically refer to `clojure.core/let` is `clojure.core` is required by default.
-;; That default can be disabled.
+;; `last` is `clojure.core/last`, `set/union` is `clojure.set/union.`
+;; Let is `clojure.core/let`, a macro.
+;; The only reason you can write `let` and have that automatically refer to `clojure.core/let` is that all vars from `clojure.core` are required by default (which can be disabled).
 
-;; Notice all the things that are missing?
+;; What about syntax for function definitions?
+;; Syntax for type definitions?
+;; Syntax for loop constructs?
+;; Where are they?
 ;;
-;; - Syntax for function definition — `fn` is a plain macro.
-;; - Syntax for type definitions — you can choose a library for checking data
+;; - There is no syntax for function definition — `fn` is a macro.
+;; - There is no syntax for type definitions — you can choose a library for checking data
 ;;   (like [clojure spec] or [malli], _if_ you want.
-;; - Syntax for for loops — `for` is a plain macro
-;; - Syntax for while loops — `loop` and `reduce` are plain macros.
-;;   You can use those, or write your own alternatives.
-;; - Syntax for defining types — `deftype`, `defrecord` and `defprotocol` are macros.
+;;   If you do need types, there's `deftype`, `defrecord` and `defprotocol`, all three are macros.
+;; - There is no syntax for for loops — `for` is a plain macro
+;; - There is no syntax for while loops — `loop` and `reduce` are macros.
 ;;
 ;; [clojure spec]: https://clojure.org/guides/spec
 ;; [malli]: https://github.com/metosin/malli
@@ -102,14 +103,13 @@
 ;; > Wait, what about the steel beams?
 ;; > I thought there was supposed to be steel beams.
 ;;
-;; Yes!
-;; Steel beams coming right up.
+;; Steel beams coming right up!
 ;;
 ;; Flexible languages can solve a wide variety of problems.
 ;; A problem you might pick for yourself is to design steel beams.
 ;; Let's see if Clojure is a good fit.
 
-;; This is a _steel beam_:
+;; This is a steel beam:
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/caption "Steel beam supporting the first floor of a house"
@@ -126,7 +126,6 @@
                (clerk/html (slurp (io/resource "steel_beams/I-BeamCrossSection-NORWEGIAN.svg"))))
 
 ;; Image [from Wikipedia][I-BeamCrossSection.svg-source], retreived 2023-10-28, licensed CC BY-SA 3.0.
-;; SVG labels have been altered to match the names used in this article.
 ;;
 ;; [I-BeamCrossSection.svg-source]: https://commons.wikimedia.org/wiki/File:I-BeamCrossSection.svg
 
@@ -135,11 +134,8 @@
   (clerk/clear-cache!))
 
 
-;; Is copy-pasting stuff from Wikipedia the end game of content creation?
-;; No!
-;; Let's make our own figures.
-;;
-;; We will be working on beams as maps.
+;; Let's make a similar figure ourselves.
+;; We will represent beams as maps.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (let [labels [{:norwegian :r       :pretty "r"                  :description "Curve radius between flanges and beams"}
@@ -154,21 +150,20 @@
               {:norwegian :iy      :pretty "I_y"                :description "Strong axis bending stiffness"}
               {:norwegian :profile :pretty "\\textit{profile}"  :description "Profile number, eg 300 for IPE300"}
               {:norwegian :a       :pretty "A"                  :description "Cross section area"}
-
               ]]
   (clerk/table (for [label (sort-by :norwegian labels)]
                  (-> label
                      (update :pretty clerk/tex)
                      (set/rename-keys {:description "Description"
                                        :norwegian "Label"
-                                       :pretty "Notation for people who like math"})))))
+                                       :pretty "Math notation"})))))
 
-;; An IPE300 beam is represented as this:
+;; This map is an IPE300 beam:
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}
 
-;; Let's draw such beams with SVG:
+;; Let's draw breams with SVG.
 
 (defn i-shape-steel-beam->svg [beam]
   (let [plus clojure.core/+
@@ -204,10 +199,10 @@
               ;; MDN explains how to draw curve segments, _arcs_:
               ;;
               ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#arcs
-              ;;
+
               ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
-              a  r  r  0               0              0          -r r
-              l 0 (minus web-inner-height r*2)  ; steg høyre
+              a    r  r  0               0              0          -r r
+              l 0 (minus web-inner-height r*2)  ; web, right side
               a r r 0 0 0 r r
 
               l (minus flange-tip-length r) 0
@@ -217,7 +212,7 @@
 
               l (minus flange-tip-length r) 0
               a r r 0 0 0 r (minus r)
-              l 0 (minus (minus web-inner-height r*2)) ;; web left
+              l 0 (minus (minus web-inner-height r*2)) ;; web, left side
               a r r 0 0 0 (minus r) (minus r)
               l (minus (minus flange-tip-length r)) 0
               "Z"
@@ -275,10 +270,12 @@
 ;;
 ;; Our solution is to invent a number type that respects units.
 ;; We will name our "number with unit" type "with-unit".
+;;
+;; To support equality, we implement hashCode and equals.
 
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
-  ;; impl based on mikera's question here:
+  ;; hashCode and equals implementation is based on mikera's question here:
   ;;
   ;;     https://stackoverflow.com/questions/3018372/overriding-equals-hashcode-and-tostring-in-a-clojure-deftype
   )
@@ -324,7 +321,7 @@
 ;;
 ;; We can now represent 300 mm and preserve the unit:
 
-(str (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+(str (WithUnit. 0.3 {:si/m 1}))
 
 ;; Perhaps we can persuade Clerk to show our units in a more appealing way?
 ;; We start by looking at Clerk's provided viewers.
@@ -332,7 +329,7 @@
 clerk/default-viewers
 
 ;; A viewer is a map.
-;; What kind of keys are there?
+;; What keys are used by other viewers?
 
 (->> clerk/default-viewers
      (mapcat keys)
@@ -354,33 +351,29 @@ clerk/default-viewers
   "A very serious sentence")
 
 ;; Nice!
-;; New viewer in one line of code.
+;; We made a toy viewer in one line of code.
 ;;
-;; Can it show Math?
+;; Can viewers show Math?
 
 (clerk/with-viewer {:transform-fn (clerk/update-val
                                    (constantly (clerk/tex "a^2 + b^2 = c^2")))}
   "A very serious sentence that is totally ignored in favor of math.")
 
-;; It's math!
-
-;; But:
+;; It's math! But:
 ;;
 ;; 1. We don't want to set the viewer manually on each expression we write.
-;; 2. We also don't want to break all the existing viewers.
+;; 2. We don't want to break existing viewers.
 ;;
 ;; I'm thinking we want to write a viewer that applies _only to our new unit type_.
 
 (defn with-unit? [x] (instance? WithUnit x))
 
 (clerk/example
- (with-unit? (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+ (with-unit? (WithUnit. 0.3 {:si/m 1}))
  (with-unit? 3)
  (with-unit? "iiiiiiiiiiiiiiiiiiiiii"))
 
-;; Looks about right.
-;;
-;; Now, let's render m^2/s.
+;; Looks about right. Can we render m^2/s?
 
 (defn unit->tex
   "Convert from a unit as data to unit as TeX.
@@ -417,7 +410,7 @@ clerk/default-viewers
  (unit->tex {:m 2 :s -1})
  (clerk/tex (unit->tex {:m 2 :s -1})))
 
-;; That looks like what I had in mind.
+;; That looks like what I had in mind!
 ;; We also want _numbers with SI units_.
 
 ^{:nextjournal.clerk/visibility {:result :hide}}
@@ -429,9 +422,11 @@ clerk/default-viewers
 
 ;; For with-units (what a weird noun), the raw TeX and the rendered TeX look different:
 
-(with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
-
-(clerk/tex (with-unit->tex (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/example
+ (with-unit->tex (WithUnit. 0.3 {:si/m 1}))
+ (clerk/tex (with-unit->tex (WithUnit. 0.3 {:si/m 1})))
+ )
 
 ;; Finally, we can create a viewer.
 
@@ -439,13 +434,12 @@ clerk/default-viewers
 (def with-unit-viewer
   {:name `with-unit-viewer
    :pred with-unit?
-   :transform-fn (clerk/update-val (fn [unit]
-                                     (clerk/tex (with-unit->tex unit))))})
+   :transform-fn (clerk/update-val (fn [unit] (clerk/tex (with-unit->tex unit))))})
 
 ^{:nextjournal.clerk/visibility {:result :hide}}
 (clerk/add-viewers! [with-unit-viewer])
 
-(WithUnit. (clojure.core// 300 1000) {:si/m 1})
+(WithUnit. 0.3 {:si/m 1})
 
 ;; It's working!
 ;; Time to implement *.
@@ -460,15 +454,15 @@ clerk/default-viewers
 
 (clerk/example
  (both-types 1 1)
- (both-types 1 (WithUnit. (clojure.core// 300 1000) {:si/m 1})))
+ (both-types 1 (WithUnit. 0.3 {:si/m 1})))
 
 ;; Note: since we're using `defrecord` to implement our SI units, we will inherit Clojure's value-based equality.
 ;; That's not what we want!
 ;; Here's an example:
 
 (=
- (WithUnit. (clojure.core// 300 1000) {:si/m 1})
- (WithUnit. (clojure.core// 300 1000) {:si/m 1 :si/s 0}))
+ (WithUnit. 0.3 {:si/m 1})
+ (WithUnit. 0.3 {:si/m 1 :si/s 0}))
 
 ;; Our problem is zero exponents in the exponent map.
 ;; We can fix this with a contructor that conforms units to the representation we want.
@@ -489,17 +483,14 @@ clerk/default-viewers
 
 ;; This implementation simplifies unitless numbers to plain numbers:
 
-(simplify (WithUnit. (clojure.core// 300 1000) {:si/m 0 :si/s 0}))
+(simplify (WithUnit. 0.3 {:si/m 0 :si/s 0}))
 
 ;; Then we implement a constructor in terms of the simplifier.
 
 (defn with-unit [number unit]
   (simplify (WithUnit. number unit)))
 
-;; From now on, we will always use this constructor.
-;;
-;; This text is a single Clojure file.
-;; In a library for SI units, would /not/ put the deftype in the public interface.
+;; If we always use `with-unit` and consider `WithUnit.` an implementation detail, equality will work as expected.
 
 (do
   (defmulti multiply both-types)
@@ -530,16 +521,16 @@ clerk/default-viewers
 
 ;; Finally, we can multiply numbers!
 
-(multiply 100 (with-unit (clojure.core// 300 1000) {:si/m 1}))
+(multiply 100 (with-unit 0.3 {:si/m 1}))
 
 (defn *
   ([a] a)
   ([a b] (multiply a b))
   ([a b & args] (reduce multiply (multiply a b) args)))
 
-(multiply 100 (WithUnit. (clojure.core// 300 1000) {:si/m 1}))
+(multiply 100 (WithUnit. 0.3 {:si/m 1}))
 
-(let [height (with-unit (clojure.core// 300 1000) {:si/m 1})]
+(let [height (with-unit 0.3 {:si/m 1})]
   (clerk/example
    (* height 0.5)
    (* height height)))
