@@ -388,9 +388,6 @@ clerk/default-viewers
   [unit]
   (when (map? unit)
     (let [numerator (filter (comp pos? val) unit)
-          numerator (if (seq numerator)
-                      numerator
-                      "1")
           denominator (->> unit
                            (filter (comp neg? val))
                            (map (fn [[baseunit exponent]]
@@ -399,11 +396,20 @@ clerk/default-viewers
           (fn [[base exp]]
             (str "\\operatorname{" (name base) "}"
                  (when (not= 1 exp)
-                   (str "^{" exp "}"))))]
+                   (str "^{" exp "}"))))
+          numerator-string (if (seq numerator)
+                             (str/join " " (map base+exp->tex numerator))
+                             "1")]
       (if-not (seq denominator)
-        (str/join " " (map base+exp->tex numerator))
-        (str "\\frac{" (str/join " " (map base+exp->tex numerator)) "}"
+        numerator-string
+        (str "\\frac{" numerator-string "}"
              "{" (str/join " " (map base+exp->tex denominator)) "}")))))
+
+(let [unit {:si/m -1 :si/s -1 :si/kg 1 :si/A 1}]
+  (unit->tex unit))
+
+(let [unit {:si/m -1 :si/s -1}]
+  (unit->tex unit))
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
@@ -535,13 +541,8 @@ clerk/default-viewers
    (* height 0.5)
    (* height height)))
 
-;; ## Arithmetic for numbers with units [HAS BUGS!]
-;;
-;; NOTE: This section does not work yet.
-;; It has bugs.
-;; I don't per 2023-11-15 know exactly what fails.
-;; Apparently, it's in the unit->text call.
-;;
+;; ## Arithmetic for numbers with units
+
 ;; For division, we can use multiplication.
 
 (defmulti invert type)
@@ -557,23 +558,9 @@ clerk/default-viewers
 
 (invert 3)
 
-(let [a (with-unit 0.3 {:si/m 1})]
-  (clerk/fragment
-   (clojure.core// (.number a))
-   (update-vals (.unit a) clojure.core/-))
-  )
+(invert (with-unit 1 {:si/m 1}))
 
-(with-unit (clojure.core// 1 3) {})
-
-(with-unit (clojure.core// 1 3) {:si/m 1})
-
-(comment
-  ;; Uncomment to trigger a bug.
-  (let [a (with-unit 0.3 {:si/m 1})]
-    (with-unit
-      (clojure.core// (.number a))
-      (update-vals (.unit a) clojure.core/-))
-    ))
+(unit->tex {:si/m -1})
 
 ;; ## Steel beams with units
 
