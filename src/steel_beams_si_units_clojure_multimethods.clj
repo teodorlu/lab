@@ -543,24 +543,55 @@ clerk/default-viewers
 
 ;; ## Arithmetic for numbers with units
 
-;; For division, we can use multiplication.
+;; To divide, we use 1-arity inversion and then rely on our multiplication.
 
-(defmulti invert type)
+(do
+  (defmulti invert type)
 
-(defmethod invert Number
-  [a]
-  (clojure.core// a))
+  (defmethod invert Number
+    [a]
+    (clojure.core// a))
 
-(defmethod invert WithUnit
-  [a]
-  (with-unit (clojure.core// (.number a))
-             (update-vals (.unit a) clojure.core/-)))
+  (defmethod invert WithUnit
+    [a]
+    (with-unit (clojure.core// (.number a))
+      (update-vals (.unit a) clojure.core/-))))
 
-(invert 3)
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/example
+ (invert 3)
+ (invert (with-unit 1 {:si/m 1})))
 
-(invert (with-unit 1 {:si/m 1}))
+(defn /
+  ([a] (invert a))
+  ([a b] (* a (invert b)))
+  ([a b & rest] (* a (invert b) (reduce * (map invert rest)))))
 
-(unit->tex {:si/m -1})
+(let [kg (with-unit 1 {:si/kg 1})
+      m (with-unit 1 {:si/m 1})
+      s (with-unit 1 {:si/s 1})
+      N (/ (* kg m)
+           (* s s))
+      kN (* 1000 N)
+      mm (/ m 1000)
+      mm2 (* mm mm)]
+  (/ (* 80 kN)
+     (* 300 mm2)))
+
+;; let's factor that into MPa instead:
+
+(let [kg (with-unit 1 {:si/kg 1})
+      m (with-unit 1 {:si/m 1})
+      s (with-unit 1 {:si/s 1})
+      N (/ (* kg m)
+           (* s s))
+      kN (* 1000 N)
+      mm (/ m 1000)
+      mm2 (* mm mm)
+      MPa (/ N mm2)]
+  (/ (/ (* 80 kN)
+        (* 300 mm2))
+     MPa))
 
 ;; ## Steel beams with units
 
