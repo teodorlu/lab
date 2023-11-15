@@ -535,11 +535,68 @@ clerk/default-viewers
    (* height 0.5)
    (* height height)))
 
+;; ## Arithmetic for numbers with units [HAS BUGS!]
+;;
+;; NOTE: This section does not work yet.
+;; It has bugs.
+;; I don't per 2023-11-15 know exactly what fails.
+;; Apparently, it's in the unit->text call.
+;;
+;; For division, we can use multiplication.
+
+(defmulti invert type)
+
+(defmethod invert Number
+  [a]
+  (clojure.core// a))
+
+(defmethod invert WithUnit
+  [a]
+  (with-unit (clojure.core// (.number a))
+             (update-vals (.unit a) clojure.core/-)))
+
+(invert 3)
+
+(let [a (with-unit 0.3 {:si/m 1})]
+  (clerk/fragment
+   (clojure.core// (.number a))
+   (update-vals (.unit a) clojure.core/-))
+  )
+
+(with-unit (clojure.core// 1 3) {})
+
+(with-unit (clojure.core// 1 3) {:si/m 1})
+
+(comment
+  ;; Uncomment to trigger a bug.
+  (let [a (with-unit 0.3 {:si/m 1})]
+    (with-unit
+      (clojure.core// (.number a))
+      (update-vals (.unit a) clojure.core/-))
+    ))
+
+;; ## Steel beams with units
+
+;; Meters is a base SI unit.
+
+(def m (with-unit 1 {:si/m 1}))
+
+;; A millimeter is one thousands of a meter.
+
+(def ipe300
+  (let [m (with-unit 1 {:si/m 1})
+        mm (* 1e-3 m)
+        mm2 (* mm mm)]
+    {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}))
+
 ;; ## Thank you
 ;;
-;; To Sam Ritchie, Martin Kavalar and Jack Rusher for being generally awesome, and patient with people who want to learn.
-;; To Gerald Jay Sussman for improving the way we think about programming, and expanding the range of problems we can solve with programming.
-;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand how Java types work with Clojure multimethod type hierarchies.
+;; To Sam Ritchie, Martin Kavalar and Jack Rusher for making good tools,
+;;   and for helping people who want to learn.
+;; To Gerald Jay Sussman for improving the way we think about programming, and
+;;   expanding the range of problems we can solve with programming.
+;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand
+;;   how Java types, Clojure multimethod type hierarchies are connected.
 
 ;; ## Further reading
 ;;
