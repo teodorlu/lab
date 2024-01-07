@@ -5,13 +5,13 @@ Purpose: share knowledge, and experiment with knowledge representation.
 | Github       | https://github.com/teodorlu/lab          |
 | Clerk garden | https://github.clerk.garden/teodorlu/lab |
 
-To build locally:
+To static pages with Clerk locally:
 
 #+begin_src
 clj -X:nextjournal/clerk :browse true
 #+end_src
 
-To build locally within a prod-like environment:
+To enter a Clerk-garden-like environment:
 
 #+begin_src
 nix run github:nextjournal/garden-env#build
