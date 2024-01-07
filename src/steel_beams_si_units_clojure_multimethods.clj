@@ -436,16 +436,15 @@ clerk/default-viewers
 
 ;; Finally, we can create a viewer.
 
-^{:nextjournal.clerk/visibility {:result :hide}}
-(def with-unit-viewer
-  {:name `with-unit-viewer
-   :pred with-unit?
-   :transform-fn (clerk/update-val (fn [unit] (clerk/tex (with-unit->tex unit))))})
+(do
+  (def with-unit-viewer
+    {:name `with-unit-viewer
+     :pred with-unit?
+     :transform-fn (clerk/update-val (fn [unit] (clerk/tex (with-unit->tex unit))))})
 
-^{:nextjournal.clerk/visibility {:result :hide}}
-(clerk/add-viewers! [with-unit-viewer])
+  (clerk/add-viewers! [with-unit-viewer])
 
-(WithUnit. 0.3 {:si/m 1})
+  (WithUnit. 0.3 {:si/m 1}))
 
 ;; It's working!
 ;; Time to implement *.
@@ -461,13 +460,37 @@ clerk/default-viewers
  (both-types 1 1)
  (both-types 1 (WithUnit. 0.3 {:si/m 1})))
 
-;; Note: since we're using `defrecord` to implement our SI units, we will inherit Clojure's value-based equality.
-;; That's not what we want!
-;; Here's an example:
+;; Numbers with units are equal when the numbers are equal and the units are equal.
+;; This normally works out fine:
 
-(=
- (WithUnit. 0.3 {:si/m 1})
- (WithUnit. 0.3 {:si/m 1 :si/s 0}))
+(= (WithUnit. 0.3 {:si/m 1})
+   (WithUnit. 0.3 {:si/m 1}))
+
+;; But zero exponents give us trouble:
+
+(= (WithUnit. 0.3 {:si/m 1})
+   (WithUnit. 0.3 {:si/m 1 :si/s 0}))
+
+^{:nextjournal.clerk/visibility {:code :hide :result :show}}
+(let [unit (fn [base exponent]
+             (format "\\mathrm{%s}^{%d}" (name base) exponent))
+      equation (fn [& args]
+                (str "$" (apply str args) "$"))]
+  (clerk/md (str "But "
+                 (equation (unit :m 0) " = " 1)
+                 "!"
+                 " Therefore "
+                 (equation "0.3 \\times"
+                           " " (unit :m 1)
+                           " " (unit :s 0)
+                           " = "
+                           "0.3 \\times"
+                           " " (unit :m 1)
+                           " = "
+                           "0.3 \\times"
+                           " " "\\mathrm m")
+                 "."
+                 " We can solve that by simplifying away zero exponents in the exponent map.")))
 
 ;; Our problem is zero exponents in the exponent map.
 ;; We can fix this with a contructor that conforms units to the representation we want.
@@ -486,16 +509,21 @@ clerk/default-viewers
         (WithUnit. (.number x)
                    simplified-unit)))))
 
-;; This implementation simplifies unitless numbers to plain numbers:
+;; Zero exponents simplify away:
 
-(simplify (WithUnit. 0.3 {:si/m 0 :si/s 0}))
+(simplify (WithUnit. 0.3 {:si/m 1 :si/s 0}))
+
+;; And if all exponents are zero, the number simplifies to a plain Clojure number:
+
+(let [x (simplify (WithUnit. 0.3 {:si/m 0 :si/s 0}))]
+  {:type (type x) :x x})
 
 ;; Then we implement a constructor in terms of the simplifier.
 
 (defn with-unit [number unit]
   (simplify (WithUnit. number unit)))
 
-;; If we always use `with-unit` and consider `WithUnit.` an implementation detail, equality will work as expected.
+;; If we always use `with-unit` and consider `WithUnit.` an implementation detail, equality will work as expected!
 
 (do
   (defmulti multiply both-types)
@@ -628,7 +656,7 @@ clerk/default-viewers
 (clerk/md (str "But for " (md-unit :mm 3) " and " (md-unit :mm 4) " using multiplication is annoying."
                " Let's fix that by defining exponentiation for WithUnit."))
 
-;; The implementation is quite similar to `multiply`, except that we don't allow numbers with units _as exponents_.
+;; The implementation is similar to `multiply`, except that we don't allow numbers with units _as exponents_.
 ;; We'll rely on clojure.math/pow under the hood.
 
 (do
