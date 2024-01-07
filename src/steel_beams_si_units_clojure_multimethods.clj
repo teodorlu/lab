@@ -594,17 +594,39 @@ clerk/default-viewers
 
 ;; ## Steel beams with units
 
-;; Meters is a base SI unit.
+;; Above, we called this an IPE300 beam:
 
-(def m (with-unit 1 {:si/m 1}))
+^{:nextjournal.clerk/visibility {:code :hide}}
+{:r 15,
+ :wy 557,
+ :s 7.1,
+ :prefix "IPE",
+ :wz 80.5,
+ :h 300,
+ :b 150,
+ :iz 6.04,
+ :t 10.7,
+ :iy 83.6,
+ :profile 300,
+ :a 5.38}
 
-;; A millimeter is one thousands of a meter.
+;; But what units do `:r`, `:wy` and `:iz` have?
+;; Let's make a new map where values have SI units.
 
-(def ipe300
-  (let [m (with-unit 1 {:si/m 1})
-        mm (* 1e-3 m)
-        mm2 (* mm mm)]
-    {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}))
+;; Meters, millimeters and square millimeters are easy:
+
+(let [m (with-unit 1 {:si/m 1})
+      mm (* 10e-3 m)
+      mm2 (* mm mm)]
+  (clerk/row m mm mm2))
+
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(defn md-unit [base exponent]
+  (format "$\\mathrm{%s}^{%d}$" (name base) exponent))
+
+^{:nextjournal.clerk/visibility {:code :hide :result :show}}
+(clerk/md (str "But for " (md-unit :mm 3) " and " (md-unit :mm 4) " using multiplication is annoying."
+               " Let's fix that by defining exponentiation for WithUnit."))
 
 ;; ## Thank you
 ;;
