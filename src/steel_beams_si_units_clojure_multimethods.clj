@@ -718,7 +718,7 @@ clerk/default-viewers
 
 ;; ## Thank you
 ;;
-;; To Sam Ritchie, Martin Kavalar and Jack Rusher for making good tools,
+;; To Sam Ritchie and the Nextjournal team for making great tools,
 ;;   and for helping people who want to learn.
 ;; To Gerald Jay Sussman for improving the way we think about programming, and
 ;;   expanding the range of problems we can solve with programming.
