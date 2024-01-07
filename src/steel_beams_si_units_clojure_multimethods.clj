@@ -29,6 +29,7 @@
   (:refer-clojure :exclude [* / + -])
   (:require
    [clojure.java.io :as io]
+   [clojure.math :as math]
    [clojure.set :as set]
    [clojure.string :as str]
    [nextjournal.clerk :as clerk]
@@ -627,6 +628,43 @@ clerk/default-viewers
 ^{:nextjournal.clerk/visibility {:code :hide :result :show}}
 (clerk/md (str "But for " (md-unit :mm 3) " and " (md-unit :mm 4) " using multiplication is annoying."
                " Let's fix that by defining exponentiation for WithUnit."))
+
+;; The implementation is quite similar to `multiply`, except that we don't allow numbers with units _as exponents_.
+;; We'll rely on clojure.math/pow under the hood.
+
+(do
+  (defmulti pow both-types)
+
+  (defmethod pow [Number Number]
+    [base exponent]
+    (math/pow base exponent))
+
+  (defmethod pow [Number WithUnit]
+    [base exponent]
+    (throw (ex-info "WithUnit as exponent is not supported"
+                    {:base base :exponent exponent})))
+
+  (defmethod pow [WithUnit Number]
+    [base exponent]
+    (with-unit
+      (math/pow (.number base) exponent)
+      (update-vals (.unit base) (partial * exponent))))
+
+  (defmethod pow [WithUnit WithUnit]
+    [base exponent]
+    (throw (ex-info "WithUnit as exponent is not supported"
+                    {:base base :exponent exponent}))))
+
+;; Does it work as expected?
+
+(let [m (with-unit 1 {:si/m 1})
+      mm (* 10e-3 m)]
+  (clerk/example mm
+                 (* mm mm)
+                 (pow mm 2)
+                 (= (* mm mm) (pow mm 2))))
+
+;; Looks all right to me!
 
 ;; ## Thank you
 ;;
