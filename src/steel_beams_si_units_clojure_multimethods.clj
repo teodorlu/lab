@@ -614,7 +614,7 @@ clerk/default-viewers
 ;; But what units do `:r`, `:wy` and `:iz` have?
 ;; Let's make a new map where values have SI units.
 
-;; Meters, millimeters and square millimeters are easy:
+;; Meters, millimeters and square millimeters are convenient to define with multiplication:
 
 (let [m (with-unit 1 {:si/m 1})
       mm (* 10e-3 m)
@@ -665,6 +665,29 @@ clerk/default-viewers
                  (= (* mm mm) (pow mm 2))))
 
 ;; Looks all right to me!
+
+;; Time to revisit our IPE beam.
+;; This time, we add units.
+
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(let [m (with-unit 1 {:si/m 1})
+      mm (* 10e-3 m)
+      mm2 (pow mm 2)
+      mm3 (pow mm 3)
+      mm4 (pow mm 4)]
+  {:r (* 15 mm),
+   :wy (* 557 10e3 mm3),
+   :s (* 7.1 mm),
+   :prefix "IPE",
+   :wz (* 80.5 10e3 mm3),
+   :h (* 300 mm),
+   :b (* 150 mm),
+   :iz (* 6.04 10e6 mm4),
+   :t (* 10.7 mm),
+   :iy (* 83.6 10e6 mm4),
+   :profile 300,
+   :a (* 5.38 10e3 mm2)})
 
 ;; ## Thank you
 ;;
