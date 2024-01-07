@@ -310,12 +310,12 @@
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/caption "Examples of units as maps from base unit to exponent"
-               (clerk/table [{:name "meter"                    :value {:si/m 1}}
-                             {:name "square meter"             :value {:si/m 2}}
-                             {:name "second"                   :value {:si/s 1}}
-                             {:name "per second"               :value {:si/s -1}}
-                             {:name "meters per square second" :value {:si/m 1 :si/s -2}}
-                             ]))
+               (clerk/table (->> [{:name "meter"                    :value {:si/m 1}}
+                                  {:name "square meter"             :value {:si/m 2}}
+                                  {:name "second"                   :value {:si/s 1}}
+                                  {:name "per second"               :value {:si/s -1}}
+                                  {:name "meters per square second" :value {:si/m 1 :si/s -2}}]
+                                 (map #(set/rename-keys % {:name "Unit" :value "Map from base unit to exponent"})))))
 
 ;; Let's not invent types when we don't have to.
 ;;
