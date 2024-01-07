@@ -28,7 +28,6 @@
 (ns steel-beams-si-units-clojure-multimethods
   (:refer-clojure :exclude [* / + -])
   (:require
-   [clojure.edn :as edn]
    [clojure.java.io :as io]
    [clojure.set :as set]
    [clojure.string :as str]
