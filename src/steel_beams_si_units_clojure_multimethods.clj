@@ -452,7 +452,6 @@ clerk/default-viewers
 ;; We're going to use multimethods to support plain numbers numbers without units.
 
 ;; First, we need a dispatch fn for two-arg type-based multimethods.
-;; Note that multimethod dispatch functions _take one arg_: the dispatch vector.
 
 ^{:nextjournal.clerk/visibility {:result :hide}}
 (defn ^:private both-types [a b]
