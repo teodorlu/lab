@@ -695,7 +695,7 @@ clerk/default-viewers
 ;; Does it work as expected?
 
 (let [m (with-unit 1 {:si/m 1})
-      mm (* 10e-3 m)]
+      mm (* 1e-3 m)]
   (clerk/example mm
                  (* mm mm)
                  (pow mm 2)
