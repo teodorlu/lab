@@ -2,7 +2,7 @@
 ;;
 ;; > Flexible software must be more flexible than all known cases.
 ;;
-;; I'm paraphrasing [Software Design for Flexibility] by [Chris Hanson] and [Gerald Jay Sussman] from memory, don't expect to find the exact quote.
+;; I'm paraphrasing [Software Design for Flexibility] by [Chris Hanson] and [Gerald Jay Sussman] from memory, don't expect to find this exact quote.
 ;;
 ;; [Software Design for Flexibility]: https://mitpress.mit.edu/books/software-design-flexibility
 ;; [Chris Hanson]: https://people.csail.mit.edu/cph/
