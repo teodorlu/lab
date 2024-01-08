@@ -33,6 +33,7 @@
    [clojure.set :as set]
    [clojure.string :as str]
    [nextjournal.clerk :as clerk]
+   [nextjournal.clerk.viewer :as viewer]
    [taoensso.nippy :as nippy]))
 
 ^{:nextjournal.clerk/visibility {:code :hide
@@ -133,6 +134,15 @@
 (comment
   (clerk/clear-cache!))
 
+;; We're going to want some pretty TeX math.
+;; We want that tex math to be _inline_.
+;; So we create our own tex viewer that is exactly the same as clerk/tex, but views forms inline.
+
+(def katex-inline-viewer
+  (update viewer/katex-viewer :transform-fn comp (fn [wv] (-> wv (assoc-in [:nextjournal/render-opts :inline?] true)))))
+
+(defn tex [x]
+  (clerk/with-viewer katex-inline-viewer x))
 
 ;; Let's make a similar figure ourselves.
 ;; We will represent beams as maps.
@@ -153,7 +163,7 @@
               ]]
   (clerk/table (for [label (sort-by :norwegian labels)]
                  (-> label
-                     (update :pretty clerk/tex)
+                     (update :pretty tex)
                      (set/rename-keys {:description "Description"
                                        :norwegian "Label"
                                        :pretty "Math notation"})))))
@@ -414,7 +424,7 @@ clerk/default-viewers
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
  (unit->tex {:m 2 :s -1})
- (clerk/tex (unit->tex {:m 2 :s -1})))
+ (tex (unit->tex {:m 2 :s -1})))
 
 ;; That looks like what I had in mind!
 ;; We also want _numbers with SI units_.
@@ -431,7 +441,7 @@ clerk/default-viewers
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
  (with-unit->tex (WithUnit. 0.3 {:si/m 1}))
- (clerk/tex (with-unit->tex (WithUnit. 0.3 {:si/m 1})))
+ (tex (with-unit->tex (WithUnit. 0.3 {:si/m 1})))
  )
 
 ;; Finally, we can create a viewer.
@@ -440,7 +450,7 @@ clerk/default-viewers
   (def with-unit-viewer
     {:name `with-unit-viewer
      :pred with-unit?
-     :transform-fn (clerk/update-val (fn [unit] (clerk/tex (with-unit->tex unit))))})
+     :transform-fn (clerk/update-val (fn [unit] (tex (with-unit->tex unit))))})
 
   (clerk/add-viewers! [with-unit-viewer])
 
