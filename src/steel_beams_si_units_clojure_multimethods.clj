@@ -733,7 +733,7 @@ clerk/default-viewers
 ;; To Gerald Jay Sussman for improving the way we think about programming, and
 ;;   expanding the range of problems we can solve with programming.
 ;; To Eugene Pakhomov, Joshua Suskalo and Ethan McCue for helping me understand
-;;   how Java types, Clojure multimethod type hierarchies are connected.
+;;   how Java types and Clojure multimethod type hierarchies are connected.
 
 ;; ## Further reading
 ;;
