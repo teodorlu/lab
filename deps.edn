@@ -3,6 +3,7 @@
         babashka/process {:mvn/version "0.5.21"}
         borkdude/rewrite-edn {:mvn/version "0.4.7"}
         cnuernber/dtype-next {:mvn/version "10.108"}
+        com.cognitect/transit-clj {:mvn/version "1.0.333"}
         com.github.seancorfield/next.jdbc {:mvn/version "1.3.909"}
         com.github.serceman/jnr-fuse {:mvn/version "0.5.7"}
         com.taoensso/nippy {:mvn/version "3.3.0"}
