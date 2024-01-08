@@ -709,7 +709,7 @@ clerk/default-viewers
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (let [m (with-unit 1 {:si/m 1})
-      mm (* 10e-3 m)
+      mm (* 1e-3 m)
       mm2 (pow mm 2)
       mm3 (pow mm 3)
       mm4 (pow mm 4)]
