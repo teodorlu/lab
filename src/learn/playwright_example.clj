@@ -6,11 +6,8 @@
 ;; - Using Playwright with the Java client.
 
 (ns learn.playwright-example
-  (:import (com.microsoft.playwright Playwright Page BrowserType)
-           com.microsoft.playwright.BrowserType$LaunchOptions)
-  (:require
-   [nextjournal.clerk :as clerk]
-   [clojure.java.data :as j]))
+  (:import (com.microsoft.playwright Playwright)
+           com.microsoft.playwright.BrowserType$LaunchOptions))
 
 ;; Running this takes quite a few seconds!
 
@@ -31,53 +28,43 @@
   (init!)
   (halt!)
 
-  )
+  (do
+    (def playwright @playwright-state)
+    (def firefox
+      (-> playwright
+          (.firefox)
+          (.launch
+           (-> (BrowserType$LaunchOptions.)
+               (.setHeadless false)))))
 
-(def playwright @playwright-state)
+    (def page-firefox (.newPage firefox))
+    (.navigate page-firefox "https://www.teod.eu/"))
 
-(def firefox
-  (-> playwright
-      (.firefox)
-      (.launch
-       (-> (BrowserType$LaunchOptions.)
-           (.setHeadless false)
-           #_(.setSlowMo 50)))))
+  (do
+    (def chromium
+      (-> playwright
+          (.chromium)
+          (.launch
+           (-> (BrowserType$LaunchOptions.)
+               (.setHeadless false)))))
+    (def page-chromium (.newPage chromium))
+    (.navigate page-chromium "https://www.ao.no/"))
 
-(def page (.newPage firefox))
-(.navigate page "https://clojure.org")
+  (.navigate page-chromium "https://www.nettavisen.no/")
 
-(comment
-  (j/from-java page)
+  (defn navboth [url]
+    (.navigate page-firefox url)
+    (.navigate page-chromium url))
 
-  ;; doing this from the REPL feels like black magic
+  (navboth "https://iterate.no")
+
   (let [domains ["https://www.evalapply.org"
                  "https://clojure.org"
                  "https://teod.eu"]]
     (dotimes [_n 10]
-      (.navigate page (rand-nth domains))
+      (.navigate page-firefox (rand-nth domains))
       (Thread/sleep 1000)))
 
-
-
-  )
-
-(comment
-
-  123
-
-  (clerk/halt!)
-
-  (when-let [p @playwright-state]
-    (.close p)
-    (reset! playwright-state nil))
+  (halt!)
 
   :rcf)
-
-(comment
-  ;; eksperimentering teodor
-
-  com.microsoft.playwright.BrowserType$LaunchOptions
-  ;; => com.microsoft.playwright.BrowserType$LaunchOptions
-
-  ;; Dette ser lovende ut!!!
-  )
