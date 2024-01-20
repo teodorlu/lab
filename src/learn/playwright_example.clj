@@ -14,7 +14,7 @@
 (defonce playwright-state (atom nil)) ;; so we can (.close @playwright-state)
 
 (defn init! []
-  (when [(not= nil @playwright-state)]
+  (when (not= nil @playwright-state)
     (reset! playwright-state (Playwright/create))))
 
 (init!)
