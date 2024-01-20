@@ -8,7 +8,7 @@
 (ns learn.playwright-example
   (:import [com.microsoft.playwright Playwright])
   (:require
-    [nextjournal.clerk :as clerk]))
+   [nextjournal.clerk :as clerk]))
 
 ;; Running this takes quite a few seconds!
 (def playwright (Playwright/create))
