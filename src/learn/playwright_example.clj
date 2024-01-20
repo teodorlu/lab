@@ -6,9 +6,7 @@
 ;; - Using Playwright with the Java client.
 
 (ns learn.playwright-example
-  (:import (com.microsoft.playwright Playwright Page BrowserType
-                                     Browsertype$LaunchOptions
-                                     ))
+  (:import (com.microsoft.playwright Playwright Page BrowserType))
   (:require
    [nextjournal.clerk :as clerk]))
 
@@ -22,14 +20,7 @@
     (.launch
      (-> (BrowserType$LaunchOptions.)
          (.setHeadless false)
-         (.setSlowMo 50))))
-;; => "Unable to resolve classname: BrowserType$LaunchOptions"
-
-
-;; (def browser (.launch (.webkit playwright)))
-;; (def page (.newPage browser))
-
-
+         #_(.setSlowMo 50))))
 
 (comment
 
