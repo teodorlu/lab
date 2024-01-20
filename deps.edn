@@ -16,6 +16,7 @@
                                           :git/sha "9ec8a1f01ccd4d4dc038a52467c8b2576f6dc4c2"}
         org.babashka/cli {:mvn/version "0.8.55"}
         org.clojure/clojure {:mvn/version "1.11.1"}
+        org.clojure/java.data {:mvn/version "1.1.103"}
         org.mentat/emmy {:mvn/version "0.31.0"}
         org.xerial/sqlite-jdbc {:mvn/version "3.44.1.0"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
