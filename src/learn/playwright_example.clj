@@ -38,7 +38,7 @@
                (.setHeadless false)))))
 
     (def page-firefox (.newPage firefox))
-    (.navigate page-firefox "https://www.teod.eu/"))
+    (.navigate page-firefox "https://www.mikrobloggeriet.no/"))
 
   (do
     (def chromium
@@ -48,21 +48,31 @@
            (-> (BrowserType$LaunchOptions.)
                (.setHeadless false)))))
     (def page-chromium (.newPage chromium))
-    (.navigate page-chromium "https://www.ao.no/"))
+    (.navigate page-chromium "https://www.mikrobloggeriet.no/"))
 
-  (.navigate page-chromium "https://www.nettavisen.no/")
+  (do
+    (def chrome
+      (-> playwright
+          (.chrome)
+          (.launch
+           (-> (BrowserType$LaunchOptions.)
+               (.setHeadless false)))))
+    (def page-chromium (.newPage chromium))
+    (.navigate page-chromium "https://www.mikrobloggeriet.no/"))
+
+  (.navigate page-chromium "https://www.mikrobloggeriet.no/")
 
   (defn navboth [url]
     (.navigate page-firefox url)
     (.navigate page-chromium url))
 
-  (navboth "https://iterate.no")
+  (navboth "https://mikrobloggeriet.no")
 
-  (let [domains ["https://www.evalapply.org"
-                 "https://clojure.org"
-                 "https://teod.eu"]]
+  (let [domains ["https://iterate.no"
+                 "https://vake.ai"
+                 "https://mikrobloggeriet.no"]]
     (dotimes [_n 10]
-      (.navigate page-firefox (rand-nth domains))
+      (navboth (rand-nth domains))
       (Thread/sleep 1000)))
 
   (halt!)
