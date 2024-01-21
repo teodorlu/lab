@@ -1,6 +1,5 @@
 (ns learn.mikrobloggeriet-css-bug
-  (:import (com.microsoft.playwright Playwright)
-           com.microsoft.playwright.BrowserType$LaunchOptions))
+  (:import (com.microsoft.playwright Playwright BrowserType$LaunchOptions)))
 
 ;; reproduce https://github.com/iterate/mikrobloggeriet/issues/79 locally
 
