@@ -23,3 +23,7 @@
   (set! (.-y p) 100)
   [(.y p) (.-y p)])
 ;; => [100 100]
+
+(= java.util.Date
+   (Class/forName "java.util.Date"))
+;; => true
