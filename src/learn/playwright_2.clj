@@ -1,36 +1,103 @@
+;; # Using Playwright from Clojure
+;;
+;; In which,
+;;
+;; - You get a feel for what Playwright can do for you
+;; - You get a feel for Playwright's Java API used through Clojure's Java interop.
+
+
 (ns learn.playwright-2
-  (:import (com.microsoft.playwright Playwright BrowserType$LaunchOptions))
   (:require
-    [clojure.string :as str]
-    [nextjournal.clerk :as clerk]))
+   [nextjournal.clerk :as clerk]
+   nextjournal.clerk.analyzer)
+  (:import
+   (com.microsoft.playwright BrowserType$LaunchOptions Playwright)))
 
-(defonce playwright (Playwright/create))
+;; ## Playwright or Etaoin?
+;;
+;; [Playwright] and [Etaoin] both provide an API for controlling web browser behavior.
+;; Playwright provides packages for use in TypeScript/JavaScript, Python, .NET and Java.
+;; Etaoin is a pure Clojure implementation.
+;;
+;; In this article, we use Playwright through the Playwright Java API.
+;;
+;; [Playwright]: https://playwright.dev/
+;; [Etaoin]: https://github.com/clj-commons/etaoin
 
-(defn firefox! [pw]
+^{:nextjournal.clerk/visibility {:code :hide}}
+(let [yes "yes ✅"
+      no "no ❌"]
+  (clerk/caption "Comparison: Playwright with java interop and Etaoin"
+   (clerk/table
+    (clerk/use-headers
+     [["Criterion"        "Playwright w/ Java interop"    "Etaoin"]
+      ["Use from Clojure" "Clojure java interop, objects" "Idiomatic Clojure interface"]
+      ["Use from Typescript" yes no]
+      ["Use from Python"     yes no]
+      ["Use from .NET"       yes no]
+      ["Browser installation"
+       "automatic, with the maven package"
+       "user installs browser web drivers manually"]]))))
+
+;; Pick what suits your needs, or try both.
+
+;; ## Playwright REPL setup
+;;
+;; We need a playwright instance and a firefox instance to poke at.
+;;
+;; `defonce` ensures we get _one_ instance when we start our REPL and Clerk.
+;; Restarts are manual in a comment block.
+
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defn make-playwright [] (Playwright/create))
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defonce playwright (make-playwright))
+
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defn make-firefox [pw]
   (-> pw
       (.firefox)
       (.launch
        (-> (BrowserType$LaunchOptions.)
            (.setHeadless false)))))
 
-(def firefox (firefox! playwright))
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defonce firefox (make-firefox playwright))
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (comment
+  (.close playwright)
+  (alter-var-root #'playwright (constantly (make-playwright)))
   (.close firefox)
-  (alter-var-root #'firefox (constantly (firefox! playwright)))
-  )
+  (alter-var-root #'firefox (constantly (make-firefox playwright)))
 
-;; are pages alive?
+  :rcf)
+
+;; ## Screenshots
+;;
+;; We're going to generate screenshots for a bunch of pages, and look at them.
+;; We'll store the images on disk, with a file name we can compute from the URL.
+
+(defn url->png-filename [url]
+  (str (nextjournal.clerk.analyzer/valuehash url) ".png"))
 
 (def urls
-  (for [name ["mikrobloggeriet.no"
-              "play.teod.eu"
-              "teod.eu"
-              "teod.eu/aphorisms"]]
-    {:filename (str (str/replace name #"/" "-") ".png")
-     :url (str "https://" name)}))
+  (for [url ["https://mikrobloggeriet.no"
+             "https://play.teod.eu"
+             "https://teod.eu"
+             "https://teod.eu/aphorisms"]]
+    {:url url
+     :filename (url->png-filename url)}))
 
-(clerk/table urls)
+(defn short-str [s]
+  (let [l (.length s)]
+    (str
+     (subs s 0 5)
+     "[...]"
+     (subs s (- l 8) l))))
+
+(clerk/table (->> urls
+                  (map #(update % :filename short-str))))
 
 (comment
   (doseq [url urls]
