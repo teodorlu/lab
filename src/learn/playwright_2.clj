@@ -100,11 +100,11 @@
      (subs s (- l 8) l))))
 
 (let [urls-pretty
-      (->> urls
-           (map (fn [m]
-                  (-> m
-                      (update :filename short-filename-str)
-                      (update :url #(clerk/html [:a {:href %} %]))))))]
+      (map (fn [m]
+             (-> m
+                 (update :filename short-filename-str)
+                 (update :url #(clerk/html [:a {:href %} %]))))
+           urls)]
   (clerk/caption "We hash URLs to get valid file names"
                  (clerk/table urls-pretty)))
 
