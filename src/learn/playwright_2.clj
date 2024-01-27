@@ -78,9 +78,11 @@
 ;; We're going to generate screenshots for a bunch of pages, and look at them.
 ;; We'll store the images on disk, with a file name we can compute from the URL.
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (defn url->png-filename [url]
   (str (nextjournal.clerk.analyzer/valuehash url) ".png"))
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (def urls
   (for [url ["https://mikrobloggeriet.no"
              "https://play.teod.eu"
@@ -89,7 +91,8 @@
     {:url url
      :filename (url->png-filename url)}))
 
-(defn short-str [s]
+^{:nextjournal.clerk/visibility {:result :hide}}
+(defn short-filename-str [s]
   (let [l (.length s)]
     (str
      (subs s 0 5)
@@ -97,7 +100,10 @@
      (subs s (- l 8) l))))
 
 (clerk/table (->> urls
-                  (map #(update % :filename short-str))))
+                  (map #(update % :filename short-filename-str))))
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/html [:div {:style {:height "50vh"}}])
 
 (comment
   (doseq [url urls]
