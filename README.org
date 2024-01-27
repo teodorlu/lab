@@ -1,6 +1,6 @@
 #+title: Teodor's Clojure lab
 
-Purpose: share knowledge, and experiment with knowledge representation.
+Purpose: to learn, to share knowledge, and to experiment with knowledge.
 
 | Github       | https://github.com/teodorlu/lab          |
 | Clerk garden | https://github.clerk.garden/teodorlu/lab |
@@ -16,3 +16,6 @@ To enter a Clerk-garden-like environment:
 #+begin_src
 nix run github:nextjournal/garden-env#build
 #+end_src
+
+Rebuild on Clerk Garden and view:
+https://github.clerk.garden/teodorlu/lab?update=1
