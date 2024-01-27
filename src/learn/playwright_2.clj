@@ -105,7 +105,7 @@
                   (-> m
                       (update :filename short-filename-str)
                       (update :url #(clerk/html [:a {:href %} %]))))))]
-  (clerk/caption "We hash the URLs to get valid file names"
+  (clerk/caption "We hash URLs to get valid file names"
                  (clerk/table urls-pretty)))
 
 (comment
