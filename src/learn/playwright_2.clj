@@ -87,7 +87,7 @@
   (for [url ["https://mikrobloggeriet.no"
              "https://play.teod.eu"
              "https://teod.eu"
-             "https://teod.eu/aphorisms"]]
+             "https://play.teod.eu/aphorisms"]]
     {:url url
      :filename (url->png-filename url)}))
 
