@@ -29,7 +29,10 @@
   {:exec-fn nextjournal.clerk/build!
    :exec-args {:paths ["src/*.clj"
                        "src/repro/*.clj"
-                       "src/learn/playwright_2.clj"]}}
+                       ;; Per 2024-01-27, Playwright doesn't work on Clerk Garden
+                       ;; See https://build.github.clerk.garden/teodorlu/lab/commit/5f1834b56d9b819c332faf5320dfd8226f56a65d/?update=1
+                       ;; "src/learn/playwright_2.clj"
+                       ]}}
   :rainbow-tables
   {:exec-fn nextjournal.clerk/build!
    :exec-args {:paths ["src/rainbow_tables.clj"]}}}}
