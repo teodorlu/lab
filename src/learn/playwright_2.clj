@@ -99,9 +99,14 @@
      "[...]"
      (subs s (- l 8) l))))
 
-(clerk/caption "We hash the URLs to get valid file names"
-               (clerk/table (->> urls
-                                 (map #(update % :filename short-filename-str)))))
+(let [urls-pretty
+      (->> urls
+           (map (fn [m]
+                  (-> m
+                      (update :filename short-filename-str)
+                      (update :url #(clerk/html [:a {:href %} %]))))))]
+  (clerk/caption "We hash the URLs to get valid file names"
+                 (clerk/table urls-pretty)))
 
 (comment
   (doseq [url urls]
