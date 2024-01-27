@@ -99,11 +99,9 @@
      "[...]"
      (subs s (- l 8) l))))
 
-(clerk/table (->> urls
-                  (map #(update % :filename short-filename-str))))
-
-^{:nextjournal.clerk/visibility {:code :hide}}
-(clerk/html [:div {:style {:height "50vh"}}])
+(clerk/caption "We hash the URLs to get valid file names"
+               (clerk/table (->> urls
+                                 (map #(update % :filename short-filename-str)))))
 
 (comment
   (doseq [url urls]
