@@ -28,7 +28,8 @@
  {:nextjournal/clerk
   {:exec-fn nextjournal.clerk/build!
    :exec-args {:paths ["src/*.clj"
-                       "src/repro/*.clj"]}}
+                       "src/repro/*.clj"
+                       "src/learn/playwright_2.clj"]}}
   :rainbow-tables
   {:exec-fn nextjournal.clerk/build!
    :exec-args {:paths ["src/rainbow_tables.clj"]}}}}
