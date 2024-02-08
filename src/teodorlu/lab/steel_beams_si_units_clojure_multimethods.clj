@@ -71,17 +71,18 @@
                         #{:spaghetti :shekshuka})]
    (str "consider exploring " (name (rand-nth (vec topics))) " today!")))
 
-;; If you accept these five decisions about syntax, you can mostly do whatever you want afterwards.
+;; When you can understand these five examples, you know enough Clojure syntax to get by.
 
 ;; You can define your own functions, and your own macros.
 ;; `last` is `clojure.core/last`, `set/union` is `clojure.set/union.`
 ;; Let is `clojure.core/let`, a macro.
-;; The only reason you can write `let` and have that automatically refer to `clojure.core/let` is that all vars from `clojure.core` are required by default (which can be disabled).
+;; The only reason you can write `let` and have that automatically refer to `clojure.core/let` is that all vars from `clojure.core` are required by default.
+;; You can disable this default if you want to.
 
 ;; What about syntax for function definitions?
 ;; Syntax for type definitions?
 ;; Syntax for loop constructs?
-;; Where are they?
+;; Surely, you just forgot about those?
 ;;
 ;; - There is no syntax for function definition — `fn` is a macro.
 ;; - There is no syntax for type definitions — you can choose a library for checking data
