@@ -86,7 +86,7 @@
 ;;
 ;; - There is no syntax for function definition — `fn` is a macro.
 ;; - There is no syntax for type definitions — you can choose a library for checking data
-;;   (like [clojure spec] or [malli], _if_ you want.
+;;   (like [clojure spec] or [malli]), _if_ you want.
 ;;   If you do need types, there's `deftype`, `defrecord` and `defprotocol`, all three are macros.
 ;; - There is no syntax for for loops — `for` is a plain macro
 ;; - There is no syntax for while loops — `loop` and `reduce` are macros.
