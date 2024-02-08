@@ -346,13 +346,17 @@
 
 (str (WithUnit. 0.3 {:si/m 1}))
 
+;; We got an instance of our type!
+;;
+;; But hex of in-memory address isn't too helpful for understanding the beams.
 ;; Perhaps we can persuade Clerk to show our units in a more appealing way?
+;;
 ;; We start by looking at Clerk's provided viewers.
 
 clerk/default-viewers
 
 ;; A viewer is a map.
-;; What keys are used by other viewers?
+;; What keys are there?
 
 (->> clerk/default-viewers
      (mapcat keys)
@@ -396,7 +400,8 @@ clerk/default-viewers
  (with-unit? 3)
  (with-unit? "iiiiiiiiiiiiiiiiiiiiii"))
 
-;; Looks about right. Can we render m^2/s?
+;; Looks about right.
+;; Can we render the SI unit for accelleration, $\mathrm{m}^2 / \mathrm s$?
 
 (defn unit->tex
   "Convert from a unit as data to unit as TeX.
@@ -436,11 +441,11 @@ clerk/default-viewers
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/example
- (unit->tex {:m 2 :s -1})
- (tex (unit->tex {:m 2 :s -1})))
+ (unit->tex {:si/m 2 :si/s -1})
+ (tex (unit->tex {:si/m 2 :si/s -1})))
 
 ;; That looks like what I had in mind!
-;; We also want _numbers with SI units_.
+;; We also want to show _numbers with SI units_ nicely.
 
 ^{:nextjournal.clerk/visibility {:result :hide}}
 (defn with-unit->tex [with-unit]
@@ -469,9 +474,10 @@ clerk/default-viewers
 
   (WithUnit. 0.3 {:si/m 1}))
 
-;; It's working!
-;; Time to implement *.
-;; We're going to use multimethods to support plain numbers numbers without units.
+;; It's working! 😁
+;;
+;; Time to implement $*$.
+;; We're going to use multimethods to support interaction between plan Clojure numbers and numbers with unit.
 
 ;; First, we need a dispatch fn for two-arg type-based multimethods.
 
