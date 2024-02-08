@@ -135,12 +135,17 @@
 (comment
   (clerk/clear-cache!))
 
-;; We're going to want some pretty TeX math.
-;; We want that tex math to be _inline_.
-;; So we create our own tex viewer that is exactly the same as clerk/tex, but views forms inline.
+;; To talk about steel beams, we want pretty math symbols.
+;; TeX to the rescue.
+;; We want our tex math to be _inline_, inside tables and other objects.
+;; We can get exactly that behavior with a Clerk viewer.
+;; Inline TeX is like normal TeX, just with inline rendering.
 
 (def katex-inline-viewer
-  (update viewer/katex-viewer :transform-fn comp (fn [wv] (-> wv (assoc-in [:nextjournal/render-opts :inline?] true)))))
+  (update viewer/katex-viewer
+          :transform-fn
+          comp (fn [viewer]
+                 (-> viewer (assoc-in [:nextjournal/render-opts :inline?] true)))))
 
 (defn tex [x]
   (clerk/with-viewer katex-inline-viewer x))
