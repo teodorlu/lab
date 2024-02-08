@@ -156,25 +156,30 @@
 ;; Keys are Clojure symbols representing a beam property.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
-(let [properties [{:label :r       :pretty "r"                  :description "Curve radius between flanges and beams"}
-                  {:label :wy      :pretty "W_y"                :description "Strong axis bending moment resistance"}
-                  {:label :s       :pretty "s"                  :description "Web thickness"}
-                  {:label :prefix  :pretty "\\textit{prefix}"   :description "Beam profile name prefix, eg IPE or HEA"}
-                  {:label :wz      :pretty "W_z"                :description "Weak axis bending moment resistance"}
-                  {:label :h       :pretty "h"                  :description "Beam cross section height"}
-                  {:label :b       :pretty "b"                  :description "Beam cross section width"}
-                  {:label :iz      :pretty "I_z"                :description "Weak axes bending stiffness"}
-                  {:label :t       :pretty "t"                  :description "Flange thickness"}
-                  {:label :iy      :pretty "I_y"                :description "Strong axis bending stiffness"}
-                  {:label :profile :pretty "\\textit{profile}"  :description "Profile number, eg 300 for IPE300"}
-                  {:label :a       :pretty "A"                  :description "Cross section area"}
-                  ]]
-  (clerk/table (for [label (sort-by :label properties)]
-                 (-> label
-                     (update :pretty tex)
-                     (set/rename-keys {:description "Description"
-                                       :label "Label"
-                                       :pretty "Math notation"})))))
+(clerk/caption "Steel beam properties"
+               (let [properties [
+                                 {:label :a       :pretty "A"                 :unit "mm^2" :description "Cross section area"}
+                                 {:label :b       :pretty "b"                 :unit "mm" :description "Beam cross section width"}
+                                 {:label :h       :pretty "h"                 :unit "mm" :description "Beam cross section height"}
+                                 {:label :iy      :pretty "I_y"               :unit "mm^4" :description "Strong axis bending stiffness"}
+                                 {:label :iz      :pretty "I_z"               :unit "mm^4" :description "Weak axes bending stiffness"}
+                                 {:label :prefix  :pretty "\\textit{prefix}"  :unit "-" :description "Beam profile name prefix, eg IPE or HEA"}
+                                 {:label :profile :pretty "\\textit{profile}" :unit "-" :description "Profile number, eg 300 for IPE300"}
+                                 {:label :r       :pretty "r"                 :unit "mm" :description "Curve radius between flanges and beams"}
+                                 {:label :s       :pretty "s"                 :unit "mm" :description "Web thickness"}
+                                 {:label :t       :pretty "t"                 :unit "mm" :description "Flange thickness"}
+                                 {:label :wy      :pretty "W_y"               :unit "mm^3" :description "Strong axis bending moment resistance"}
+                                 {:label :wz      :pretty "W_z"               :unit "mm^3" :description "Weak axis bending moment resistance"}
+                                 ]]
+                 (clerk/table
+                  (clerk/use-headers
+                   (concat [["Description" "Label" "Math notation" "SI Unit"]]
+                           (for [beam-property (sort-by :label properties)]
+                             (let [label (:label beam-property)
+                                   description (:description beam-property)
+                                   math-notation (tex (:pretty beam-property))
+                                   si-unit (tex (str "\\mathrm{" (:unit beam-property) "}"))]
+                               [description label math-notation si-unit])))))))
 
 ;; This map is an IPE300 beam:
 
