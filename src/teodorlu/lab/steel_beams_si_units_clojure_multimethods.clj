@@ -188,65 +188,65 @@
 
 ;; Let's draw breams with SVG.
 
-(defn i-shape-steel-beam->svg [beam]
-  (let [plus clojure.core/+
-        minus clojure.core/-
-        div clojure.core//
-        mult clojure.core/*
+(let [i-shape-steel-beam->svg
+      (fn [beam]
+        (let [plus clojure.core/+
+              minus clojure.core/-
+              div clojure.core//
+              mult clojure.core/*
 
-        margin 4.5
-        margin*2 (mult margin 2)
+              margin 4.5
+              margin*2 (mult margin 2)
 
-        ;; Profile parameters
-        {:keys [h b s t r]} beam
-        ;;
-        ;; Notation for paths with SVG
-        ;; See
-        ;;
-        ;;     https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
-        ;;
-        ;; to learn how to work with SVG pathsSVG paths
-        M "M"
-        l "l"
-        a "a"
-
-        -r (minus r)
-        r*2 (mult r 2)
-        flange-tip-length (div (minus b s) 2)
-        web-inner-height (minus h (mult 2 t))
-        path [M margin margin
-              l b 0
-              l 0 t
-              l (minus (minus flange-tip-length r)) 0 ; top right corner
-
-              ;; MDN explains how to draw curve segments, _arcs_:
+              ;; Profile parameters
+              {:keys [h b s t r]} beam
               ;;
-              ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#arcs
+              ;; Notation for paths with SVG
+              ;; See
+              ;;
+              ;;     https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+              ;;
+              ;; to learn how to work with SVG pathsSVG paths
+              M "M"
+              l "l"
+              a "a"
 
-              ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
-              a    r  r  0               0              0          -r r
-              l 0 (minus web-inner-height r*2)  ; web, right side
-              a r r 0 0 0 r r
+              -r (minus r)
+              r*2 (mult r 2)
+              flange-tip-length (div (minus b s) 2)
+              web-inner-height (minus h (mult 2 t))
+              path [M margin margin
+                    l b 0
+                    l 0 t
+                    l (minus (minus flange-tip-length r)) 0 ; top right corner
 
-              l (minus flange-tip-length r) 0
-              l 0 t
-              l (minus b) 0
-              l 0 (minus t)
+                    ;; MDN explains how to draw curve segments, _arcs_:
+                    ;;
+                    ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#arcs
 
-              l (minus flange-tip-length r) 0
-              a r r 0 0 0 r (minus r)
-              l 0 (minus (minus web-inner-height r*2)) ;; web, left side
-              a r r 0 0 0 (minus r) (minus r)
-              l (minus (minus flange-tip-length r)) 0
-              "Z"
-              ]]
-    [:svg {:width (plus margin*2 (:b beam))
-           :height (plus margin*2 (:h beam))}
-     [:path {:d (str/join " " path)
-             :fill "transparent"
-             :stroke "black"}]]))
+                    ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
+                    a    r  r  0               0              0          -r r
+                    l 0 (minus web-inner-height r*2) ; web, right side
+                    a r r 0 0 0 r r
 
-(let [ipe300 {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}]
+                    l (minus flange-tip-length r) 0
+                    l 0 t
+                    l (minus b) 0
+                    l 0 (minus t)
+
+                    l (minus flange-tip-length r) 0
+                    a r r 0 0 0 r (minus r)
+                    l 0 (minus (minus web-inner-height r*2)) ;; web, left side
+                    a r r 0 0 0 (minus r) (minus r)
+                    l (minus (minus flange-tip-length r)) 0
+                    "Z"
+                    ]]
+          [:svg {:width (plus margin*2 (:b beam))
+                 :height (plus margin*2 (:h beam))}
+           [:path {:d (str/join " " path)
+                   :fill "transparent"
+                   :stroke "black"}]]))
+      ipe300 {:r 15, :wy 557, :s 7.1, :prefix "IPE", :wz 80.5, :h 300, :b 150, :iz 6.04, :t 10.7, :iy 83.6, :profile 300, :a 5.38}]
   (clerk/caption "My SVG of a steel beam!"
                  (clerk/html (i-shape-steel-beam->svg ipe300))))
 
@@ -765,6 +765,10 @@ clerk/default-viewers
    :iy (* 83.6 10e6 mm4),
    :profile 300,
    :a (* 5.38 10e3 mm2)})
+
+;; ## Steel beams figures revisited
+
+
 
 ;; ## Thank you
 ;;
