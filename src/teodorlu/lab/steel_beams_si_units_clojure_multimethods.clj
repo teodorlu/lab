@@ -521,11 +521,18 @@ clerk/default-viewers
                  "."
                  " We can solve that by simplifying away zero exponents in the exponent map.")))
 
-;; Our problem is zero exponents in the exponent map.
-;; We can fix this with a contructor that conforms units to the representation we want.
-
 (defn ^:private simplify-unit [x]
   (into {} (remove (fn [[_ exponent]] (= exponent 0)) x)))
+
+;; Does it work?
+
+(let [length (WithUnit. 0.3 {:si/m 1 :si/s 0})]
+  (clerk/example (.unit length)
+                 (simplify-unit (.unit length))))
+
+;; The zero exponent simplifies away.
+;; Nice!
+;; Onto with-units.
 
 ^{:nextjournal.clerk/visibility {:result :hide}}
 (do
@@ -538,11 +545,14 @@ clerk/default-viewers
         (WithUnit. (.number x)
                    simplified-unit)))))
 
-;; Zero exponents simplify away:
+;; Does it work?
 
 (simplify (WithUnit. 0.3 {:si/m 1 :si/s 0}))
 
-;; And if all exponents are zero, the number simplifies to a plain Clojure number:
+;; Also this time, the zero exponent also simplifies away.
+;; Also nice!
+;;
+;; If all exponents are zero, the number simplifies to a plain Clojure number:
 
 (let [x (simplify (WithUnit. 0.3 {:si/m 0 :si/s 0}))]
   {:type (type x) :x x})
@@ -553,6 +563,8 @@ clerk/default-viewers
   (simplify (WithUnit. number unit)))
 
 ;; If we always use `with-unit` and consider `WithUnit.` an implementation detail, equality will work as expected!
+
+;; Finally, multiplication.
 
 (do
   (defmulti multiply both-types)
@@ -581,16 +593,24 @@ clerk/default-viewers
                   (.unit a)
                   (.unit b)))))
 
-;; Finally, we can multiply numbers!
+;; Does it work?
 
 (multiply 100 (with-unit 0.3 {:si/m 1}))
 
+;; Yes!
+
+;; Our `multiply` only supports two arguments.
+;; In the Lisp tradition, we'll make a _variadic_ $*$: a $*$ that supports zero, one, two or many arguments.
+
 (defn *
+  ([] 1)
   ([a] a)
   ([a b] (multiply a b))
   ([a b & args] (reduce multiply (multiply a b) args)))
 
-(multiply 100 (WithUnit. 0.3 {:si/m 1}))
+(clerk/example
+  (* 100 (with-unit 0.3 {:si/m 1}))
+  (* 100 (with-unit 0.3 {:si/m 1}) (with-unit 1 {:si/s -1})))
 
 (let [height (with-unit 0.3 {:si/m 1})]
   (clerk/example
