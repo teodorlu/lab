@@ -25,7 +25,7 @@
 ;; Clojure establishes syntax for sequential data, associative data, sets, function calls and macro calls.
 
 ^{:nextjournal.clerk/toc true}
-(ns steel-beams-si-units-clojure-multimethods
+(ns teodorlu.lab.steel-beams-si-units-clojure-multimethods
   (:refer-clojure :exclude [* / + -])
   (:require
    [clojure.java.io :as io]
