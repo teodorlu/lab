@@ -2,14 +2,14 @@
 ;;
 ;; > Flexible software must be more flexible than all known cases.
 ;;
-;; I'm paraphrasing [Software Design for Flexibility] by [Chris Hanson] and [Gerald Jay Sussman] from memory, don't expect to find this exact quote.
+;; In [Software Design for Flexibility], [Chris Hanson] and [Gerald Jay Sussman] say something like this.
 ;;
 ;; [Software Design for Flexibility]: https://mitpress.mit.edu/books/software-design-flexibility
 ;; [Chris Hanson]: https://people.csail.mit.edu/cph/
 ;; [Gerald Jay Sussman]: http://groups.csail.mit.edu/mac/users/gjs/gjs.html
 ;;
 ;; I believe they are right.
-;; Flexible systems must be more general than their application.
+;; Flexible systems must be more general than their current application.
 ;; Otherwise the flexible system is not an abstraction, it's just a collection of code.
 ;;
 ;; ## Clojure is a flexible language
@@ -19,7 +19,7 @@
 ;; Frankly, the statement surprised me too.
 ;; Syntax isn't irrelevant.
 ;; But it's not _the goal_.
-;; Some programming languages depend greatly on the syntax.
+;; Some programming languages make syntax a big deal.
 ;; Others don't.
 ;;
 ;; Clojure establishes syntax for sequential data, associative data, sets, function calls and macro calls.
