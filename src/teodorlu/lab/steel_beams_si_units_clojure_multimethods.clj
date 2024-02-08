@@ -619,7 +619,7 @@ clerk/default-viewers
 
 ;; ## Arithmetic for numbers with units
 
-;; To divide, we use 1-arity inversion and then rely on our multiplication.
+;; To divide, we implement 1-arity inversion, then lean on the multiplication we already got working.
 
 (do
   (defmulti invert type)
@@ -641,7 +641,7 @@ clerk/default-viewers
 (defn /
   ([a] (invert a))
   ([a b] (* a (invert b)))
-  ([a b & rest] (* a (invert b) (reduce * (map invert rest)))))
+  ([a b & rest] (* a (invert b) (invert (reduce * rest)))))
 
 (let [kg (with-unit 1 {:si/kg 1})
       m (with-unit 1 {:si/m 1})
@@ -695,7 +695,7 @@ clerk/default-viewers
 (let [m (with-unit 1 {:si/m 1})
       mm (* 10e-3 m)
       mm2 (* mm mm)]
-  (clerk/row m mm mm2))
+  (clerk/example m mm mm2))
 
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (defn md-unit [base exponent]
