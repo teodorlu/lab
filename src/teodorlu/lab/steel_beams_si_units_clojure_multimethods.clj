@@ -151,27 +151,29 @@
   (clerk/with-viewer katex-inline-viewer x))
 
 ;; Let's make a similar figure ourselves.
+;;
 ;; We will represent beams as maps.
+;; Keys are Clojure symbols representing a beam property.
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
-(let [labels [{:norwegian :r       :pretty "r"                  :description "Curve radius between flanges and beams"}
-              {:norwegian :wy      :pretty "W_y"                :description "Strong axis bending moment resistance"}
-              {:norwegian :s       :pretty "s"                  :description "Web thickness"}
-              {:norwegian :prefix  :pretty "\\textit{prefix}"   :description "Beam profile name prefix, eg IPE or HEA"}
-              {:norwegian :wz      :pretty "W_z"                :description "Weak axis bending moment resistance"}
-              {:norwegian :h       :pretty "h"                  :description "Beam cross section height"}
-              {:norwegian :b       :pretty "b"                  :description "Beam cross section width"}
-              {:norwegian :iz      :pretty "I_z"                :description "Weak axes bending stiffness"}
-              {:norwegian :t       :pretty "t"                  :description "Flange thickness"}
-              {:norwegian :iy      :pretty "I_y"                :description "Strong axis bending stiffness"}
-              {:norwegian :profile :pretty "\\textit{profile}"  :description "Profile number, eg 300 for IPE300"}
-              {:norwegian :a       :pretty "A"                  :description "Cross section area"}
-              ]]
-  (clerk/table (for [label (sort-by :norwegian labels)]
+(let [properties [{:label :r       :pretty "r"                  :description "Curve radius between flanges and beams"}
+                  {:label :wy      :pretty "W_y"                :description "Strong axis bending moment resistance"}
+                  {:label :s       :pretty "s"                  :description "Web thickness"}
+                  {:label :prefix  :pretty "\\textit{prefix}"   :description "Beam profile name prefix, eg IPE or HEA"}
+                  {:label :wz      :pretty "W_z"                :description "Weak axis bending moment resistance"}
+                  {:label :h       :pretty "h"                  :description "Beam cross section height"}
+                  {:label :b       :pretty "b"                  :description "Beam cross section width"}
+                  {:label :iz      :pretty "I_z"                :description "Weak axes bending stiffness"}
+                  {:label :t       :pretty "t"                  :description "Flange thickness"}
+                  {:label :iy      :pretty "I_y"                :description "Strong axis bending stiffness"}
+                  {:label :profile :pretty "\\textit{profile}"  :description "Profile number, eg 300 for IPE300"}
+                  {:label :a       :pretty "A"                  :description "Cross section area"}
+                  ]]
+  (clerk/table (for [label (sort-by :label properties)]
                  (-> label
                      (update :pretty tex)
                      (set/rename-keys {:description "Description"
-                                       :norwegian "Label"
+                                       :label "Label"
                                        :pretty "Math notation"})))))
 
 ;; This map is an IPE300 beam:
