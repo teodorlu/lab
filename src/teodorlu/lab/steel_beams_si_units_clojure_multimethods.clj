@@ -557,7 +557,18 @@ clerk/default-viewers
 (let [x (simplify (WithUnit. 0.3 {:si/m 0 :si/s 0}))]
   {:type (type x) :x x})
 
-;; Then we implement a constructor in terms of the simplifier.
+;; Now that we have simplification, we will also support extracting units from our numbers.
+
+(do
+  (defmulti unit type)
+  (defmethod unit Number
+    [_x]
+    {})
+  (defmethod unit WithUnit
+    [q]
+    (.unit (simplify) q)))
+
+;; And we implement a constructor in terms of the simplifier.
 
 (defn with-unit [number unit]
   (simplify (WithUnit. number unit)))
@@ -669,6 +680,65 @@ clerk/default-viewers
         (* 300 mm2))
      MPa))
 
+;; Onto addition and subtraction.
+;; First, we need to know if the units line up.
+
+(defn unitless? [x]
+  (= {} (unit x)))
+
+(do
+  (defmulti add both-types)
+  (defmethod add [Number Number]
+    [x y]
+    (clojure.core/+ x y))
+  (defmethod add [Number WithUnit]
+    [x q]
+    (assert (unitless? q) "Cannot add numbers with different units!")
+    (clojure.core/+ x (.number q)))
+  (defmethod add [WithUnit Number]
+    [q x]
+    (assert (unitless? q) "Cannot add numbers with different units!")
+    (clojure.core/+ x (.number q)))
+  (defmethod add [WithUnit WithUnit]
+    [q w]
+    (assert (= (unit q) (unit w))
+            "Cannot add numbers with different units!")
+    (with-unit (clojure.core/+ (.number q)
+                               (.number w))
+      (unit q))))
+
+(defn +
+  ([] 0)
+  ([a] a)
+  ([a b] (add a b))
+  ([a b & args] (reduce add (add a b) args)))
+
+;; Let's try it out!
+
+#_
+(let [kg (with-unit 1 {:si/kg 1})
+      m (with-unit 1 {:si/m 1})
+      s (with-unit 1 {:si/s 1})
+      N (/ (* kg m)
+           (* s s))
+      kN (* 1000 N)
+      mm (/ m 1000)
+      mm2 (* mm mm)
+      MPa (/ N mm2)
+      kPa (* 1000 (/ N m))]
+
+  (clerk/example
+    (+ (* 30 s) s)
+    (comment
+      (+ (* 30 s) s)
+      (+ N N)
+      (+ N kN)
+      (+ mm mm)
+      (+ MPa kPa))))
+
+(let [s (with-unit 1 {:si/s 1})]
+  (add (* 30 s) s))
+
 ;; ## Steel beams with units
 
 ;; Above, we called this an IPE300 beam:
@@ -768,7 +838,63 @@ clerk/default-viewers
 
 ;; ## Steel beams figures revisited
 
+(defn i-shape-steel-beam->svg [beam pixels-per-mm]
+  (let [plus clojure.core/+
+        minus clojure.core/-
+        div clojure.core//
+        mult clojure.core/*
 
+        margin-px 4.5
+        margin-px*2 (mult margin-px 2)
+
+        ;; Profile parameters
+        {:keys [h b s t r]} beam
+        ;;
+        ;; Notation for paths with SVG
+        ;; See
+        ;;
+        ;;     https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+        ;;
+        ;; to learn how to work with SVG pathsSVG paths
+        M "M"
+        l "l"
+        a "a"
+
+        -r (minus r)
+        r*2 (mult r 2)
+        flange-tip-length (div (minus b s) 2)
+        web-inner-height (minus h (mult 2 t))
+        path [M margin-px margin-px
+              l b 0
+              l 0 t
+              l (minus (minus flange-tip-length r)) 0 ; top right corner
+
+              ;; MDN explains how to draw curve segments, _arcs_:
+              ;;
+              ;; https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths#arcs
+
+              ;; a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy              "a" r r 0
+              a    r  r  0               0              0          -r r
+              l 0 (minus web-inner-height r*2) ; web, right side
+              a r r 0 0 0 r r
+
+              l (minus flange-tip-length r) 0
+              l 0 t
+              l (minus b) 0
+              l 0 (minus t)
+
+              l (minus flange-tip-length r) 0
+              a r r 0 0 0 r (minus r)
+              l 0 (minus (minus web-inner-height r*2)) ;; web, left side
+              a r r 0 0 0 (minus r) (minus r)
+              l (minus (minus flange-tip-length r)) 0
+              "Z"
+              ]]
+    [:svg {:width (plus margin-px*2 (:b beam))
+           :height (plus margin-px*2 (:h beam))}
+     [:path {:d (str/join " " path)
+             :fill "transparent"
+             :stroke "black"}]]))
 
 ;; ## Thank you
 ;;
