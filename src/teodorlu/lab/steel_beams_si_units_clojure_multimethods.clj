@@ -708,6 +708,7 @@ clerk/default-viewers
 ;; The implementation is similar to `multiply`, except that we don't allow numbers with units _as exponents_.
 ;; We'll rely on clojure.math/pow under the hood.
 
+^{:nextjournal.clerk/visibility {:result :hide}}
 (do
   (defmulti pow both-types)
 
