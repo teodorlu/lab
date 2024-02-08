@@ -84,12 +84,12 @@
 ;; Syntax for loop constructs?
 ;; Surely, you just forgot about those?
 ;;
-;; - There is no syntax for function definition — `fn` is a macro.
-;; - There is no syntax for type definitions — you can choose a library for checking data
+;; - There is no syntax for defining functions — `fn` is a macro.
+;; - There is no syntax for defining types — you can choose a library for checking data
 ;;   (like [clojure spec] or [malli]), _if_ you want.
 ;;   If you do need types, there's `deftype`, `defrecord` and `defprotocol`, all three are macros.
-;; - There is no syntax for for loops — `for` is a plain macro
-;; - There is no syntax for while loops — `loop` and `reduce` are macros.
+;; - There is no syntax for for loops — `for` is a macro
+;; - There is no syntax for while loops — `loop` is a macro.
 ;;
 ;; [clojure spec]: https://clojure.org/guides/spec
 ;; [malli]: https://github.com/metosin/malli
@@ -97,13 +97,13 @@
 ;; This is good!
 ;;
 ;; Take the time to learn and understand vectors (sequential data), maps (associative data), sets (unique elements only) and functions.
-;; Idiomatic Clojure code is functions transforming data.
-;; Leave the rest for when you actually need it!
+;; Code where functions that tranform data is idiomatic in Clojure.
+;; Leave advanced features for when you actually need them!
 
 ;; ## Steel beams
 ;;
 ;; > Wait, what about the steel beams?
-;; > I thought there was supposed to be steel beams.
+;; > I came here expecting steel beams.
 ;;
 ;; Steel beams coming right up!
 ;;
