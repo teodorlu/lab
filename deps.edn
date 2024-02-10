@@ -32,6 +32,8 @@
                        ;; Per 2024-01-27, Playwright doesn't work on Clerk Garden
                        ;; See https://build.github.clerk.garden/teodorlu/lab/commit/5f1834b56d9b819c332faf5320dfd8226f56a65d/?update=1
                        ;; "src/learn/playwright_2.clj"
+                       ;; teodorlu.lab.steel-beams-si-units-clojure-multimethods
+                       "src/teodorlu/lab/steel_beams_si_units_clojure_multimethods.clj"
                        ]}}
   :rainbow-tables
   {:exec-fn nextjournal.clerk/build!
