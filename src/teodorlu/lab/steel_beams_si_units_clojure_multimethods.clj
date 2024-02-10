@@ -736,6 +736,7 @@ clerk/default-viewers
       (+ mm mm)
       (+ MPa kPa))))
 
+#_
 (let [s (with-unit 1 {:si/s 1})]
   (add (* 30 s) s))
 
