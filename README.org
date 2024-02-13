@@ -5,7 +5,7 @@ Purpose: to learn, to share knowledge, and to experiment with knowledge.
 | Github       | https://github.com/teodorlu/lab          |
 | Clerk garden | https://github.clerk.garden/teodorlu/lab |
 
-To static pages with Clerk locally:
+To build and view static pages locally:
 
 #+begin_src
 clj -X:nextjournal/clerk :browse true
