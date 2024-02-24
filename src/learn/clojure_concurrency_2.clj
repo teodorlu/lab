@@ -1,6 +1,6 @@
 (ns learn.clojure-concurrency-2)
 
- (require '[clojure.core.async :as a :refer [chan to-chan!! pipeline-blocking <!!]])
+(require '[clojure.core.async :as a :refer [chan to-chan!! pipeline-blocking <!!]])
 
 ;; Use op on each input element, run 20 workers
 
