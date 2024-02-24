@@ -1,6 +1,8 @@
 (ns learn.clojure-concurrency-2)
 
-(require '[clojure.core.async :as a :refer [chan to-chan!! pipeline-blocking <!!]])
+ (require '[clojure.core.async :as a :refer [chan to-chan!! pipeline-blocking <!!]])
+
+;; Use op on each input element, run 20 workers
 
 (let [op (fn [arg] (* arg 42))
       result
@@ -14,3 +16,4 @@
         (<!! (a/into [] output-chan)))]
   {:count (count result)
    :sum (reduce + result)})
+;; => {:count 1000, :sum 20979000}
