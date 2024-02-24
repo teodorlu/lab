@@ -33,7 +33,7 @@
 ;; - I asked about concurrency earlier on Slack:
 ;;   https://clojurians.slack.com/archives/C061XGG1W/p1707477511195369
 
-(defn process-vthread [concurrency result f coll]
+(defn process-vthread [concurrency started-fn process-fn done-fn coll]
   (let [semaphore (java.util.concurrent.Semaphore. concurrency)
         latch (java.util.concurrent.CountDownLatch. (count coll))
         p (promise)]
@@ -44,7 +44,9 @@
                  (fn []
                    (try
                      (.acquire semaphore)
-                     (f % result)
+                     (started-fn %)
+                     (let [result (process-fn %)]
+                       (done-fn result))
                      (finally
                        (.countDown latch)
                        (.release semaphore)))))))
@@ -62,7 +64,64 @@
   ::clerk/visibility {:result :hide}}
 (defonce status2 (atom {}))
 
-@status2
+(defn status2-initial-state [job-count]
+  (into {}
+        (for [i (range job-count)]
+          [(keyword (str "j" i)) :wait])))
+
+(defn work [_job]
+  (slurp "https://teod.eu")
+  :done)
+
+(update-vals @status2 status->color)
+
+(comment
+  ;; first, assign work
+  (reset! status2 (status2-initial-state 6))
+
+  @status2
+
+  (def all-done-promise
+    (let [started-fn (fn [job] (swap! status2 assoc job :started))
+          process-fn work
+          done-fn (fn [job] (swap! status2 assoc job :done))
+          jobs (keys @status2)]
+      (process-vthread 3 started-fn process-fn done-fn jobs)))
+
+  (let [coll (keys @status2)
+        concurrency 3]
+    ;;
+    (let [semaphore (java.util.concurrent.Semaphore. concurrency)
+          latch (java.util.concurrent.CountDownLatch. (count coll))
+          p (promise)]
+
+      ;; start én virtual thread per element
+      (->> coll
+           (run! #(Thread/startVirtualThread
+                   (fn []
+                     (try
+                       (.acquire semaphore)
+                       (prn [:started %])
+                       (let [result (work %)]
+                         (prn [:done % result]))
+                       (finally
+                         (.countDown latch)
+                         (.release semaphore)))))))
+
+      ;; start en virtual thread som venter på alle jobbene og sier "ferdig"
+      (Thread/startVirtualThread
+       (fn []
+         (.await latch)
+         (deliver p :done)))
+
+      ;; returner promise, som blir levert når alt er klart
+      p))
+
+  all-done-promise
+
+  *clojure-version*
+  (System/getProperty "java.version")
+  )
 
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
