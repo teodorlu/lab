@@ -70,12 +70,9 @@
         (for [i (range job-count)]
           [(keyword (str "j" i)) :wait])))
 
-(defn work [_job]
-  (slurp "https://teod.eu")
-  :done)
-
 (update-vals @status2 status->color)
 
+^{::clerk/visibility {:code :hide :result :hide}}
 (comment
   ;; first, assign work
   (reset! status2 (status2-initial-state 8))
