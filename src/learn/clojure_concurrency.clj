@@ -33,20 +33,21 @@
 ;; - I asked about concurrency earlier on Slack:
 ;;   https://clojurians.slack.com/archives/C061XGG1W/p1707477511195369
 
-(defn process-vthread [concurrency started-fn process-fn done-fn coll]
+(defn process-vthread [concurrency started-fn process-fn done-fn jobs]
   (let [semaphore (java.util.concurrent.Semaphore. concurrency)
-        latch (java.util.concurrent.CountDownLatch. (count coll))
+        latch (java.util.concurrent.CountDownLatch. (count jobs))
         p (promise)]
 
     ;; start én virtual thread per element
-    (->> coll
+    (->> jobs
          (run! #(Thread/startVirtualThread
                  (fn []
                    (try
                      (.acquire semaphore)
                      (started-fn %)
                      (let [result (process-fn %)]
-                       (done-fn result))
+                       (prn [:done % result])
+                       (done-fn % result))
                      (finally
                        (.countDown latch)
                        (.release semaphore)))))))
@@ -77,45 +78,19 @@
 
 (comment
   ;; first, assign work
-  (reset! status2 (status2-initial-state 6))
+  (reset! status2 (status2-initial-state 8))
 
   @status2
 
   (def all-done-promise
     (let [started-fn (fn [job] (swap! status2 assoc job :started))
-          process-fn work
-          done-fn (fn [job] (swap! status2 assoc job :done))
+          process-fn (fn [job]
+                       (swap! status2 assoc job :in-progress)
+                       (slurp "https://teod.eu")
+                       :done)
+          done-fn (fn [job _result] (swap! status2 assoc job :done))
           jobs (keys @status2)]
       (process-vthread 3 started-fn process-fn done-fn jobs)))
-
-  (let [coll (keys @status2)
-        concurrency 3]
-    ;;
-    (let [semaphore (java.util.concurrent.Semaphore. concurrency)
-          latch (java.util.concurrent.CountDownLatch. (count coll))
-          p (promise)]
-
-      ;; start én virtual thread per element
-      (->> coll
-           (run! #(Thread/startVirtualThread
-                   (fn []
-                     (try
-                       (.acquire semaphore)
-                       (prn [:started %])
-                       (let [result (work %)]
-                         (prn [:done % result]))
-                       (finally
-                         (.countDown latch)
-                         (.release semaphore)))))))
-
-      ;; start en virtual thread som venter på alle jobbene og sier "ferdig"
-      (Thread/startVirtualThread
-       (fn []
-         (.await latch)
-         (deliver p :done)))
-
-      ;; returner promise, som blir levert når alt er klart
-      p))
 
   all-done-promise
 
