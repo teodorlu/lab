@@ -17,3 +17,16 @@
   {:count (count result)
    :sum (reduce + result)})
 ;; => {:count 1000, :sum 20979000}
+
+(defn leaf? [node]
+  (number? (second node)))
+
+(defn leaves [node]
+  (cond (leaf? node) [node]
+        :else (mapcat leaves (rest node))))
+
+(leaves
+ [:root
+  [:a [:b [:c [:d 0] [:d 1] [:d 2]]]]
+  [:a [:b [:c [:d 3] [:d 4] [:d 5]]]]])
+;; => ([:d 0] [:d 1] [:d 2] [:d 3] [:d 4] [:d 5])
