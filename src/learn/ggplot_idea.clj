@@ -21,6 +21,8 @@
   IMapping
   (mapping [this] :TODO))
 
+(defn aes [& args] :TODO)
+
 (defn + [ggplot component] :TODO)
 
 (defprotocol IComponent
@@ -32,7 +34,12 @@
 
 (defrecord GGPlot [data mapping environment])
 
+(defn ggplot [& args] :TODO)
+(def penguins :TODO)
+
 (comment
 
+  (ggplot :data penguins
+          :mapping (aes :x :flipper_length_mm :y :body_mass_g))
 
   )
