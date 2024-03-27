@@ -137,7 +137,7 @@
 ;;
 ;; ---
 ;;
-;; Thank you to Jack Rusher for reviewing this text.
+;; Thank you to Jack Rusher for reading an early version of this text.
 ;; Any errors are mine.
 ;;
 ;; You are viewing an immutable version of this text.
