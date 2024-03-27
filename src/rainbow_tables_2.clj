@@ -141,7 +141,7 @@
 ;; Any errors are mine.
 ;;
 ;; You are viewing an immutable version of this text.
-;; If I fix errors, you may not get them.
+;; If I fix errors, you may not get the fixes.
 ;; A link to the latest version of this document can be found here:
 ;;
 ;; https://play.teod.eu/rainbow-tables-explained-with-clojure/
