@@ -1,4 +1,4 @@
-;; # Rainbow tables: what they are, and why we salt passwords before hashing
+;; # Rainbow tables: what they are, and why we salt passwords before hashing, explained with Clojure
 ;;
 ;; > DISCLAIMER: Rainbow tables are complicated.
 ;; > For precise details, please read the [Wikipedia article][wikipedia-article].
