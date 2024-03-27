@@ -39,11 +39,7 @@
 ^{:nextjournal.clerk/toc true}
 (ns rainbow-tables-2
   (:require
-   [next.jdbc]
-   [nextjournal.clerk :as clerk]
-   [babashka.fs]
-   [babashka.process]
-   [clojure.string :as str]))
+   [nextjournal.clerk :as clerk]))
 
 ;; ## A table of passwords and hashes
 ;;
@@ -143,6 +139,12 @@
 ;;
 ;; Thank you to Jack Rusher for reviewing this text.
 ;; Any errors are mine.
+;;
+;; You are viewing an immutable version of this text.
+;; If I fix errors, you may not get them.
+;; A link to the latest version of this document can be found here:
+;;
+;; https://play.teod.eu/rainbow-tables-explained-with-clojure/
 
 #_
 ^{:nextjournal.clerk/visibility {:code :hide}
