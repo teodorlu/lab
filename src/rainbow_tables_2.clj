@@ -78,7 +78,11 @@
 ;;     abceot
 ;;
 ;; Why?
-;; We don't want to wait a lot for code to run.
+;; We just don't want to wait a lot while working on this code.
+;; I like to keep the feedback loops short when I code to learn.
+;; For real-world rainbow tables to guess Windows XP passwords like [ophcrack], it could take hours to days to create a rainbow table.
+;;
+;; [ophcrack]: https://en.wikipedia.org/wiki/Ophcrack
 
 (def rainbow-table
   (alphabet->lookup-table "abceot"))
@@ -136,7 +140,11 @@
 ;; Try it yourself! 😊
 ;;
 ;; ---
+;;
+;; Thank you to Jack Rusher for reviewing this text.
+;; Any errors are mine.
 
+#_
 ^{:nextjournal.clerk/visibility {:code :hide}
   :nextjournal.clerk/no-cache true}
 (let [garden-url "https://github.clerk.garden"
