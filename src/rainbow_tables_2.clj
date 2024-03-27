@@ -1,4 +1,4 @@
-;; # Rainbow tables 2
+;; # Rainbow tables: what they are, and why we salt passwords before hashing
 ;;
 ;; > DISCLAIMER: Rainbow tables are complicated.
 ;; > For precise details, please read the [Wikipedia article][wikipedia-article].
@@ -48,9 +48,7 @@
 ;; ## A table of passwords and hashes
 ;;
 ;; A rainbow table can be used to look up `password` from `hash(password)`.
-;;
-;; First, we need a hash function.
-;; We'll choose `base64_encode(sha1(password))`:
+;; We choose `base64_encode(sha1(password))` as our hash function:
 
 (defn sha1-str [password]
   (.encodeToString (java.util.Base64/getEncoder)
@@ -58,14 +56,14 @@
                     (doto (java.security.MessageDigest/getInstance "SHA-1")
                       (.update (.getBytes password "UTF-8"))))))
 
-;; We can use our hash function like this:
+;; We use our hash function like this:
 
 (clerk/example
  (sha1-str "abc")
  (sha1-str "cat")
  (sha1-str "teo"))
 
-;; To create a lookup table, we enumerate multiple three letter passwords:
+;; To create a lookup table, we enumerate all three letter combinations from an alphabet:
 
 (defn alphabet->lookup-table [alphabet]
   (into {}
@@ -74,6 +72,13 @@
               c alphabet]
           (let [password (str a b c)]
             [(sha1-str password) password]))))
+
+;; We will use a small alphabet:
+;;
+;;     abceot
+;;
+;; Why?
+;; We don't want to wait a lot for code to run.
 
 (def rainbow-table
   (alphabet->lookup-table "abceot"))
@@ -94,7 +99,7 @@
 
 ;; ## A function from hash to password
 ;;
-;; Our function from hash to password is now a lookup in a map!
+;; Our function from hash to password is a map lookup!
 
 (defn guess-password [sha1-digest]
   (get rainbow-table sha1-digest))
@@ -106,7 +111,7 @@
    {"hash(passord)" h
     "passord" (guess-password h)}))
 
-;; Voilà! We can now lookup people's passwords if we have the password hash.
+;; Voilà! We can now lookup certain passwords if we have the password hash.
 ;;
 ;; But there are limitations:
 ;;
