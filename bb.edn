@@ -1,1 +1,2 @@
-{:deps {teodorlu/clerk-stuff {:local/root "."}}}
+{:deps {com.lambdaisland/launchpad {:mvn/version "0.28.129-alpha"}
+        teodorlu/clerk-stuff {:local/root "."}}}
