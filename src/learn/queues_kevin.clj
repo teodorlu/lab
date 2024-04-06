@@ -11,6 +11,7 @@
 
   (a/<!! q)
   ;; leser en verdi
+  ;; kjør den to ganger for å lese både "hei" og "hei 2".
 
   )
 
