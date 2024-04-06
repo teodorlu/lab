@@ -2,6 +2,10 @@
   (:require
    [clojure.core.async :as a]))
 
+::q
+;; => :learn.queues-kevin/q
+
+
 (comment
   (def q (a/chan))
 
@@ -22,7 +26,9 @@
     (a/>! (::q ctx) "Hello!")
     (a/>! (::q ctx) "Hello, there!!!")))
 
-(defn consume-values [ctx]
+(defn consume-values
+  "Reads two values from the queue"
+  [ctx]
   [(a/<!! (::q ctx))
    (a/<!! (::q ctx))])
 
