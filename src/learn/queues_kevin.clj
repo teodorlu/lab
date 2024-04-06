@@ -7,8 +7,10 @@
 
   (a/go (a/>! q "hei")
         (a/>! q "hei 2"))
+  ;; "spawner" noe på en grønn tråd som skriver verdier først når de er klare til å leses
 
   (a/<!! q)
+  ;; leser en verdi
 
   )
 
@@ -29,5 +31,6 @@
   (provide-values ctx)
 
   (consume-values ctx)
+  ;; => ["Hello!" "Hello, there!!!"]
 
   )
