@@ -24,3 +24,6 @@ pom.xml.asc
 # Teodor
 /rainbow-tables.sqlite
 /rainbow-tables.sqlite-journal
+
+# Calva
+/.calva
