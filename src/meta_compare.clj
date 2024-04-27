@@ -75,8 +75,8 @@
     ;;
     ;; 1. leaf values without metadata are replaced with ::prune.
     ;;
-    (clojure.walk/postwalk (fn [v]
-                             (cond ())
+    (clojure.walk/postwalk (fn [_]
+                             (cond () ()))
+                           ()))
 
-                             ))
-    ))
+  :rcf)
