@@ -37,19 +37,20 @@
 ;; It returns 3!
 ;; But you, the reader have no reason to know wether it was actually slow or not.
 
-(defn time* [f]
-  (let [before (System/currentTimeMillis)
-        value (f)
-        after (System/currentTimeMillis)
-        duration-millis (- after before)]
-    {:value value :duration-millis duration-millis}))
+(do
+  (defn time* [f]
+    (let [before (System/currentTimeMillis)
+          value (f)
+          after (System/currentTimeMillis)
+          duration-millis (- after before)]
+      {:value value :duration-millis duration-millis}))
 
-(defmacro time
-  "A `clojure.core/time` alternative suitable for notebook usage"
-  [& body]
-  `(time* (fn [] ~@body)))
+  (defmacro time
+    "A `clojure.core/time` alternative suitable for notebook usage"
+    [& body]
+    `(time* (fn [] ~@body)))
 
-(time (slow+ 1 2))
+  (time (slow+ 1 2)))
 
 ;; ## Single threaded with `clojure.core/map`
 
