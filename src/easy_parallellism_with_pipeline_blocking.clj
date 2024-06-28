@@ -124,12 +124,12 @@
 
 (defn calculate-pmapv-speedup [op args]
   (double
-   (/ (:duration-millis (time (mapv (slow 10 op) args)))
-      (:duration-millis (time (pmapv (slow 10 op) args))))))
+   (/ (:duration-millis (time (mapv op args)))
+      (:duration-millis (time (pmapv op args))))))
 
 ;; For our own sanity, can we reproduce something like the previous speedup?
 
-(calculate-pmapv-speedup inc [10 20 30])
+(calculate-pmapv-speedup (slow 10 inc) [10 20 30])
 
 ;; Now, let's plot n and speedup for a few different values.
 
@@ -137,13 +137,24 @@
  "Speedup for certain values of n"
  (let [two-decimals #(format "%.2f" %)]
    (clerk/table (for [n [3 5 10 20 50]]
-                  (let [speedup (calculate-pmapv-speedup inc (repeatedly n rand))]
+                  (let [speedup (calculate-pmapv-speedup (slow 10 inc) (repeatedly n rand))]
                     {"n" n
                      "speedup" (two-decimals speedup)
                      "speedup/n" (two-decimals (/ speedup n))})))))
 
-;; On Teodor's personal computer, speedup/n drops from about 1 for n=20 to about 0.5 for n=40.
-;; This leads me to believe that on my computer, pmap runs about 20 to 30 threads.
+;; On Teodor's personal computer, speedup/n drops from about 1 for n=5 to about 0.5 for n=20.
+;; Speedup dropoff can be caused by us reaching `pmap`'s parallellisation limits, or because coordination overhead increases relative to compute time.
+
+;; For a different perspective, let's look at slower operations (40 ms per op) for lower values of n.
+
+(clerk/caption
+ "Speedup for certain values of n"
+ (let [two-decimals #(format "%.2f" %)]
+   (clerk/table (for [n [2 3 4 5 6 7 8 12 15 18]]
+                  (let [speedup (calculate-pmapv-speedup (slow 40 inc) (repeatedly n rand))]
+                    {"n" n
+                     "speedup" (two-decimals speedup)
+                     "speedup/n" (two-decimals (/ speedup n))})))))
 
 ;; [A Stackoverflow answer](https://stackoverflow.com/questions/5021788/how-many-threads-does-clojures-pmap-function-spawn-for-url-fetching-operations)
 ;; points towards a value derived from the number of processors on the system:
