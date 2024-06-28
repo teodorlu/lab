@@ -142,7 +142,7 @@
                      "speedup" (two-decimals speedup)
                      "speedup/n" (two-decimals (/ speedup n))})))))
 
-;; On my personal computer, speedup/n drops from about 1 for n=20 to about 0.5 for n=40.
+;; On Teodor's personal computer, speedup/n drops from about 1 for n=20 to about 0.5 for n=40.
 ;; This leads me to believe that on my computer, pmap runs about 20 to 30 threads.
 
 ;; [A Stackoverflow answer](https://stackoverflow.com/questions/5021788/how-many-threads-does-clojures-pmap-function-spawn-for-url-fetching-operations)
