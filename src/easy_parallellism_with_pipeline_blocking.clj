@@ -167,7 +167,7 @@
 
 (+ 2 (.. Runtime getRuntime availableProcessors))
 
-;; ## User-controlled parallelism with `clojure.core.async/pipeline-blocking`
+;; ## User-controlled parallellism with `clojure.core.async/pipeline-blocking`
 
 ;; TODO
 
