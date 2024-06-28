@@ -52,6 +52,10 @@
 
   (time (slow+ 1 2)))
 
+;; There you go.
+;; Now, you, the reader, might assume that what we wrote after `:duration-millis` was how long time it actually took.
+;; If you decide to put your faith in us today.
+
 ;; ## Single threaded with `clojure.core/map`
 
 (time (map (partial slow+ 10) [100 200 300]))
