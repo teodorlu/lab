@@ -36,6 +36,7 @@
 
 ;; It returns 3!
 ;; But you, the reader have no reason to know wether it was actually slow or not.
+;; If one op takes about 100 ms, shouldn't three ops take about 300 ms?
 
 (do
   (defn time* [f]
