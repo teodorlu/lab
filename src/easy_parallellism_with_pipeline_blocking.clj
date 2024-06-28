@@ -20,7 +20,7 @@
 ;;
 ;; We're going to explore our parallelism interactively.
 ;; For this we'll need two helpers, a slow operation, and a way to time operations.
-;; First, a slow operatoin.
+;; First, a slow operation.
 ;;
 ;; Also, `clojure.core/time` outputs to standard out, so we'll make our own function for timing.`
 
