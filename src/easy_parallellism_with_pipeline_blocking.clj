@@ -22,7 +22,7 @@
 ;; For this we'll need two helpers, a slow operation, and a way to time operations.
 ;; First, a slow operation.
 ;;
-;; Also, `clojure.core/time` outputs to standard out, so we'll make our own function for timing.`
+;; Also, `clojure.core/time` outputs to standard out, so we'll make our own function for timing.
 
 {:nextjournal.clerk/visibility {:result :hide}}
 
