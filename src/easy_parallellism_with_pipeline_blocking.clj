@@ -1,4 +1,4 @@
-;; # Easy, explicit parallelism with `pipeline-blocking`
+;; # Easy, explicit parallellism with `pipeline-blocking`
 ;;
 ;; If you want a `map` to go faster, you could use `pmap`.
 ;; But what if you need more control than `pmap` can give you?
