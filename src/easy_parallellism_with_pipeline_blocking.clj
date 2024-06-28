@@ -24,34 +24,40 @@
 ;;
 ;; Also, `clojure.core/time` outputs to standard out, so we'll make our own function for timing.`
 
-(do
-  (defn slow [extra-latency-ms op]
-    (fn [& args]
-      (Thread/sleep extra-latency-ms)
-      (apply op args)))
+{:nextjournal.clerk/visibility {:result :hide}}
 
-  (def slow+ (slow 100 +))
+(defn slow [extra-latency-ms op]
+  (fn [& args]
+    (Thread/sleep extra-latency-ms)
+    (apply op args)))
 
-  (slow+ 1 2))
+(def slow+ (slow 100 +))
+
+{:nextjournal.clerk/visibility {:result :show}}
+
+(slow+ 1 2)
 
 ;; It returns 3!
 ;; But you, the reader have no reason to know wether it was actually slow or not.
 ;; If one op takes about 100 ms, shouldn't three ops take about 300 ms?
 
-(do
-  (defn time* [f]
-    (let [before (System/currentTimeMillis)
-          value (f)
-          after (System/currentTimeMillis)
-          duration-millis (- after before)]
-      {:value value :duration-millis duration-millis}))
+{:nextjournal.clerk/visibility {:result :hide}}
 
-  (defmacro time
-    "A `clojure.core/time` alternative suitable for notebook usage"
-    [& body]
-    `(time* (fn [] ~@body)))
+(defn time* [f]
+  (let [before (System/currentTimeMillis)
+        value (f)
+        after (System/currentTimeMillis)
+        duration-millis (- after before)]
+    {:value value :duration-millis duration-millis}))
 
-  (time (slow+ 1 2)))
+(defmacro time
+  "A `clojure.core/time` alternative suitable for notebook usage"
+  [& body]
+  `(time* (fn [] ~@body)))
+
+{:nextjournal.clerk/visibility {:result :show}}
+
+(time (slow+ 1 2))
 
 ;; There you go.
 ;; Now, you, the reader, might assume that what we wrote after `:duration-millis` was how long time it actually took.
@@ -91,10 +97,10 @@
 
 ;; `pmapv` isn't provided, so let's create it.
 
-(do
-  (def pmapv (comp vec pmap))
+^{:nextjournal.clerk/visibility {:result :hide}}
+(def pmapv (comp vec pmap))
 
-  (time (pmapv (partial slow+ 10) [100 200 300])))
+(time (pmapv (partial slow+ 10) [100 200 300]))
 
 ;; There you go!
 ;; `pmap` sometimes makes your code go faster.
