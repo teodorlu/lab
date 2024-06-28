@@ -39,7 +39,6 @@
 
 ;; It returns 3!
 ;; But you, the reader have no reason to know wether it was actually slow or not.
-;; If one op takes about 100 ms, shouldn't three ops take about 300 ms?
 
 {:nextjournal.clerk/visibility {:result :hide}}
 
@@ -69,6 +68,7 @@
 
 ;; Wait, 0 ms?
 ;; That was not what we exected.
+;; If one op takes about 100 ms, shouldn't three ops take about 300 ms?
 
 ;; `(doc map)` gives a clue:
 ;;
