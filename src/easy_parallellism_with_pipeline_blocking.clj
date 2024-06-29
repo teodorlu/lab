@@ -141,12 +141,11 @@
 
 (clerk/caption
  "Speedup for certain values of n"
- (let [two-decimals #(format "%.2f" %)]
-   (clerk/table (for [n [3 5 10 20 50]]
-                  (let [speedup (calculate-pmapv-speedup (slow 10 inc) (repeatedly n rand))]
-                    {"n" n
-                     "speedup" (two-decimals speedup)
-                     "speedup/n" (two-decimals (/ speedup n))})))))
+ (clerk/table (for [n [3 5 10 20 50]]
+                (let [speedup (calculate-pmapv-speedup (slow 10 inc) (repeatedly n rand))]
+                  {"n" n
+                   "speedup" (format "%.2f" speedup)
+                   "speedup/n" (format "%.2f" (/ speedup n))}))))
 
 ;; On Teodor's personal computer, speedup/n drops from about 1 for n=5 to about 0.5 for n=20.
 ;; Speedup dropoff can be caused by us reaching `pmap`'s parallellisation limits, or because coordination overhead increases relative to compute time.
@@ -155,12 +154,11 @@
 
 (clerk/caption
  "Speedup for certain values of n"
- (let [two-decimals #(format "%.2f" %)]
-   (clerk/table (for [n [2 3 4 5 6 7 8 12 15 18]]
-                  (let [speedup (calculate-pmapv-speedup (slow 40 inc) (repeatedly n rand))]
-                    {"n" n
-                     "speedup" (two-decimals speedup)
-                     "speedup/n" (two-decimals (/ speedup n))})))))
+ (clerk/table (for [n [2 3 4 5 6 7 8 12 15 18]]
+                (let [speedup (calculate-pmapv-speedup (slow 40 inc) (repeatedly n rand))]
+                  {"n" n
+                   "speedup" (format "%.2f" speedup)
+                   "speedup/n" (format "%.2f" (/ speedup n))}))))
 
 ;; [A Stackoverflow answer](https://stackoverflow.com/questions/5021788/how-many-threads-does-clojures-pmap-function-spawn-for-url-fetching-operations)
 ;; points towards a value derived from the number of processors on the system:
