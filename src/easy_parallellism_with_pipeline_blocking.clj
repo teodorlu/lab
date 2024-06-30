@@ -168,7 +168,8 @@
 ;; ## User-controlled parallellism with `clojure.core.async/pipeline-blocking`
 
 ;; In Clojure, we can utilize the core.async library for concurrency and
-;; parallelism. Let's explore what that looks like.
+;; parallelism. Let's explore what that looks like by using core.async to
+;; implement the same behavior as the code above.
 
 ;; An important concept in core.async is channels. You can think of a channel
 ;; as a thread-safe FIFO queue. In our current case, we will require an input
