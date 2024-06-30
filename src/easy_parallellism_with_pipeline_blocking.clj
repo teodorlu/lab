@@ -167,18 +167,41 @@
 
 ;; ## User-controlled parallellism with `clojure.core.async/pipeline-blocking`
 
-;; In Clojure, we can utilize the core/async library for concurrency and
-;; parallelism, lets explore what that looks like
+;; In Clojure, we can utilize the core.async library for concurrency and
+;; parallelism. Let's explore what that looks like.
 
-;; Create a worker function, which increments values on the cin channel using slow+ and outputs the results
-;; on the cout channel
+;; An important concept in core.async is channels. You can think of a channel
+;; as a thread-safe FIFO queue. In our current case, we will require an input
+;; channel and an output channel, and a function that takes values from the input
+;; channel, adds to the values via the `slow+` function, and then outputs the
+;; resulting values on the output channel. I call these types of functions 'worker'
+;; functions since they run concurrently, move values between channels, and usually
+;; perform some 'work' on the values.
+
+;; It may help to think about core.async code as pipelines with one or more
+;; steps. Channels can be thought of as the lines that data flows through, and
+;; worker functions move and process the values between channels. In our case, we
+;; we have a simple pipeline with one step:
+;;
+;;                        +------------------+
+;;                        |                  |
+;;     -------cin------>  |      worker      |   ------cout----->
+;;                        |                  |
+;;                        +------------------+
+
+
+;; Let's write some code using the core.async library. First, we will define our
+;; worker function. It will immediately start a go block, continually take values
+;; from the `cin` channel until the channel is closed, add to each of the values
+;; using the `slow+` function, and finally output the resulting values on the `cout`
+;; channel.
 (defn worker [cin cout]
   (a/go-loop []
     (when-some [val (a/<! cin)]
       (a/>! cout (slow+ 10 val))
       (recur))))
 
-;; Run the function with the defined channels and collect the result
+;; Now we need to run the function with the defined channels and collect the result
 (let [cin (a/to-chan! (range 10))
       ;; We give the out channel a buffer for convenience sake. It allows us to
       ;; easily collect the results in a list.
@@ -190,12 +213,11 @@
    (a/close! cout)
    (a/<!! (a/into [] cout))))
 
-;; But this still only runs on one thread, we dont have any parallelism yet. To
-;; get some parallelism, we need to spawn more worker functions.
-
+;; This works, but it still runs on only one thread, we don't have any parallelism yet. Let's
+;; spawn some more worker functions to fix that:
 (let [cin (a/to-chan! (range 10))
       cout (a/chan 20)]
-  (time (let [worker-chns (mapv (fn [_] (worker cin cout)) (range 3))]
+  (time (let [worker-chns (repeatedly 3 #(worker cin cout))]
           ;; Wait for all channels to complete
           (mapv a/<!! worker-chns)
           (a/close! cout)
@@ -204,73 +226,76 @@
 ;; There we go! Much better.
 
 ;; Managing and creating these worker functions, and correctly handling channels
-;; and when to close them, can become a bit tricky. Luckily, core/async provides
-;; an awesome helper function in the form of pipeline-blocking.
+;; and knowing when to close them, can be a bit tricky. Luckily, core.async provides
+;; an excellent helper function in the form of `pipeline-blocking`.
 
-;; pipeline-blocking works on an input and an output channel, a number
-;; representing the number of concurrent workers and a transducer to apply to
+;; `pipeline-blocking` works with an input and an output channel, a number
+;; representing the number of concurrent workers, and a transducer to apply to
 ;; the values flowing between the channels. Transducers are a feature in Clojure
-;; that has great interop with core/async. We can connect transducers to
-;; channels when we create a channel via the (async/chan buf xf) function, or we can
-;; use other functions such as pipeline-blocking to get a bit more control over
+;; that has great interoperability with core.async. We can connect transducers to
+;; channels when we create a channel via the `(async/chan buf xf)` function, or we can
+;; use other functions such as `pipeline-blocking` to get more control over
 ;; parallel execution.
 
-;; Rewriting the above code to use pipeline-blocking:
-;; First we need to define a transducer
+;; Let's rewrite the above code using `pipeline-blocking`. The first thing we need
+;; is a transducer. One way to define a transducer is to use the `map` function,
+;; but omit the collection argument:
 (def xf (map slow+))
 
-;; Then we setup some channels and run pipeline-blocking
+;; Then we setup some channels and run `pipeline-blocking`
 (let [cin (a/to-chan! (range 10))
       cout (a/chan 20)]
   (time (a/pipeline-blocking 3 cout xf cin)
         (a/<!! (a/into [] cout))))
 
-;; Lets see if we can push it a bit...
+;; Let's see if we can push it a bit...
 (let [cin (a/to-chan! (range 500))
       cout (a/chan 600)]
   (time (a/pipeline-blocking 50 cout xf cin)
         (a/<!! (a/into [] cout))))
 
-;; ...and thats it!
-;; In my view, pipeline-blocking offers a lot of benefits. We dont have to manage worker functions, and
+;; ...and that's it!
+;; In my view, `pipeline-blocking` offers a lot of benefits. We don't have to manage worker functions, and
 ;; we can utilize transducers, which can be reused in many different contexts without needing knowledge
-;; of the underlying datastructure.
+;; of the underlying data structure.
 
 ;; Sometimes, we do need the extra control that custom worker functions provide, but I suspect that
-;; pipeline-blocking is sufficient in manye scenarios.
+;; `pipeline-blocking` is sufficient in many scenarios.
 
 ;; You might have noticed that there are a couple of other pipeline-related
-;; functions, namely (pipeline-async) and (pipeline). The difference between these is
-;; that pipeline-blocking uses (async/thread) under the hood, while
-;; pipeline-async and pipeline uses (async/go). You can see that in action here:
+;; functions, namely `pipeline-async` and `pipeline`. The difference between these is
+;; that `pipeline-blocking` uses `(async/thread)` under the hood, while
+;; `pipeline-async` and `pipeline` use `(async/go)`. You can see that in action here:
 ;; https://github.com/clojure/core.async/blob/aa6b951301fbdcf5a13cdaaecb4b1a908dc8a978/src/main/clojure/clojure/core/async.clj#L548
-;; The names of the functions suggest the proper usage: if you have any blocking
-;; operations such as network calls or in our case, the (slow+) function, then
-;; use pipeline-blocking. If you have async operations, use pipeline-async. If
-;; you are doing compute-intensive operations, use pipeline.
+;; The names of the functions suggest their proper usage: if you have any blocking
+;; operations such as network calls or, in our case, the `(slow+)` function, then
+;; use `pipeline-blocking`. If you have async operations, use `pipeline-async`. If
+;; you are doing compute-intensive operations, use `pipeline`.
 
 ;; The reason for differentiating between these functions is because of a common
-;; pitfall when using go-blocks: blocking operations will starve the thread pool
+;; pitfall when using go blocks: blocking operations will starve the thread pool
 ;; (which has a default of 8 threads). Unlike in Golang where goroutines are
 ;; preempted on I/O calls and other events, this is not the case in Clojure. Go
 ;; blocks in Clojure are only preempted when we perform a take or put on a
-;; channel. This means that a go-block performing a blocking network call will
-;; block that thread until the network call is done, if enough of these are
-;; running at the same time the core/async thread pool for go blocks will run
+;; channel. This means that a go block performing a blocking network call will
+;; block that thread until the network call is done. If enough of these are
+;; running at the same time, the core.async thread pool for go blocks will run
 ;; out of threads.
 
 ;; The ideal solution to such a situation is to make the network call
-;; asynchronous so that we can still use go-blocks without starving the thread
+;; asynchronous so that we can still use go blocks without starving the thread
 ;; pool, but a much simpler solution is to spin up dedicated threads with
-;; (async/thread). (async/go) and (async/thread) blocks are pretty much
-;; interchangeble with the exception of some core/async functions which have
-;; their own versions, such as (async/<!!) for (async/thread) blocks and
-;; (async/<!) for (async/go) blocks. Unless a very large number of threads are
-;; needed, (async/thread) and pipeline-blocking works perfectly fine. If you
-;; need several hundreds of threads, then it might be good idea to consider
-;; pipeline-async.
+;; `(async/thread)`. `(async/go)` and `(async/thread)` blocks are pretty much
+;; interchangeable with the exception of some core.async functions which have
+;; their own versions, such as `(async/<!!)` for `(async/thread)` blocks and
+;; `(async/<! )` for `(async/go)` blocks. Unless a very large number of threads are
+;; needed, `(async/thread)` and `pipeline-blocking` work perfectly fine. If you
+;; need several hundreds of threads, then it might be a good idea to consider
+;; `pipeline-async`.
 
 ;; This is a good blog post that explores the topic a bit more:
 ;; https://eli.thegreenplace.net/2017/clojure-concurrency-and-blocking-with-coreasync/
+
+
 
 #_(clerk/clear-cache!)
