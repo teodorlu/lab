@@ -79,7 +79,7 @@
 ;;
 ;; Lazyness!
 ;; Right.
-;; "Lazyness and impurity is a bad match", timing impure.
+;; "Lazyness and impurity is a bad match", timing is impure.
 ;; We returned a lazy sequence that did no work, then timed no work, then the rendering of the value triggered the realization of the lazy sequence.
 ;; We could force the lazyness out with a doall in the expression:
 
