@@ -264,27 +264,33 @@
 ;; `pipeline-blocking` is sufficient in many scenarios.
 
 ;; You might have noticed that there are a couple of other pipeline-related
-;; functions, namely `pipeline-async` and `pipeline`. The difference between these is
-;; that `pipeline-blocking` and `pipeline` uses `async/thread` under the hood, while
-;; `pipeline-async` `async/go`. You can see that in action here:
+;; functions, namely `pipeline-async` and `pipeline`. The difference between
+;; these is that `pipeline-blocking` and `pipeline` use `async/thread` under
+;; the hood, while `pipeline-async` uses `async/go`. You can see that in action
+;; here:
 ;; https://github.com/clojure/core.async/blob/aa6b951301fbdcf5a13cdaaecb4b1a908dc8a978/src/main/clojure/clojure/core/async.clj#L548
-;; The names of the functions suggest their proper usage: if you have any blocking
-;; operations such as network calls or, in our case, the `slow+` function, then
-;; use `pipeline-blocking`. If you have async operations, use `pipeline-async`. If
-;; you are doing compute-intensive operations, use `pipeline`.
+
+;; The names of the functions suggest their proper usage: if you have blocking
+;; operations such as blocking HTTP requests or, in our case, the `slow+`
+;; function, then use `pipeline-blocking`. If you have operations that run
+;; asynchronously, then you may use `pipeline-async` to take advantage of the
+;; core.async go block scheduler and thread pool. An example of an asynchronous
+;; operation could be a function doing an HTTP request that returns immediately,
+;; but accepts a callback where you can put the result value on a channel in the
+;; callback. If you are doing compute-intensive operations, use `pipeline`.
 
 ;; The reason for differentiating between these functions is because of a common
 ;; pitfall when using go blocks: blocking operations will starve the thread pool
 ;; (which has a default of 8 threads). Unlike in Golang where goroutines are
 ;; preempted on I/O calls and other events, this is not the case in Clojure. Go
 ;; blocks in Clojure are only preempted when we perform a take or put on a
-;; channel. This means that a go block performing a blocking network call will
-;; block that thread until the network call is done. If enough of these are
+;; channel. This means that a go block performing a blocking HTTP request will
+;; block that thread until the operation is done. If enough of these are
 ;; running at the same time, the core.async thread pool for go blocks will run
 ;; out of threads.
 
-;; The ideal solution to such a situation is to make the network call
-;; asynchronous so that we can still use go blocks without starving the thread
+;; The ideal solution to such a situation is to make the HTTP request
+;; asynchronously so that we can still use go blocks without starving the thread
 ;; pool, but a much simpler solution is to spin up dedicated threads with
 ;; `async/thread`. `async/go` and `async/thread` blocks are pretty much
 ;; interchangeable with the exception of some core.async functions which have
@@ -292,7 +298,7 @@
 ;; `async/<!` for `async/go` blocks. Unless a very large number of threads are
 ;; needed, `async/thread` and `pipeline-blocking` work perfectly fine. If you
 ;; need several hundreds of threads, then it might be a good idea to consider
-;; `pipeline-async`.
+;; `async/go` and `pipeline-async`.
 
 ;; This is a good blog post that explores the topic a bit more:
 ;; https://eli.thegreenplace.net/2017/clojure-concurrency-and-blocking-with-coreasync/
