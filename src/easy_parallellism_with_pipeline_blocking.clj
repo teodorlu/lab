@@ -202,7 +202,7 @@
       (a/>! cout (slow+ 10 val))
       (recur))))
 
-;; Now we need to run the function with the defined channels and collect the result
+;; Now we need to run the function with the defined channels and collect the result.
 (let [cin (a/to-chan! (range 10))
       ;; We give the out channel a buffer for convenience sake. It allows us to
       ;; easily collect the results in a list.
@@ -218,7 +218,7 @@
 ;; spawn some more worker functions to fix that:
 (let [cin (a/to-chan! (range 10))
       cout (a/chan 20)]
-  (time (let [worker-chns (repeatedly 3 #(worker cin cout))]
+  (time (let [worker-chns (doall (repeatedly 3 #(worker cin cout)))]
           ;; Wait for all channels to complete
           (mapv a/<!! worker-chns)
           (a/close! cout)
@@ -243,7 +243,7 @@
 ;; and omitting the collection argument:
 (def xf (map slow+))
 
-;; Then we setup some channels and run `pipeline-blocking`
+;; Then we setup some channels and run `pipeline-blocking`:
 (let [cin (a/to-chan! (range 10))
       cout (a/chan 20)]
   (time (a/pipeline-blocking 3 cout xf cin)
