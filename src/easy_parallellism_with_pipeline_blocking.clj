@@ -208,7 +208,7 @@
       ;; easily collect the results in a list.
       cout (a/chan 20)]
   (time
-   ;; Wait for processing to finish. This works because go-blocks returns a
+   ;; Wait for processing to finish. This works because go-blocks return a
    ;; channel that receive a single value when the go-block is done
    (a/<!! (worker cin cout))
    (a/close! cout)
@@ -239,8 +239,8 @@
 ;; parallel execution.
 
 ;; Let's rewrite the above code using `pipeline-blocking`. The first thing we need
-;; is a transducer. One way to define a transducer is to use the `map` function,
-;; but omit the collection argument:
+;; is a transducer. One way to define a transducer is to use the `map` function
+;; and omitting the collection argument:
 (def xf (map slow+))
 
 ;; Then we setup some channels and run `pipeline-blocking`
@@ -265,11 +265,11 @@
 
 ;; You might have noticed that there are a couple of other pipeline-related
 ;; functions, namely `pipeline-async` and `pipeline`. The difference between these is
-;; that `pipeline-blocking` uses `(async/thread)` under the hood, while
-;; `pipeline-async` and `pipeline` use `(async/go)`. You can see that in action here:
+;; that `pipeline-blocking` and `pipeline` uses `async/thread` under the hood, while
+;; `pipeline-async` `async/go`. You can see that in action here:
 ;; https://github.com/clojure/core.async/blob/aa6b951301fbdcf5a13cdaaecb4b1a908dc8a978/src/main/clojure/clojure/core/async.clj#L548
 ;; The names of the functions suggest their proper usage: if you have any blocking
-;; operations such as network calls or, in our case, the `(slow+)` function, then
+;; operations such as network calls or, in our case, the `slow+` function, then
 ;; use `pipeline-blocking`. If you have async operations, use `pipeline-async`. If
 ;; you are doing compute-intensive operations, use `pipeline`.
 
@@ -286,11 +286,11 @@
 ;; The ideal solution to such a situation is to make the network call
 ;; asynchronous so that we can still use go blocks without starving the thread
 ;; pool, but a much simpler solution is to spin up dedicated threads with
-;; `(async/thread)`. `(async/go)` and `(async/thread)` blocks are pretty much
+;; `async/thread`. `async/go` and `async/thread` blocks are pretty much
 ;; interchangeable with the exception of some core.async functions which have
-;; their own versions, such as `(async/<!!)` for `(async/thread)` blocks and
-;; `(async/<! )` for `(async/go)` blocks. Unless a very large number of threads are
-;; needed, `(async/thread)` and `pipeline-blocking` work perfectly fine. If you
+;; their own versions, such as `async/<!!` for `async/thread` blocks and
+;; `async/<!` for `async/go` blocks. Unless a very large number of threads are
+;; needed, `async/thread` and `pipeline-blocking` work perfectly fine. If you
 ;; need several hundreds of threads, then it might be a good idea to consider
 ;; `pipeline-async`.
 
