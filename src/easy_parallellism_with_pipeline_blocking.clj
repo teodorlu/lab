@@ -180,9 +180,10 @@
 ;; perform some 'work' on the values.
 
 ;; It may help to think about core.async code as pipelines with one or more
-;; steps. Channels can be thought of as the lines that data flows through, and
-;; worker functions move and process the values between channels. In our case, we
-;; we have a simple pipeline with one step:
+;; steps. Channels can be thought of as the lines that data flows through, while
+;; worker functions are the components that do some work on the values between
+;; channels. In our case, we have a simple pipeline with one step:
+
 ;;
 ;;                        +------------------+
 ;;                        |                  |
@@ -202,7 +203,8 @@
       (a/>! cout (slow+ 10 val))
       (recur))))
 
-;; Now we need to run the function with the defined channels and collect the result.
+;; Now we need to run the worker function with the defined channels and collect
+;; the result.
 (let [cin (a/to-chan! (range 10))
       ;; We give the out channel a buffer for convenience sake. It allows us to
       ;; easily collect the results in a list.
@@ -214,7 +216,7 @@
    (a/close! cout)
    (a/<!! (a/into [] cout))))
 
-;; This works, but it still runs on only one thread, we don't have any parallelism yet. Let's
+;; This works, but it runs on a single thread, we don't have any parallelism yet. Let's
 ;; spawn some more worker functions to fix that:
 (let [cin (a/to-chan! (range 10))
       cout (a/chan 20)]
@@ -226,9 +228,10 @@
 
 ;; There we go! Much better.
 
-;; Managing and creating these worker functions, and correctly handling channels
-;; and knowing when to close them, can be a bit tricky. Luckily, core.async provides
-;; an excellent helper function in the form of `pipeline-blocking`.
+;; Creating and managing these worker functions, as well as correctly handling
+;; channels and knowing when to close them, can be a bit tricky. Luckily,
+;; core.async provides an excellent helper function in the form of
+;; `pipeline-blocking`.
 
 ;; `pipeline-blocking` works with an input and an output channel, a number
 ;; representing the number of concurrent workers, and a transducer to apply to
@@ -238,12 +241,12 @@
 ;; use other functions such as `pipeline-blocking` to get more control over
 ;; parallel execution.
 
-;; Let's rewrite the above code using `pipeline-blocking`. The first thing we need
-;; is a transducer. One way to define a transducer is to use the `map` function
-;; and omitting the collection argument:
-(def xf (map slow+))
+;; Let's rewrite the above code using `pipeline-blocking`. The first thing we
+;; need is a transducer. One way to define a transducer is by using the `map`
+;; function without the collection argument:
+(def xf (map (partial slow+ 10)))
 
-;; Then we setup some channels and run `pipeline-blocking`:
+;; Then we create some channels and run `pipeline-blocking`:
 (let [cin (a/to-chan! (range 10))
       cout (a/chan 20)]
   (time (a/pipeline-blocking 3 cout xf cin)
