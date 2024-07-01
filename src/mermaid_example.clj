@@ -23,4 +23,4 @@
 
 (clerk/with-viewer mermaid-viewer
   "flowchart LR
-    markdown[\"(range 10)\"]-- cin -->worker-- cout -->id[\"Results in a vector\"]")
+    source[\"(range 3)\"]-- cin -->worker-- cout -->sink[\"[10, 11, 12]\"]")
