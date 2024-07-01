@@ -43,7 +43,8 @@
 
 (center
  (clerk/table
-  (for [job [{:n 20 :workers 3}
+  (for [job [{:n 10 :workers 4}
+             {:n 20 :workers 3}
              {:n 500 :workers 50}]]
     (let [{:keys [n workers]} job
           duration-millis (:duration-millis (pipeline-blocking-example n workers))]
