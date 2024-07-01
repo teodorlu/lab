@@ -4,7 +4,7 @@
    [clojure.core.async :as a]
    [nextjournal.clerk :as clerk]
    [java-time-literals.core]
-   [nextjournal.clerk.viewer :as cv])
+   [nextjournal.clerk.viewer])
   (:import (java.time Duration)))
 
 {:nextjournal.clerk/visibility {:result :hide}}
@@ -87,9 +87,6 @@
       {:n n
        :workers workers
        :duration (format "%,6d ms" (.toMillis duration))}))))
-
-(require 'nextjournal.clerk.viewer)
-(require 'nextjournal.clerk.viewer)
 
 (def duration-ms-viewer-wip
   {:transform-fn (nextjournal.clerk.viewer/update-val
