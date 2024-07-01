@@ -229,24 +229,24 @@
 ;; Now we need to run the worker function with the defined channels and collect
 ;; the result.
 (let [cin (a/to-chan! (range 10))
-      ;; We give the out channel a buffer for convenience sake. It allows us to
-      ;; easily collect the results in a list.
-      cout (a/chan 20)]
+      cout (a/chan)]
   (time
-   ;; Wait for processing to finish. This works because go-blocks return a
-   ;; channel that receive a single value when the go-block is done
-   (a/<!! (worker cin cout))
-   (a/close! cout)
+   ;; Wait for processing to finish then close the out channel. This works
+   ;; because go-blocks return a channel that receive a single value when the
+   ;; go-block is done
+   (a/go (a/<! (worker cin cout))
+         (a/close! cout))
    (a/<!! (a/into [] cout))))
 
 ;; This works, but it runs on a single thread, we don't have any parallelism yet. Let's
 ;; spawn some more worker functions to fix that:
 (let [cin (a/to-chan! (range 10))
-      cout (a/chan 20)]
+      cout (a/chan)]
   (time (let [worker-chns (doall (repeatedly 3 #(worker cin cout)))]
-          ;; Wait for all channels to complete
-          (mapv a/<!! worker-chns)
-          (a/close! cout)
+          ;; Wait for all channels to complete then close the out channel
+          (a/go (doseq [c worker-chns]
+                  (a/<! c))
+                (a/close! cout))
           (a/<!! (a/into [] cout)))))
 
 ;; There we go! Much better.
@@ -271,7 +271,7 @@
 
 ;; Then we create some channels and run `pipeline-blocking`:
 (let [cin (a/to-chan! (range 10))
-      cout (a/chan 20)]
+      cout (a/chan)]
   (time (a/pipeline-blocking 3 cout xf cin)
         (a/<!! (a/into [] cout))))
 
@@ -299,7 +299,7 @@
 
 ;; Let's see if we can push it a bit...
 (let [cin (a/to-chan! (range 500))
-      cout (a/chan 600)]
+      cout (a/chan)]
   (time (a/pipeline-blocking 50 cout xf cin)
         (a/<!! (a/into [] cout))))
 
@@ -357,7 +357,5 @@
 
 ;; This is a good blog post that explores the topic a bit more:
 ;; https://eli.thegreenplace.net/2017/clojure-concurrency-and-blocking-with-coreasync/
-
-
 
 #_(clerk/clear-cache!)
