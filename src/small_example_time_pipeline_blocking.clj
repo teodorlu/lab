@@ -51,3 +51,5 @@
        :workers workers
        :duration-millis duration-millis}))))
 
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/html [:div {:style {:height "50vh"}}])
