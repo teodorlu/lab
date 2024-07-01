@@ -23,37 +23,31 @@
     (Thread/sleep extra-latency-ms)
     (apply op args)))
 
+(defn pipeline-blocking-example [n workers]
+  (let [cin (a/to-chan! (range n))
+        cout (a/chan)
+        add-10-xf (map (partial (slow 100 +) 10))]
+    (time (a/pipeline-blocking workers cout add-10-xf cin)
+          (a/<!! (a/into [] cout)))))
+
 {:nextjournal.clerk/visibility {:result :show}}
 
-;; examples:
+;; With n = 10 and 4 workers, we should be done in three cycles.
+;; Each op takes 100 ms, so expect a bit more than 300 ms total duration.
 
-(clerk/caption
- "n=20, 3 workers"
- (let [cin (a/to-chan! (range 20))
-       cout (a/chan)
-       add-10-xf (map (partial (slow 100 +) 10))]
-   (time (a/pipeline-blocking 3 cout add-10-xf cin)
-         (a/<!! (a/into [] cout)))))
+(pipeline-blocking-example 10 4)
 
-(clerk/caption
- "n=500, 50 workers"
- (let [cin (a/to-chan! (range 500))
-       cout (a/chan)
-       add-10-xf (map (partial (slow 100 +) 10))]
-   (time (a/pipeline-blocking 50 cout add-10-xf cin)
-         (a/<!! (a/into [] cout)))))
+;; More examples:
 
-^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
-(comment
+(defn center [& body] (clerk/html (into [:div.flex.justify-center] body)))
 
-  ;; (defn example [n workers]
-  ;;   (let [cin (a/to-chan! (range n))
-  ;;         cout (a/chan)
-  ;;         add-10-xf (map (partial (slow 100 +) 10))]
-  ;;     (time (a/pipeline-blocking workers cout add-10-xf cin)
-  ;;           (a/<!! (a/into [] cout)))))
+(center
+ (clerk/table
+  (for [job [{:n 20 :workers 3}
+             {:n 500 :workers 50}]]
+    (let [{:keys [n workers]} job
+          duration-millis (:duration-millis (pipeline-blocking-example n workers))]
+      {:n n
+       :workers workers
+       :duration-millis duration-millis}))))
 
-
-
-  ;; (clerk/table )
-  )
