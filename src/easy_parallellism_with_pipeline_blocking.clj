@@ -252,11 +252,47 @@
   (time (a/pipeline-blocking 3 cout xf cin)
         (a/<!! (a/into [] cout))))
 
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(comment
+  ;; @ruben: sånn som dette går det an å skrive mermaid.js-diagrammer i Clerk.
+  ;;
+  ;; Koden er basert på Clerk-boka
+  ;;
+  ;;    https://book.clerk.vision/#loading-libraries
+  ;;
+  ;; og Mermaid.js-dokumentasjonen
+  ;;
+  ;;    https://mermaid.js.org/syntax/flowchart.html
+  ;;
+  ;; Hva tenker du? Skal vi ta med noen sånne?
+  )
+
+^{:nextjournal.clerk/visibility {:result :hide :code :hide}}
+(def mermaid-viewer
+  {:transform-fn clerk/mark-presented
+   :render-fn '(fn [value]
+                 (when value
+                   [nextjournal.clerk.render/with-d3-require {:package ["mermaid@8.14/dist/mermaid.js"]}
+                    (fn [mermaid]
+                      [:div {:ref (fn [el] (when el
+                                             (.render mermaid (str (gensym)) value #(set! (.-innerHTML el) %))))}])]))})
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/with-viewer mermaid-viewer
+  "flowchart LR
+    source[\"(range 10)\"]-- cin -->worker[\"(pipeline-blocking 3 cout xf cin)\"]-- cout -->sink[\"[10, 11, 12, …]\"]")
+
 ;; Let's see if we can push it a bit...
 (let [cin (a/to-chan! (range 500))
       cout (a/chan 600)]
   (time (a/pipeline-blocking 50 cout xf cin)
         (a/<!! (a/into [] cout))))
+
+
+^{:nextjournal.clerk/visibility {:code :hide}}
+(clerk/with-viewer mermaid-viewer
+  "flowchart LR
+    source[\"(range 500)\"]-- cin -->worker[\"(pipeline-blocking 50 cout xf cin)\"]-- cout -->sink[\"[10, 11, 12, …]\"]")
 
 ;; ...and that's it!
 ;; In my view, `pipeline-blocking` offers a lot of benefits. We don't have to manage worker functions, and
