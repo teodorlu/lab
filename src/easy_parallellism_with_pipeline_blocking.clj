@@ -50,7 +50,7 @@
     {:value value :duration-millis duration-millis}))
 
 (defmacro time
-  "A `clojure.core/time` alternative suitable for notebook usage"
+  "An alternative to `clojure.core/time` suitable for notebooks"
   [& body]
   `(time* (fn [] ~@body)))
 
