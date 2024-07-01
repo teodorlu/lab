@@ -322,8 +322,7 @@
 ;; functions, namely `pipeline-async` and `pipeline`. The difference between
 ;; these is that `pipeline-blocking` and `pipeline` use `async/thread` under
 ;; the hood, while `pipeline-async` uses `async/go`. You can see that in action
-;; here:
-;; https://github.com/clojure/core.async/blob/aa6b951301fbdcf5a13cdaaecb4b1a908dc8a978/src/main/clojure/clojure/core/async.clj#L548
+;; [here](https://github.com/clojure/core.async/blob/aa6b951301fbdcf5a13cdaaecb4b1a908dc8a978/src/main/clojure/clojure/core/async.clj#L548).
 
 ;; The names of the functions suggest their proper usage: if you have blocking
 ;; operations such as blocking HTTP requests or, in our case, the `slow+`
@@ -355,7 +354,7 @@
 ;; need several hundreds of threads, then it might be a good idea to consider
 ;; `async/go` and `pipeline-async`.
 
-;; This is a good blog post that explores the topic a bit more:
+;; Here is a good blog post that explores the topic a bit more:
 ;; https://eli.thegreenplace.net/2017/clojure-concurrency-and-blocking-with-coreasync/
 
 #_(clerk/clear-cache!)
