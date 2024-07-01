@@ -102,10 +102,6 @@
     :workers workers
     :duration (clerk/with-viewer duration-ms-viewer-wip duration)}))
 
-nextjournal.clerk.viewer/default-viewers
-nextjournal.clerk.viewer/add-viewers
-
-
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (clerk/html [:div {:style {:height "50vh"}}])
 #_ (clerk/halt!)
