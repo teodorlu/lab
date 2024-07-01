@@ -33,7 +33,7 @@
 {:nextjournal.clerk/visibility {:result :show}}
 
 ;; With n = 10 and 4 workers, we should be done in three cycles.
-;; Each op takes 100 ms, so expect a bit more than 300 ms total duration.
+;; Each op takes ~100 ms, so expect a bit more than 300 ms total duration.
 
 (pipeline-blocking-example 10 4)
 
