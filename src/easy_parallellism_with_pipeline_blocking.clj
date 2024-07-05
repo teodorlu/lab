@@ -174,7 +174,7 @@
 ;; An important concept in core.async is channels. You can think of a channel
 ;; as a thread-safe FIFO queue. In our current case, we will require an input
 ;; channel and an output channel, and a function that takes values from the input
-;; channel, adds to the values via the `slow+` function, and then outputs the
+;; channel, adds to the values via the `slow+` function, and then puts the
 ;; resulting values on the output channel. I call these types of functions 'worker'
 ;; functions since they run concurrently, move values between channels, and usually
 ;; perform some 'work' on the values.
@@ -194,13 +194,6 @@
                       [:div {:ref (fn [el] (when el
                                              (.render mermaid (str (gensym)) value #(set! (.-innerHTML el) %))))}])]))})
 
-;;
-;;                        +------------------+
-;;                        |                  |
-;;     -------cin------>  |      worker      |   ------cout----->
-;;                        |                  |
-;;                        +------------------+
-
 ^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
 (comment
   ;; @ruben: ditto for denne: velg hva du liker best av ascii og Mermaid.
@@ -218,7 +211,7 @@
 ;; Let's write some code using the core.async library. First, we will define our
 ;; worker function. It will immediately start a go block, continually take values
 ;; from the `cin` channel until the channel is closed, add to each of the values
-;; using the `slow+` function, and finally output the resulting values on the `cout`
+;; using the `slow+` function, and finally put the resulting values on the `cout`
 ;; channel.
 (defn worker [cin cout]
   (a/go-loop []
