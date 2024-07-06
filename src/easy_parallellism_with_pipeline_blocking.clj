@@ -351,6 +351,16 @@
 ;; Here is a good blog post that explores the topic a bit more:
 ;; https://eli.thegreenplace.net/2017/clojure-concurrency-and-blocking-with-coreasync/
 
+;; ## Colophon and thanks
+;;
+;; [clojure/core.async](https://github.com/clojure/core.async) is made by the Clojure core team, with contributors.
+;; This document was written with [Clerk](https://clerk.vision/), by [Nextjournal](https://nextjournal.com/).
+;; The code that inspired this document was run on [Babashka](https://babashka.org/), by [Michiel Borkent](https://www.michielborkent.nl/).
+;; The programmers writing this documents were inspired by the Norwegian Clojure community ([#clojure-norway on Clojurians](https://clojurians.slack.com/archives/C061XGG1W), [Clojure/Oslo Meetup](https://www.meetup.com/clojure-oslo/)).
+;;
+;; Best regards,
+;; [Ruben S. Sevaldson](https://github.com/rubensseva) and [Teodor Heggelund](https://play.teod.eu/).
+
 ^{:nextjournal.clerk/visibility {:result :hide :code :hide}}
 (comment
   ;; Alternative deployment via Teodor's personal website
