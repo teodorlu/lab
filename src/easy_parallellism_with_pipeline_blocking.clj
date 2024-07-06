@@ -11,7 +11,8 @@
   (:refer-clojure :exclude [time])
   (:require
    [clojure.core.async :as a]
-   [nextjournal.clerk :as clerk]))
+   [nextjournal.clerk :as clerk]
+   [babashka.fs :as fs]))
 
 ;; `pipeline-blocking` is from `clojure.core.async`.
 ;; And we're going to make our own way to time our code.
@@ -349,5 +350,13 @@
 
 ;; Here is a good blog post that explores the topic a bit more:
 ;; https://eli.thegreenplace.net/2017/clojure-concurrency-and-blocking-with-coreasync/
+
+^{:nextjournal.clerk/visibility {:result :hide :code :hide}}
+(comment
+  ;; Alternative deployment via Teodor's personal website
+  (clerk/build! {:paths ["src/easy_parallellism_with_pipeline_blocking.clj"]
+                 :out-path (fs/file (fs/home) "dev/teodorlu/play.teod.eu/clojure-easy-parallellism-with-pipeline-blocking")})
+
+  :rcf)
 
 #_(clerk/clear-cache!)
