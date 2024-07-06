@@ -1,3 +1,5 @@
+;; [..](https://play.teod.eu)
+;;
 ;; # Easy, explicit parallellism with `pipeline-blocking`
 ;;
 ;; If you want a `map` to go faster, you could use `pmap`.
