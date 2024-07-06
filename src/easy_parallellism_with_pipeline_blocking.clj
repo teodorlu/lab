@@ -49,8 +49,8 @@
   (let [before (System/currentTimeMillis)
         value (f)
         after (System/currentTimeMillis)
-        duration-millis (- after before)]
-    {:value value :duration-millis duration-millis}))
+        duration-ms (- after before)]
+    {:value value :duration-ms duration-ms}))
 
 (defmacro time
   "An alternative to `clojure.core/time` suitable for notebooks"
@@ -62,7 +62,7 @@
 (time (slow+ 1 2))
 
 ;; There you go.
-;; Now, you, the reader, might assume that what we wrote after `:duration-millis` was how long time it actually took.
+;; Now, you, the reader, might assume that what we wrote after `:duration-ms` was how long time it actually took.
 ;; If you decide to put your faith in us today.
 
 ;; ## Single threaded with `clojure.core/map`
@@ -126,15 +126,15 @@
 ;; Speedup is _almost 3_ on _certain systems_:
 
 (double
- (/ (:duration-millis timing-1)
-    (:duration-millis timing-2)))
+ (/ (:duration-ms timing-1)
+    (:duration-ms timing-2)))
 
 ;; Let's plot n, speedup(n) and speedup(n)/n for some values of n.
 
 (defn calculate-pmapv-speedup [op args]
   (double
-   (/ (:duration-millis (time (mapv op args)))
-      (:duration-millis (time (pmapv op args))))))
+   (/ (:duration-ms (time (mapv op args)))
+      (:duration-ms (time (pmapv op args))))))
 
 ;; For our own sanity, can we reproduce something like the previous speedup?
 
