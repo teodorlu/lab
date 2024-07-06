@@ -162,7 +162,7 @@
                    "speedup/n" (format "%.2f" (/ speedup n))}))))
 
 ;; [A Stackoverflow answer](https://stackoverflow.com/questions/5021788/how-many-threads-does-clojures-pmap-function-spawn-for-url-fetching-operations)
-;; points towards a value derived from the number of processors on the system:
+;; indicates that core.async parallelism is derived from the number of processors on the system:
 
 (+ 2 (.. Runtime getRuntime availableProcessors))
 
