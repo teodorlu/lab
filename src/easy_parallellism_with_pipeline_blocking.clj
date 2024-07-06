@@ -360,6 +360,8 @@
 ;; The code that inspired this document was run on [Babashka](https://babashka.org/), by [Michiel Borkent](https://www.michielborkent.nl/).
 ;; The programmers writing this documents were inspired by the Norwegian Clojure community ([#clojure-norway on Clojurians](https://clojurians.slack.com/archives/C061XGG1W), [Clojure/Oslo Meetup](https://www.meetup.com/clojure-oslo/)).
 ;;
+;; Special thanks to Terje, who nudged the authors towards this way of thinking [five months prior to us writing this documents](https://clojurians.slack.com/archives/C061XGG1W/p1707646189467349?thread_ts=1707477511.195369&cid=C061XGG1W).
+;;
 ;; This document was written by
 ;; [Ruben S. Sevaldson](https://github.com/rubensseva) and [Teodor Heggelund](https://play.teod.eu/).
 ;; Thank you for reading!
