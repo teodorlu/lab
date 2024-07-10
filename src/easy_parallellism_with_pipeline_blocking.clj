@@ -1,5 +1,9 @@
-;; [..](https://play.teod.eu)
-;;
+^{:nextjournal.clerk/visibility {:code :hide}}
+(do
+  (require 'nextjournal.clerk)
+  (nextjournal.clerk/html [:a {:data-ignore-anchor-click true
+                               :href ".."} ".."]))
+
 ;; # Easy, explicit parallellism with `pipeline-blocking`
 ;;
 ;; If you want a `map` to go faster, you could use `pmap`.
