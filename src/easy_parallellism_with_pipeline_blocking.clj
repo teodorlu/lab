@@ -1,3 +1,7 @@
+^{:nextjournal.clerk/visibility {:code :hide :result :hide}}
+(ns easy-parallellism-with-pipeline-blocking
+  {:nextjournal.clerk/toc true})
+
 ^{:nextjournal.clerk/visibility {:code :hide}}
 (do
   (require 'nextjournal.clerk)
@@ -11,14 +15,13 @@
 ;; What if your problem is memory constrained?
 ;; Read on to discover your options!
 
-
-(ns easy-parallellism-with-pipeline-blocking
-  {:nextjournal.clerk/toc true}
-  (:refer-clojure :exclude [time])
-  (:require
-   [clojure.core.async :as a]
-   [nextjournal.clerk :as clerk]
-   [babashka.fs :as fs]))
+^{:nextjournal.clerk/visibility {:result :hide}}
+(do
+  (refer-clojure :exclude '[time])
+  (require
+   '[clojure.core.async :as a]
+   '[nextjournal.clerk :as clerk]
+   '[babashka.fs :as fs]))
 
 ;; `pipeline-blocking` is from `clojure.core.async`.
 ;; And we're going to make our own way to time our code.
