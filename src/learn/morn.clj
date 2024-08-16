@@ -8,3 +8,12 @@
   (dotimes [_ 10]
     (append-str "!"))
   (get-state))
+
+(eval `(do ~(for [c (str 'morn)]
+              `
+             )))
+
+
+(eval `(do ~@(for [c (str 'morn)]
+               `(print ~c))
+           (println)))
