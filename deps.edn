@@ -18,6 +18,7 @@
         java-time-literals/java-time-literals {:mvn/version "2018-04-06"}
         liberator/liberator {:mvn/version "0.15.3"}
         org.babashka/cli {:mvn/version "0.8.60"}
+        org.babashka/http-client {:mvn/version "0.4.20"}
         org.clojure/clojure {:mvn/version "1.11.4"}
         org.clojure/core.async {:mvn/version "1.6.681"}
         org.clojure/java.data {:mvn/version "1.2.107"}
@@ -27,8 +28,7 @@
         ring-mock/ring-mock {:mvn/version "0.1.5"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
-        thi.ng/geom {:mvn/version "1.0.1"}
-        }
+        thi.ng/geom {:mvn/version "1.0.1"}}
  :paths ["src" "resources"]
  :aliases
  {:nextjournal/clerk
