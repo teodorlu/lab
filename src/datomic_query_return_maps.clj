@@ -46,8 +46,6 @@
     (d/sync conn)
     (d/db conn)))
 
-(fresh-db)
-
 ;; ## Database som en verdi
 
 (def db (fresh-db))
