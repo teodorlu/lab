@@ -50,7 +50,7 @@
 
 (def db (fresh-db))
 
-;; (d/entity db [:user/username "teodorlu"])
+(d/entity db [:user/username "teodorlu"])
 
 ;; ## Spørringer med og uten return maps
 
