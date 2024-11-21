@@ -28,7 +28,8 @@
         ring-mock/ring-mock {:mvn/version "0.1.5"}
         teodorlu/pandoc-edn {:git/url "https://github.com/teodorlu/pandoc-edn"
                              :git/sha "4e060991513cec1a5471df6b4116c151bfb5d0cf"}
-        thi.ng/geom {:mvn/version "1.0.1"}}
+        thi.ng/geom {:mvn/version "1.0.1"}
+        com.datomic/peer {:mvn/version "1.0.7260"}}
  :paths ["src" "resources"]
  :aliases
  {:nextjournal/clerk
